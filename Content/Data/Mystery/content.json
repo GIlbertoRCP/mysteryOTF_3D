@@ -1,0 +1,4951 @@
+{
+ "version": 1,
+ "source": "GIlbertoRCP/MysteryOTF server/src/content (exported by Tools/MysteryExport/export.mts)",
+ "traits": {
+  "height": [
+   {
+    "key": "tall",
+    "label": {
+     "en": "Tall",
+     "es": "Alta"
+    },
+    "clue": {
+     "en": "tall",
+     "es": "alta"
+    }
+   },
+   {
+    "key": "average",
+    "label": {
+     "en": "Average",
+     "es": "Media"
+    },
+    "clue": {
+     "en": "medium-height",
+     "es": "de estatura media"
+    }
+   },
+   {
+    "key": "short",
+    "label": {
+     "en": "Short",
+     "es": "Baja"
+    },
+    "clue": {
+     "en": "short",
+     "es": "baja"
+    }
+   }
+  ],
+  "coat": [
+   {
+    "key": "black",
+    "label": {
+     "en": "Black coat",
+     "es": "Abrigo negro"
+    },
+    "clue": {
+     "en": "black",
+     "es": "negro"
+    }
+   },
+   {
+    "key": "grey",
+    "label": {
+     "en": "Grey coat",
+     "es": "Abrigo gris"
+    },
+    "clue": {
+     "en": "grey",
+     "es": "gris"
+    }
+   },
+   {
+    "key": "green",
+    "label": {
+     "en": "Green coat",
+     "es": "Abrigo verde"
+    },
+    "clue": {
+     "en": "green",
+     "es": "verde"
+    }
+   },
+   {
+    "key": "burgundy",
+    "label": {
+     "en": "Burgundy coat",
+     "es": "Abrigo burdeos"
+    },
+    "clue": {
+     "en": "burgundy",
+     "es": "burdeos"
+    }
+   },
+   {
+    "key": "camel",
+    "label": {
+     "en": "Camel coat",
+     "es": "Abrigo color camel"
+    },
+    "clue": {
+     "en": "camel",
+     "es": "color camel"
+    }
+   }
+  ],
+  "voice": [
+   {
+    "key": "deep",
+    "label": {
+     "en": "Deep voice",
+     "es": "Voz grave"
+    },
+    "clue": {
+     "en": "deep",
+     "es": "grave"
+    }
+   },
+   {
+    "key": "soft",
+    "label": {
+     "en": "Soft voice",
+     "es": "Voz suave"
+    },
+    "clue": {
+     "en": "soft, almost whispering",
+     "es": "suave, casi un susurro"
+    }
+   },
+   {
+    "key": "hoarse",
+    "label": {
+     "en": "Hoarse voice",
+     "es": "Voz ronca"
+    },
+    "clue": {
+     "en": "hoarse",
+     "es": "ronca"
+    }
+   },
+   {
+    "key": "accented",
+    "label": {
+     "en": "Foreign accent",
+     "es": "Acento extranjero"
+    },
+    "clue": {
+     "en": "foreign-accented",
+     "es": "con acento extranjero"
+    }
+   }
+  ],
+  "hand": [
+   {
+    "key": "left",
+    "label": {
+     "en": "Left",
+     "es": "Izquierda"
+    },
+    "clue": {
+     "en": "left",
+     "es": "izquierda"
+    }
+   },
+   {
+    "key": "right",
+    "label": {
+     "en": "Right",
+     "es": "Derecha"
+    },
+    "clue": {
+     "en": "right",
+     "es": "derecha"
+    }
+   }
+  ],
+  "footwear": [
+   {
+    "key": "boots",
+    "label": {
+     "en": "Riding boots",
+     "es": "Botas de montar"
+    },
+    "clue": {
+     "en": "riding boots",
+     "es": "botas de montar"
+    }
+   },
+   {
+    "key": "heels",
+    "label": {
+     "en": "Heeled shoes",
+     "es": "Zapatos de tacón"
+    },
+    "clue": {
+     "en": "heeled shoes",
+     "es": "zapatos de tacón"
+    }
+   },
+   {
+    "key": "oxfords",
+    "label": {
+     "en": "Polished oxfords",
+     "es": "Zapatos de vestir"
+    },
+    "clue": {
+     "en": "polished oxfords",
+     "es": "zapatos de vestir"
+    }
+   },
+   {
+    "key": "rubber",
+    "label": {
+     "en": "Rubber-soled shoes",
+     "es": "Suela de goma"
+    },
+    "clue": {
+     "en": "rubber-soled shoes",
+     "es": "zapatos de suela de goma"
+    }
+   }
+  ],
+  "habit": [
+   {
+    "key": "cigar",
+    "label": {
+     "en": "Smokes cigars",
+     "es": "Fuma puros"
+    },
+    "clue": {
+     "en": "flakes of cigar ash",
+     "es": "restos de ceniza de puro"
+    }
+   },
+   {
+    "key": "lavender",
+    "label": {
+     "en": "Wears lavender perfume",
+     "es": "Usa perfume de lavanda"
+    },
+    "clue": {
+     "en": "a strong scent of lavender",
+     "es": "un fuerte olor a lavanda"
+    }
+   },
+   {
+    "key": "ink",
+    "label": {
+     "en": "Ink-stained fingers",
+     "es": "Dedos manchados de tinta"
+    },
+    "clue": {
+     "en": "smudges of blue ink",
+     "es": "manchas de tinta azul"
+    }
+   },
+   {
+    "key": "cat",
+    "label": {
+     "en": "Owns a long-haired cat",
+     "es": "Tiene un gato de pelo largo"
+    },
+    "clue": {
+     "en": "long white cat hairs",
+     "es": "pelos largos de gato blanco"
+    }
+   },
+   {
+    "key": "mint",
+    "label": {
+     "en": "Always chewing peppermints",
+     "es": "Siempre masca mentas"
+    },
+    "clue": {
+     "en": "a crumpled peppermint wrapper",
+     "es": "un envoltorio de menta arrugado"
+    }
+   }
+  ],
+  "blood": [
+   {
+    "key": "A",
+    "label": {
+     "en": "Type A",
+     "es": "Tipo A"
+    },
+    "clue": {
+     "en": "type A",
+     "es": "tipo A"
+    }
+   },
+   {
+    "key": "B",
+    "label": {
+     "en": "Type B",
+     "es": "Tipo B"
+    },
+    "clue": {
+     "en": "type B",
+     "es": "tipo B"
+    }
+   },
+   {
+    "key": "AB",
+    "label": {
+     "en": "Type AB",
+     "es": "Tipo AB"
+    },
+    "clue": {
+     "en": "type AB",
+     "es": "tipo AB"
+    }
+   },
+   {
+    "key": "O",
+    "label": {
+     "en": "Type O",
+     "es": "Tipo O"
+    },
+    "clue": {
+     "en": "type O",
+     "es": "tipo O"
+    }
+   }
+  ]
+ },
+ "traitDimLabels": {
+  "height": {
+   "en": "Height",
+   "es": "Estatura"
+  },
+  "coat": {
+   "en": "Coat",
+   "es": "Abrigo"
+  },
+  "voice": {
+   "en": "Voice",
+   "es": "Voz"
+  },
+  "blood": {
+   "en": "Blood type",
+   "es": "Grupo sanguíneo"
+  },
+  "hand": {
+   "en": "Dominant hand",
+   "es": "Mano dominante"
+  },
+  "footwear": {
+   "en": "Footwear",
+   "es": "Calzado"
+  },
+  "habit": {
+   "en": "Habit",
+   "es": "Hábito"
+  }
+ },
+ "leadDims": [
+  "height",
+  "coat",
+  "voice"
+ ],
+ "analystDims": [
+  "hand",
+  "footwear",
+  "habit",
+  "blood"
+ ],
+ "motives": [
+  {
+   "key": "will",
+   "label": {
+    "en": "Cut out of the will",
+    "es": "Excluido del testamento"
+   },
+   "docTitle": {
+    "en": "Draft will naming {name}",
+    "es": "Borrador de testamento que nombra a {name}"
+   },
+   "docSummary": {
+    "en": "A new will, dated last week.",
+    "es": "Un testamento nuevo, fechado la semana pasada."
+   },
+   "doc": {
+    "en": "A draft of {victim}'s new will, dated last week, removes {name} as a beneficiary entirely. A note in the margin reads: \"They will be furious, but it is done.\"",
+    "es": "Un borrador del nuevo testamento de {victim}, fechado la semana pasada, excluye por completo a {name} de la herencia. Una nota al margen dice: \"Le sentará fatal, pero ya está hecho.\""
+   },
+   "deflect": {
+    "en": "We argued about family money from time to time. Every family does.",
+    "es": "De vez en cuando discutíamos por dinero de la familia. Como en todas las familias."
+   },
+   "admit": {
+    "en": "Fine. Yes, I knew about the new will. I was furious. But being angry isn't a crime.",
+    "es": "Está bien. Sí, sabía lo del nuevo testamento. Me sentó fatal. Pero enfadarse no es un delito."
+   }
+  },
+  {
+   "key": "debt",
+   "label": {
+    "en": "Unpayable debt",
+    "es": "Una deuda impagable"
+   },
+   "docTitle": {
+    "en": "IOU signed by {name}",
+    "es": "Pagaré firmado por {name}"
+   },
+   "docSummary": {
+    "en": "A promissory note for a staggering sum.",
+    "es": "Un pagaré por una suma desorbitada."
+   },
+   "doc": {
+    "en": "A promissory note signed by {name} for a sum they could never hope to repay. {victim} had underlined the due date twice: this Friday.",
+    "es": "Un pagaré firmado por {name} por una cantidad que jamás podría devolver. {victim} había subrayado dos veces la fecha de vencimiento: este viernes."
+   },
+   "deflect": {
+    "en": "We had a small financial arrangement. Perfectly friendly, I assure you.",
+    "es": "Teníamos un pequeño acuerdo económico. Totalmente amistoso, se lo aseguro."
+   },
+   "admit": {
+    "en": "All right, I owed {victim} more than I could ever pay. That doesn't make me a killer.",
+    "es": "De acuerdo, le debía a {victim} más de lo que podré pagar nunca. Eso no significa que yo haya hecho esto."
+   }
+  },
+  {
+   "key": "blackmail",
+   "label": {
+    "en": "Being blackmailed",
+    "es": "Víctima de chantaje"
+   },
+   "docTitle": {
+    "en": "Blackmail ledger: {name}'s payments",
+    "es": "Libro de chantajes: pagos de {name}"
+   },
+   "docSummary": {
+    "en": "A hidden ledger of monthly \"contributions\".",
+    "es": "Un libro oculto de \"aportaciones\" mensuales."
+   },
+   "doc": {
+    "en": "Hidden in {victim}'s safe: compromising photographs of {name} and a ledger of monthly \"contributions\" going back three years. The latest entry demands double.",
+    "es": "Escondido en la caja fuerte de {victim}: fotografías comprometedoras de {name} y un registro de \"aportaciones\" mensuales de los últimos tres años. La última entrada exige el doble."
+   },
+   "deflect": {
+    "en": "I paid {victim} a visit now and then. Social calls. Nothing more.",
+    "es": "Visitaba a {victim} de vez en cuando. Visitas sociales, nada más."
+   },
+   "admit": {
+    "en": "Yes, {victim} was bleeding me dry. I won't pretend I'm sorry it's over.",
+    "es": "Sí, {victim} me estaba desangrando. No voy a fingir que lamento que se haya acabado."
+   }
+  },
+  {
+   "key": "affair",
+   "label": {
+    "en": "A bitter love affair",
+    "es": "Un amorío que acabó mal"
+   },
+   "docTitle": {
+    "en": "Love letters signed by {name}",
+    "es": "Cartas de amor firmadas por {name}"
+   },
+   "docSummary": {
+    "en": "A bundle of letters tied with ribbon.",
+    "es": "Un fajo de cartas atadas con una cinta."
+   },
+   "doc": {
+    "en": "A bundle of love letters from {name} to {victim}. The last one is angry and unsigned save for an initial: \"You will regret ending this.\"",
+    "es": "Un fajo de cartas de amor de {name} a {victim}. La última está escrita con rabia y firmada solo con una inicial: \"Te arrepentirás de haber terminado esto.\""
+   },
+   "deflect": {
+    "en": "We were close once. That was a long time ago.",
+    "es": "Una vez fuimos muy cercanos. Hace mucho tiempo de eso."
+   },
+   "admit": {
+    "en": "We were together, and it ended badly. I said things I regret. That's all.",
+    "es": "Estuvimos juntos y terminó mal. Dije cosas de las que me arrepiento. Eso es todo."
+   }
+  },
+  {
+   "key": "credit",
+   "label": {
+    "en": "Stolen life’s work",
+    "es": "El trabajo de su vida, robado"
+   },
+   "docTitle": {
+    "en": "{name}'s original notebooks",
+    "es": "Cuadernos originales de {name}"
+   },
+   "docSummary": {
+    "en": "Notebooks with the same ideas, written years earlier.",
+    "es": "Cuadernos con las mismas ideas, escritos años antes."
+   },
+   "doc": {
+    "en": "Notebooks in {name}'s handwriting, dated years earlier, contain the very work {victim} presented to the world as their own. {name} had circled the newspaper article praising {victim}.",
+    "es": "Cuadernos con la letra de {name}, fechados años antes, contienen el mismo trabajo que {victim} presentó al mundo como propio. {name} había marcado con un círculo el artículo de prensa que elogiaba a {victim}."
+   },
+   "deflect": {
+    "en": "I admired {victim}’s work. Everyone did.",
+    "es": "Yo admiraba el trabajo de {victim}. Todo el mundo lo hacía."
+   },
+   "admit": {
+    "en": "That work was mine. {victim} stole it, and everyone applauded. You'd be bitter too.",
+    "es": "Ese trabajo era mío. {victim} lo robó y todos aplaudieron. A usted también le dolería."
+   }
+  },
+  {
+   "key": "dismissal",
+   "label": {
+    "en": "About to be ruined",
+    "es": "A punto de ser arruinado"
+   },
+   "docTitle": {
+    "en": "Signed dismissal letter for {name}",
+    "es": "Carta de despido firmada para {name}"
+   },
+   "docSummary": {
+    "en": "To be delivered tomorrow morning.",
+    "es": "Iba a entregarse mañana por la mañana."
+   },
+   "doc": {
+    "en": "A dismissal letter for {name}, signed by {victim} and sealed for delivery tomorrow morning. Attached: a list of \"irregularities\" that would end their career for good.",
+    "es": "Una carta de despido para {name}, firmada por {victim} y sellada para entregarse mañana por la mañana. Adjunta: una lista de \"irregularidades\" que acabarían con su carrera para siempre."
+   },
+   "deflect": {
+    "en": "My position was secure. {victim} relied on me completely.",
+    "es": "Mi puesto estaba asegurado. {victim} confiaba en mí por completo."
+   },
+   "admit": {
+    "en": "I knew the letter was coming. I was going to fight it, not kill anyone over it.",
+    "es": "Sabía que venía esa carta. Iba a pelearla, no a matar a nadie por ella."
+   }
+  },
+  {
+   "key": "revenge",
+   "label": {
+    "en": "An old family grudge",
+    "es": "Un viejo rencor familiar"
+   },
+   "docTitle": {
+    "en": "Old newspaper clipping about {name}",
+    "es": "Recorte de periódico antiguo sobre {name}"
+   },
+   "docSummary": {
+    "en": "A yellowed clipping from twenty years ago.",
+    "es": "Un recorte amarillento de hace veinte años."
+   },
+   "doc": {
+    "en": "A yellowed newspaper clipping: {victim}'s testimony sent {name}'s father to prison twenty years ago. He died there. Someone has written \"Never forget\" across the top.",
+    "es": "Un recorte de periódico amarillento: el testimonio de {victim} mandó a prisión al padre de {name} hace veinte años. Murió allí. Alguien escribió \"Nunca olvides\" en la parte superior."
+   },
+   "deflect": {
+    "en": "The past is the past. I have no quarrel with anyone.",
+    "es": "El pasado, pasado está. No tengo problemas con nadie."
+   },
+   "admit": {
+    "en": "My father died in that prison because of {victim}. I've hated them for twenty years. Hating isn't killing.",
+    "es": "Mi padre murió en esa cárcel por culpa de {victim}. Llevo veinte años odiando a {victim}. Odiar no es matar."
+   }
+  },
+  {
+   "key": "fraud",
+   "label": {
+    "en": "About to be exposed as a fraud",
+    "es": "A punto de ser desenmascarado"
+   },
+   "docTitle": {
+    "en": "{victim}'s private notes on {name}",
+    "es": "Notas privadas de {victim} sobre {name}"
+   },
+   "docSummary": {
+    "en": "Notes for a speech planned for tomorrow.",
+    "es": "Notas para un discurso previsto para mañana."
+   },
+   "doc": {
+    "en": "{victim}'s private notes: \"{name} is not who they claim to be. The credentials are forged. I will say so publicly tomorrow.\"",
+    "es": "Notas privadas de {victim}: \"{name} no es quien dice ser. Sus credenciales son falsas. Lo diré públicamente mañana.\""
+   },
+   "deflect": {
+    "en": "{victim} and I respected each other. Ask anyone.",
+    "es": "{victim} y yo nos respetábamos. Pregúntele a cualquiera."
+   },
+   "admit": {
+    "en": "So {victim} found me out. I was going to disappear quietly, not do this.",
+    "es": "Así que {victim} me descubrió. Pensaba desaparecer sin hacer ruido, no hacer esto."
+   }
+  }
+ ],
+ "motiveRank": {
+  "en": [
+   5,
+   7,
+   4,
+   0,
+   6,
+   2,
+   3,
+   1
+  ],
+  "es": [
+   3,
+   6,
+   7,
+   4,
+   2,
+   0,
+   5,
+   1
+  ]
+ },
+ "causes": {
+  "blunt": {
+   "autopsy": {
+    "en": "Cause of death: a single heavy blow to the back of the head. The wound contained {trace}.",
+    "es": "Causa de la muerte: un único golpe fuerte en la nuca. La herida contenía {trace}."
+   },
+   "slipNoun": {
+    "en": "the blow to the head",
+    "es": "el golpe en la cabeza"
+   }
+  },
+  "sharp": {
+   "autopsy": {
+    "en": "Cause of death: a deep puncture wound below the ribs. The wound edges carried {trace}.",
+    "es": "Causa de la muerte: una herida punzante profunda bajo las costillas. Los bordes de la herida tenían {trace}."
+   },
+   "slipNoun": {
+    "en": "the stabbing",
+    "es": "la puñalada"
+   }
+  },
+  "poison": {
+   "autopsy": {
+    "en": "Cause of death: poisoning. The stomach contents contained {trace}. Onset was quick; the victim would have collapsed within minutes.",
+    "es": "Causa de la muerte: envenenamiento. El contenido del estómago tenía {trace}. El efecto fue rápido: la víctima se habría desplomado en minutos."
+   },
+   "slipNoun": {
+    "en": "the poison",
+    "es": "el veneno"
+   }
+  },
+  "strangle": {
+   "autopsy": {
+    "en": "Cause of death: strangulation with a ligature. The furrow around the neck contained {trace}.",
+    "es": "Causa de la muerte: estrangulamiento con una ligadura. El surco alrededor del cuello contenía {trace}."
+   },
+   "slipNoun": {
+    "en": "the strangling",
+    "es": "el estrangulamiento"
+   }
+  }
+ },
+ "text": {
+  "alibiStatement": {
+   "en": "Claims to have been in {place} between {window}.",
+   "es": "Afirma haber estado en {place} entre {window}."
+  },
+  "bio": {
+   "en": "{role}. {line}.",
+   "es": "{role}. {line}."
+  },
+  "witnessTitle": {
+   "en": "Witness statement: {witness}",
+   "es": "Declaración de testigo: {witness}"
+  },
+  "witnessSummary": {
+   "en": "Saw someone leaving {scene}.",
+   "es": "Vio a alguien salir de {scene}."
+  },
+  "witnessDetails": {
+   "en": "{witness} reports seeing a {value} figure hurrying out of {scene} at about {time}. The light was poor and they could not make out a face.",
+   "es": "{witness} declara haber visto una figura {value} saliendo deprisa de {scene} hacia las {time}. Había poca luz y no pudo distinguir la cara."
+  },
+  "cameraSummary": {
+   "en": "Someone near {scene} at {time}.",
+   "es": "Alguien cerca de {scene} a las {time}."
+  },
+  "cameraDetails": {
+   "en": "{source} shows someone in a {value} coat passing near {scene} at {time}. The face is turned away from the lens.",
+   "es": "{source} muestra a alguien con un abrigo {value} pasando cerca de {scene} a las {time}. La cara está girada, lejos del objetivo."
+  },
+  "recordTitle": {
+   "en": "Alibi check: {place}",
+   "es": "Verificación de coartada: {place}"
+  },
+  "recordSummary": {
+   "en": "Who was really in {place}?",
+   "es": "¿Quién estuvo realmente en {place}?"
+  },
+  "recordWithNames": {
+   "en": "Staff and guests in {place} between {window} confirm the presence of: {names}. Nobody else could be confirmed there.",
+   "es": "El personal y los invitados en {place} entre {window} confirman la presencia de: {names}. No se pudo confirmar a nadie más."
+  },
+  "recordEmpty": {
+   "en": "Nobody in {place} between {window} can confirm seeing any of the suspects there.",
+   "es": "Nadie en {place} entre {window} puede confirmar haber visto allí a ninguno de los sospechosos."
+  },
+  "recordVouch": {
+   "en": " {accomplice} and {killer} swear they were together there the whole time.",
+   "es": " {accomplice} y {killer} juran que estuvieron juntos allí todo el tiempo."
+  },
+  "receiptTitle": {
+   "en": "Signed receipt: {place}",
+   "es": "Recibo firmado: {place}"
+  },
+  "receiptSummary": {
+   "en": "Signed at {time}.",
+   "es": "Firmado a las {time}."
+  },
+  "receiptDetails": {
+   "en": "A receipt from {place}, signed by {name} at {time}. The staff there remember {name} clearly.",
+   "es": "Un recibo de {place}, firmado por {name} a las {time}. El personal de allí recuerda a {name} con claridad."
+  },
+  "aWhereTogether": {
+   "en": "In {place}, with {other}. We never left each other’s side. Ask them.",
+   "es": "En {place}, con {other}. No nos separamos en ningún momento. Pregúnteselo."
+  },
+  "diaryTitle": {
+   "en": "{victim}'s appointment book",
+   "es": "Agenda de {victim}"
+  },
+  "diarySummary": {
+   "en": "The last entry, written today.",
+   "es": "La última entrada, escrita hoy."
+  },
+  "diaryDetails": {
+   "en": "The final entry, in a hurried hand: \"{start}, {scene}. Meeting I cannot postpone. It ends tonight.\" The name of the person has been scratched out.",
+   "es": "La última entrada, con letra apresurada: \"{start}, {scene}. Una reunión que no puedo aplazar. Esta noche se acaba.\" El nombre de la persona está tachado."
+  },
+  "autopsyTitle": {
+   "en": "Autopsy report: {victim}",
+   "es": "Informe de autopsia: {victim}"
+  },
+  "autopsySummary": {
+   "en": "Official cause and time of death.",
+   "es": "Causa y hora oficiales de la muerte."
+  },
+  "autopsyDetails": {
+   "en": "Time of death: between {window}. The victim's watch broke in the fall and stopped at {tod}. {cause}",
+   "es": "Hora de la muerte: entre {window}. El reloj de la víctima se rompió en la caída y se paró a las {tod}. {cause}"
+  },
+  "sightingTitle": {
+   "en": "Statement: {witness} saw {name}",
+   "es": "Declaración: {witness} vio a {name}"
+  },
+  "sightingSummary": {
+   "en": "{name} in {place} at {time}.",
+   "es": "{name} en {place} a las {time}."
+  },
+  "sightingDetails": {
+   "en": "{witness} spoke with {name} in {place} at {time} and remembers glancing at the clock. Check the floor plan for how far that is from {scene}.",
+   "es": "{witness} habló con {name} en {place} a las {time} y recuerda haber mirado el reloj. Consulten en el plano a qué distancia está de {scene}."
+  },
+  "smudgeTitle": {
+   "en": "Partial prints on the victim's lapel",
+   "es": "Huellas parciales en la solapa de la víctima"
+  },
+  "smudgeSummary": {
+   "en": "Someone grabbed the victim.",
+   "es": "Alguien agarró a la víctima."
+  },
+  "smudgeDetails": {
+   "en": "Faint prints on the victim's lapel show the culprit grabbed them with their {value} hand: the thumb on one side, four fingers on the other. The killer was close enough to touch.",
+   "es": "Unas huellas tenues en la solapa de la víctima muestran que quien lo hizo la agarró con la mano {value}: el pulgar a un lado y cuatro dedos al otro. El asesino estuvo lo bastante cerca como para tocarla."
+  },
+  "shoeprintTitle": {
+   "en": "Shoeprint cast",
+   "es": "Molde de pisada"
+  },
+  "shoeprintSummary": {
+   "en": "A clear print near the body.",
+   "es": "Una pisada clara junto al cuerpo."
+  },
+  "shoeprintDetails": {
+   "en": "A clear print in {floor} next to the body. The tread and heel shape match {value}.",
+   "es": "Una pisada clara en {floor} junto al cuerpo. El dibujo de la suela y la forma del tacón coinciden con {value}."
+  },
+  "traceTitle": {
+   "en": "Trace evidence on the body",
+   "es": "Rastros en el cuerpo"
+  },
+  "traceSummary": {
+   "en": "Something left on the victim's clothes.",
+   "es": "Algo quedó en la ropa de la víctima."
+  },
+  "traceDetails": {
+   "en": "The lab recovered {value} from the victim's collar and sleeve. The victim had no such habit.",
+   "es": "El laboratorio encontró {value} en el cuello y la manga de la víctima. La víctima no tenía ese hábito."
+  },
+  "phoneSummary": {
+   "en": "A call from near {scene} at {time}.",
+   "es": "Una llamada desde cerca de {scene} a las {time}."
+  },
+  "phoneDetails": {
+   "en": "{source}: at {time} someone placed a short call from near {scene} and hung up without giving a name. The operator remembers a {value} voice.",
+   "es": "{source}: a las {time} alguien hizo una llamada breve desde cerca de {scene} y colgó sin dar su nombre. La operadora recuerda una voz {value}."
+  },
+  "scrapingsTitle": {
+   "en": "Scrapings from under the victim's nails",
+   "es": "Raspados de las uñas de la víctima"
+  },
+  "scrapingsSummary": {
+   "en": "The victim fought back.",
+   "es": "La víctima se defendió."
+  },
+  "scrapingsDetails": {
+   "en": "The victim fought back. Skin and blood recovered from under the fingernails are not the victim's own: the blood is {value}.",
+   "es": "La víctima se defendió. La piel y la sangre encontradas bajo sus uñas no son suyas: la sangre es {value}."
+  },
+  "weaponTitle": {
+   "en": "Recovered item: {weapon}",
+   "es": "Objeto recuperado: {weapon}"
+  },
+  "weaponSummary": {
+   "en": "Found in {place}.",
+   "es": "Lugar del hallazgo: {place}."
+  },
+  "weaponDetails": {
+   "en": "Found in {place}. {desc}",
+   "es": "Lugar del hallazgo: {place}. {desc}"
+  },
+  "qWhere": {
+   "en": "Where were you between {window}?",
+   "es": "¿Dónde estaba entre {window}?"
+  },
+  "aWhere": {
+   "en": "In {place}, the whole time. Ask anyone who was there.",
+   "es": "En {place}, todo el tiempo. Pregúntele a cualquiera que estuviera allí."
+  },
+  "qRelation": {
+   "en": "What was your relationship with {victim}?",
+   "es": "¿Qué relación tenía con {victim}?"
+  },
+  "qHeard": {
+   "en": "How did you hear about the death?",
+   "es": "¿Cómo se enteró de la muerte?"
+  },
+  "aHeardInnocent": {
+   "en": "When the alarm went up, like everyone else. Nobody has told us how it happened.",
+   "es": "Cuando sonó la alarma, como todos. Nadie nos ha dicho cómo ocurrió."
+  },
+  "aHeardSlip": {
+   "en": "When the alarm went up. When I heard about {cause}, I could barely stand. Who would do such a thing?",
+   "es": "Cuando sonó la alarma. Cuando supe lo de {cause}, casi me desmayo. ¿Quién haría algo así?"
+  },
+  "qNoticed": {
+   "en": "Did you notice anything unusual tonight?",
+   "es": "¿Notó algo extraño esta noche?"
+  },
+  "aNoticedFrame": {
+   "en": "Now that you mention it, I saw {other} near {scene} earlier. They looked nervous.",
+   "es": "Ahora que lo menciona, vi a {other} cerca de {scene} antes. Iba con prisa y no quiso hablar."
+  },
+  "aNoticedTrue": {
+   "en": "I noticed {value} in the hallway near {scene}. It struck me as odd.",
+   "es": "Noté {value} en el pasillo cerca de {scene}. Me pareció raro."
+  },
+  "aNoticedNothing": {
+   "en": "Nothing. I kept to myself all evening.",
+   "es": "Nada. Estuve a lo mío toda la noche."
+  },
+  "hintAlibi": {
+   "en": "The alibi checks clear {names}. Cross them off.",
+   "es": "Las verificaciones de coartada descartan a {names}. Táchenlos."
+  },
+  "hintAlibiNone": {
+   "en": "No alibi check clears anyone this time. Rely on the physical clues.",
+   "es": "Esta vez ninguna coartada descarta a nadie. Confíen en las pistas físicas."
+  },
+  "hintWeapon": {
+   "en": "Compare the autopsy with the recovered items. It was not {names}.",
+   "es": "Comparen la autopsia con los objetos recuperados. No fue {names}."
+  },
+  "hintClue": {
+   "en": "“{title}” rules out {names}.",
+   "es": "«{title}» descarta a {names}."
+  },
+  "hintSlip": {
+   "en": "Ask the remaining suspects how they heard about the death. Listen for details nobody should know yet.",
+   "es": "Pregunten a los sospechosos restantes cómo se enteraron de la muerte. Atentos a detalles que nadie debería conocer aún."
+  },
+  "hintMotive": {
+   "en": "Once you know who did it, look for the document that names them. That is the motive.",
+   "es": "Cuando sepan quién fue, busquen el documento que lo nombra. Ese es el móvil."
+  },
+  "confrontAccomplice": {
+   "en": "All right. I wasn’t with {killer}. I was in {receiptPlace}. I said otherwise because I was asked to.",
+   "es": "Está bien. No estaba con {killer}. Estaba en {receiptPlace}. Dije lo contrario porque me lo pidieron."
+  },
+  "confrontSighting": {
+   "en": "Exactly. I was in {place}, talking to {witness}. I couldn’t have been anywhere near {scene}.",
+   "es": "Exacto. Estaba en {place}, hablando con {witness}. No pude estar ni cerca de {scene}."
+  },
+  "confrontPlanted": {
+   "en": "That’s mine, but I lost it days ago. Someone wants you looking at me instead of them.",
+   "es": "Es mío, pero lo perdí hace días. Alguien quiere que me miren a mí en vez de a ellos."
+  },
+  "confrontClaim": {
+   "en": "That’s a lie. Everyone in {place} saw me there all evening. Check their record.",
+   "es": "Eso es mentira. Todos en {place} me vieron allí toda la noche. Revisen su registro."
+  },
+  "confrontSlip": {
+   "en": "How did I know how it happened? I... someone must have said it. Everyone was talking.",
+   "es": "¿Cómo sabía cómo ocurrió? Yo... alguien lo diría. Todo el mundo hablaba."
+  },
+  "deflect0": {
+   "en": "That proves nothing.",
+   "es": "Eso no demuestra nada."
+  },
+  "deflect1": {
+   "en": "I don’t see what that has to do with me.",
+   "es": "No veo qué tiene eso que ver conmigo."
+  },
+  "deflect2": {
+   "en": "Are we finished here, detective?",
+   "es": "¿Hemos terminado, detective?"
+  },
+  "plantedTitle": {
+   "en": "Monogrammed {item} by the body",
+   "es": "{itemCap} con monograma junto al cuerpo"
+  },
+  "plantedSummary": {
+   "en": "Embroidered with the initials {initials}.",
+   "es": "Bordado con las iniciales {initials}."
+  },
+  "plantedDetails": {
+   "en": "{itemFull} embroidered with the initials {initials}, found beside the body. Under the lab lamp it is spotless: no trace of the victim and none of the dust on the floor. It was placed there after the death.",
+   "es": "{itemFull} bordado con las iniciales {initials}, encontrado junto al cuerpo. Bajo la lámpara del laboratorio está impecable: ni rastro de la víctima ni del polvo del suelo. Lo dejaron allí después de la muerte."
+  },
+  "claimTitle": {
+   "en": "Statement: {witness} accuses {name}",
+   "es": "Declaración: {witness} acusa a {name}"
+  },
+  "claimSummary": {
+   "en": "Claims to have seen {name} leaving {scene}.",
+   "es": "Dice haber visto a {name} salir de {scene}."
+  },
+  "claimDetails": {
+   "en": "{witness} swears they saw {name} hurrying out of {scene} at {time}, and is very sure of it. Nobody else saw the same thing.",
+   "es": "{witness} jura haber visto a {name} salir deprisa de {scene} a las {time}, y no tiene ninguna duda. Nadie más vio lo mismo."
+  },
+  "lateNote": {
+   "en": "New lead",
+   "es": "Nueva pista"
+  },
+  "explanationAccomplice": {
+   "en": " {accomplice} lied to give them an alibi, but a receipt put {accomplice} in {receiptPlace} at the time.",
+   "es": " {accomplice} mintió para darle una coartada, pero un recibo situaba a {accomplice} en {receiptPlace} a esa hora."
+  },
+  "explanation": {
+   "en": "{killer} killed {victim} with {weapon}. Motive: {motive}. They claimed to be in {place}, but nobody there could vouch for them.",
+   "es": "{killer} mató a {victim} con {weapon}. Móvil: {motive}. Dijo estar en {place}, pero nadie allí pudo confirmarlo."
+  }
+ },
+ "modifiers": {
+  "blackout": {
+   "label": {
+    "en": "Blackout",
+    "es": "Apagón"
+   },
+   "note": {
+    "en": "At {time} the power failed across the whole building. Every camera went dark and nobody could see their own hands.",
+    "es": "A las {time} se cortó la luz en todo el edificio. Todas las cámaras se apagaron y nadie veía ni sus propias manos."
+   }
+  },
+  "storm": {
+   "label": {
+    "en": "Storm",
+    "es": "Tormenta"
+   },
+   "note": {
+    "en": "A storm raged all night. The rain washed out every footprint anywhere near the scene.",
+    "es": "Una tormenta azotó toda la noche. La lluvia borró cualquier pisada cerca de la escena."
+   }
+  },
+  "tampered": {
+   "label": {
+    "en": "Tampered evidence",
+    "es": "Pruebas manipuladas"
+   },
+   "note": {
+    "en": "Someone got to the evidence before the police did. Not everything is what it looks like.",
+    "es": "Alguien llegó a las pruebas antes que la policía. No todo es lo que parece."
+   }
+  }
+ },
+ "tamperedNote": {
+  "en": "There is a dark red smear on it that looks like blood. The lab says otherwise: it is {fake}. Someone wanted this to look used.",
+  "es": "Tiene una mancha rojo oscuro que parece sangre. El laboratorio dice otra cosa: es {fake}. Alguien quería que pareciera usado."
+ },
+ "fakeBlood": [
+  {
+   "en": "red paint",
+   "es": "pintura roja"
+  },
+  {
+   "en": "stage blood",
+   "es": "sangre de teatro"
+  },
+  {
+   "en": "red wine",
+   "es": "vino tinto"
+  },
+  {
+   "en": "beetroot juice",
+   "es": "zumo de remolacha"
+  }
+ ],
+ "spots": [
+  {
+   "name": {
+    "en": "the desk drawer",
+    "es": "el cajón del escritorio"
+   },
+   "label": {
+    "en": "Desk drawer",
+    "es": "Cajón del escritorio"
+   }
+  },
+  {
+   "name": {
+    "en": "the wastebasket",
+    "es": "la papelera"
+   },
+   "label": {
+    "en": "Wastebasket",
+    "es": "Papelera"
+   }
+  },
+  {
+   "name": {
+    "en": "the window",
+    "es": "la ventana"
+   },
+   "label": {
+    "en": "Window",
+    "es": "Ventana"
+   }
+  },
+  {
+   "name": {
+    "en": "the cupboard",
+    "es": "el armario"
+   },
+   "label": {
+    "en": "Cupboard",
+    "es": "Armario"
+   }
+  },
+  {
+   "name": {
+    "en": "the rug",
+    "es": "la alfombra"
+   },
+   "label": {
+    "en": "Rug",
+    "es": "Alfombra"
+   }
+  },
+  {
+   "name": {
+    "en": "the bookshelf",
+    "es": "la estantería"
+   },
+   "label": {
+    "en": "Bookshelf",
+    "es": "Estantería"
+   }
+  },
+  {
+   "name": {
+    "en": "the coat rack",
+    "es": "el perchero"
+   },
+   "label": {
+    "en": "Coat rack",
+    "es": "Perchero"
+   }
+  },
+  {
+   "name": {
+    "en": "the sofa cushions",
+    "es": "los cojines del sofá"
+   },
+   "label": {
+    "en": "Sofa",
+    "es": "Sofá"
+   }
+  }
+ ],
+ "spotNothing": [
+  {
+   "en": "Nothing here but dust.",
+   "es": "Aquí no hay más que polvo."
+  },
+  {
+   "en": "An old ticket stub and a broken pencil. Nothing useful.",
+   "es": "Una entrada vieja y un lápiz roto. Nada útil."
+  },
+  {
+   "en": "A half-finished letter that has nothing to do with the case.",
+   "es": "Una carta a medio escribir que no tiene nada que ver con el caso."
+  },
+  {
+   "en": "The latch is fastened from the inside. Nobody came in this way.",
+   "es": "El pestillo está echado por dentro. Nadie entró por aquí."
+  },
+  {
+   "en": "Someone searched this before you: everything is slightly out of place.",
+   "es": "Alguien registró esto antes: todo está un poco fuera de sitio."
+  },
+  {
+   "en": "A cold cup of coffee. Whoever left it left in a hurry.",
+   "es": "Una taza de café frío. Quien la dejó se fue con prisa."
+  },
+  {
+   "en": "Old scratches on the floor. They were here long before tonight.",
+   "es": "Arañazos viejos en el suelo. Estaban ahí mucho antes de esta noche."
+  },
+  {
+   "en": "A mouse runs for cover. Nothing else.",
+   "es": "Un ratón corre a esconderse. Nada más."
+  }
+ ],
+ "spotScene": [
+  {
+   "en": "Chalk marks on the floor show where the body lay.",
+   "es": "Unas marcas de tiza en el suelo muestran dónde estaba el cuerpo."
+  },
+  {
+   "en": "A chair has been knocked over. There was a struggle, but a short one.",
+   "es": "Hay una silla volcada. Hubo forcejeo, pero breve."
+  }
+ ],
+ "spotFound": {
+  "en": "In {spot} you find {weapon}.",
+  "es": "En {spot} encuentran {weapon}."
+ },
+ "followUp": {
+  "qMore": {
+   "en": "Is there anything else you haven’t told us?",
+   "es": "¿Hay algo más que no nos haya contado?"
+  },
+  "qWho": {
+   "en": "Then who do you think did it?",
+   "es": "Entonces, ¿quién cree que fue?"
+  },
+  "qWhy": {
+   "en": "Why did you cover for them?",
+   "es": "¿Por qué le encubrió?"
+  },
+  "qHeard": {
+   "en": "Who told you how they died?",
+   "es": "¿Quién le dijo cómo murió?"
+  },
+  "aWhy": {
+   "en": "{killer} swore they would ruin me if I didn’t. I was afraid.",
+   "es": "{killer} juró que me arruinaría si no lo hacía. Tenía miedo."
+  },
+  "aHeard": {
+   "en": "I... don’t remember. I’d like to speak to a lawyer now.",
+   "es": "No... no me acuerdo. Quiero hablar con un abogado."
+  },
+  "aFrame": {
+   "en": "If I were you, I’d take a closer look at {other}.",
+   "es": "Yo que usted miraría más de cerca a {other}."
+  },
+  "seen": {
+   "height": {
+    "en": "Now that I think about it, I saw a {value} figure slip past the door of {scene}.",
+    "es": "Ahora que lo pienso, vi una figura {value} pasar junto a la puerta de {scene}."
+   },
+   "coat": {
+    "en": "Someone in a {value} coat hurried past me in the corridor.",
+    "es": "Alguien con un abrigo {value} pasó deprisa a mi lado en el pasillo."
+   },
+   "voice": {
+    "en": "I heard a {value} voice arguing with the victim earlier.",
+    "es": "Antes oí una voz {value} discutiendo con la víctima."
+   },
+   "hand": {
+    "en": "I noticed whoever went in used their {value} hand on the door.",
+    "es": "Me fijé en que quien entró usó la mano {value} en la puerta."
+   },
+   "footwear": {
+    "en": "I heard {value} on the floor outside, going fast.",
+    "es": "Oí {value} en el suelo de fuera, a toda prisa."
+   },
+   "habit": {
+    "en": "There was {value} on the floor outside {scene}.",
+    "es": "Había {value} en el suelo, a la salida de {scene}."
+   }
+  }
+ },
+ "story": {
+  "meeting": {
+   "en": "{victim} goes to {scene} for a meeting that couldn’t wait.",
+   "es": "{victim} va a {scene} a una reunión que no podía esperar."
+  },
+  "powerCut": {
+   "en": "The power fails. Every camera goes dark.",
+   "es": "Se va la luz. Todas las cámaras se apagan."
+  },
+  "leaves": {
+   "en": "{killer} slips out of {claimed}.",
+   "es": "{killer} sale a escondidas de {claimed}."
+  },
+  "witness": {
+   "en": "{witness} glimpses {killer} hurrying out of {scene}.",
+   "es": "{witness} ve de refilón a {killer} saliendo deprisa de {scene}."
+  },
+  "camera": {
+   "en": "{source} catches {killer} near {scene}, face turned away.",
+   "es": "{source} capta a {killer} cerca de {scene}, de espaldas."
+  },
+  "phone": {
+   "en": "{killer} makes a short call near {scene} and hangs up without a name.",
+   "es": "{killer} hace una llamada breve cerca de {scene} y cuelga sin dar su nombre."
+  },
+  "murder": {
+   "en": "{killer} kills {victim} with {weapon}. The watch breaks in the fall.",
+   "es": "{killer} mata a {victim} con {weapon}. El reloj se rompe en la caída."
+  },
+  "hides": {
+   "en": "{killer} leaves {weapon} in {place}.",
+   "es": "{killer} deja {weapon} en {place}."
+  },
+  "tampers": {
+   "en": "To muddy the trail, {killer} smears {fake} on {decoy}.",
+   "es": "Para despistar, {killer} mancha {decoy} con {fake}."
+  },
+  "plants": {
+   "en": "{killer} drops {innocent}’s {item} by the body to frame them.",
+   "es": "{killer} deja junto al cuerpo el {item} de {innocent} para incriminarle."
+  },
+  "sighting": {
+   "en": "{innocent} is in {place} talking to {witness}, far from {scene}.",
+   "es": "{innocent} está en {place} hablando con {witness}, lejos de {scene}."
+  },
+  "receipt": {
+   "en": "{accomplice} is really in {place}, signing a receipt.",
+   "es": "{accomplice} está en realidad en {place}, firmando un recibo."
+  },
+  "accomplice": {
+   "en": "{accomplice} agrees to swear they were with {killer} all evening.",
+   "es": "{accomplice} acepta jurar que estuvo con {killer} toda la noche."
+  },
+  "claim": {
+   "en": "{witness} later accuses {innocent}. It’s a lie: {witness} owed {killer} a favour.",
+   "es": "Más tarde, {witness} acusa a {innocent}. Es mentira: {witness} le debía un favor a {killer}."
+  },
+  "returns": {
+   "en": "{killer} walks back into {claimed} as if nothing had happened.",
+   "es": "{killer} vuelve a {claimed} como si no hubiera pasado nada."
+  }
+ },
+ "plantedItems": [
+  {
+   "name": {
+    "en": "handkerchief",
+    "es": "pañuelo"
+   },
+   "cap": {
+    "en": "Handkerchief",
+    "es": "Pañuelo"
+   },
+   "full": {
+    "en": "A silk handkerchief",
+    "es": "Un pañuelo de seda"
+   }
+  },
+  {
+   "name": {
+    "en": "glove",
+    "es": "guante"
+   },
+   "cap": {
+    "en": "Glove",
+    "es": "Guante"
+   },
+   "full": {
+    "en": "A leather glove",
+    "es": "Un guante de cuero"
+   }
+  },
+  {
+   "name": {
+    "en": "cufflink",
+    "es": "gemelo"
+   },
+   "cap": {
+    "en": "Cufflink",
+    "es": "Gemelo"
+   },
+   "full": {
+    "en": "A silver cufflink",
+    "es": "Un gemelo de plata"
+   }
+  },
+  {
+   "name": {
+    "en": "cigarette case",
+    "es": "pitillero"
+   },
+   "cap": {
+    "en": "Cigarette case",
+    "es": "Pitillero"
+   },
+   "full": {
+    "en": "An engraved cigarette case",
+    "es": "Un pitillero grabado"
+   }
+  }
+ ],
+ "themeKeys": [
+  "gothic",
+  "cyber",
+  "opera",
+  "casino",
+  "express",
+  "hacienda",
+  "studio",
+  "arctic",
+  "carnival"
+ ],
+ "themes": {
+  "gothic": {
+   "titles": [
+    {
+     "en": "Death at Blackwood Manor",
+     "es": "Muerte en la mansión Blackwood"
+    },
+    {
+     "en": "The Silence of Thorne Hall",
+     "es": "El silencio de Thorne Hall"
+    },
+    {
+     "en": "A Storm over Ravenscourt",
+     "es": "Tormenta sobre Ravenscourt"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Lord Arthur Pendleton",
+     "occupation": {
+      "en": "shipping magnate",
+      "es": "magnate naviero"
+     }
+    },
+    {
+     "name": "Lady Eleanor Vance",
+     "occupation": {
+      "en": "art collector",
+      "es": "coleccionista de arte"
+     }
+    },
+    {
+     "name": "Baron Hector Thorne",
+     "occupation": {
+      "en": "retired judge",
+      "es": "juez retirado"
+     }
+    },
+    {
+     "name": "Margaret Ashby",
+     "occupation": {
+      "en": "bestselling novelist",
+      "es": "novelista de éxito"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the library",
+      "es": "la biblioteca"
+     },
+     "label": {
+      "en": "Library",
+      "es": "Biblioteca"
+     }
+    },
+    {
+     "name": {
+      "en": "the conservatory",
+      "es": "el invernadero"
+     },
+     "label": {
+      "en": "Conservatory",
+      "es": "Invernadero"
+     }
+    },
+    {
+     "name": {
+      "en": "the wine cellar",
+      "es": "la bodega"
+     },
+     "label": {
+      "en": "Wine Cellar",
+      "es": "Bodega"
+     }
+    },
+    {
+     "name": {
+      "en": "the study",
+      "es": "el despacho"
+     },
+     "label": {
+      "en": "Study",
+      "es": "Despacho"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the billiard room",
+      "es": "la sala de billar"
+     },
+     "label": {
+      "en": "Billiard Room",
+      "es": "Sala de billar"
+     }
+    },
+    {
+     "name": {
+      "en": "the drawing room",
+      "es": "el salón"
+     },
+     "label": {
+      "en": "Drawing Room",
+      "es": "Salón"
+     }
+    },
+    {
+     "name": {
+      "en": "the kitchen",
+      "es": "la cocina"
+     },
+     "label": {
+      "en": "Kitchen",
+      "es": "Cocina"
+     }
+    },
+    {
+     "name": {
+      "en": "the chapel",
+      "es": "la capilla"
+     },
+     "label": {
+      "en": "Chapel",
+      "es": "Capilla"
+     }
+    },
+    {
+     "name": {
+      "en": "the music room",
+      "es": "la sala de música"
+     },
+     "label": {
+      "en": "Music Room",
+      "es": "Sala de música"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "the gardener",
+      "es": "el jardinero"
+     },
+     "label": {
+      "en": "The Gardener",
+      "es": "El jardinero"
+     }
+    },
+    {
+     "name": {
+      "en": "the scullery maid",
+      "es": "la ayudante de cocina"
+     },
+     "label": {
+      "en": "The Scullery Maid",
+      "es": "La ayudante de cocina"
+     }
+    },
+    {
+     "name": {
+      "en": "the chauffeur",
+      "es": "el chófer"
+     },
+     "label": {
+      "en": "The Chauffeur",
+      "es": "El chófer"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "A guest's flash photograph",
+     "es": "Una fotografía con flash de un invitado"
+    },
+    {
+     "en": "The society photographer's plate",
+     "es": "Una placa del fotógrafo de sociedad"
+    }
+   ],
+   "floor": {
+    "en": "the dust on the parquet floor",
+    "es": "el polvo del parqué"
+   },
+   "phone": {
+    "en": "The village telephone exchange",
+    "es": "La centralita telefónica del pueblo"
+   },
+   "suspects": [
+    {
+     "name": "Dr. Evelyn Reed",
+     "role": {
+      "en": "Family physician",
+      "es": "Médica de la familia"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Julian Thorne",
+     "role": {
+      "en": "Disinherited nephew",
+      "es": "Sobrino desheredado"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Clara Bell",
+     "role": {
+      "en": "Private secretary",
+      "es": "Secretaria personal"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Marcus Vance",
+     "role": {
+      "en": "Business rival",
+      "es": "Rival de negocios"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Genevieve Noir",
+     "role": {
+      "en": "Paid companion",
+      "es": "Dama de compañía"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Colonel Garrison Ford",
+     "role": {
+      "en": "Old army friend",
+      "es": "Viejo amigo del ejército"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Agatha Crane",
+     "role": {
+      "en": "Housekeeper",
+      "es": "Ama de llaves"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Rupert Hale",
+     "role": {
+      "en": "Family solicitor",
+      "es": "Abogado de la familia"
+     },
+     "look": "m"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Has spent every summer at the manor for twenty years",
+     "es": "Ha pasado todos los veranos en la mansión durante veinte años"
+    },
+    {
+     "en": "Was overheard arguing with {victim} three days ago",
+     "es": "Se le oyó discutir con {victim} hace tres días"
+    },
+    {
+     "en": "Knows every servants' passage in the house",
+     "es": "Conoce todos los pasillos del servicio de la casa"
+    },
+    {
+     "en": "Arrived unexpectedly the night before",
+     "es": "Llegó de improviso la noche anterior"
+    },
+    {
+     "en": "Is rumoured to have money troubles",
+     "es": "Se rumorea que tiene problemas de dinero"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "candlestick",
+     "cause": "blunt",
+     "name": {
+      "en": "the brass candlestick",
+      "es": "el candelabro de latón"
+     },
+     "label": {
+      "en": "Brass candlestick",
+      "es": "Candelabro de latón"
+     },
+     "trace": {
+      "en": "tiny flecks of brass",
+      "es": "diminutas partículas de latón"
+     },
+     "desc": {
+      "en": "Heavy, solid brass. The base has been wiped, but not well.",
+      "es": "Pesado, de latón macizo. Alguien limpió la base, aunque no muy bien."
+     }
+    },
+    {
+     "key": "poker",
+     "cause": "blunt",
+     "name": {
+      "en": "the fireplace poker",
+      "es": "el atizador"
+     },
+     "label": {
+      "en": "Fireplace poker",
+      "es": "Atizador"
+     },
+     "trace": {
+      "en": "flakes of rust and soot",
+      "es": "escamas de óxido y hollín"
+     },
+     "desc": {
+      "en": "Wrought iron, flaked with rust and soot from years of use.",
+      "es": "De hierro forjado, con óxido y hollín de años de uso."
+     }
+    },
+    {
+     "key": "letter_opener",
+     "cause": "sharp",
+     "name": {
+      "en": "the silver letter opener",
+      "es": "el abrecartas de plata"
+     },
+     "label": {
+      "en": "Silver letter opener",
+      "es": "Abrecartas de plata"
+     },
+     "trace": {
+      "en": "traces of tarnished silver",
+      "es": "restos de plata ennegrecida"
+     },
+     "desc": {
+      "en": "Sterling silver, slightly tarnished. Its tip is unusually sharp.",
+      "es": "De plata de ley, algo ennegrecida. Su punta es inusualmente afilada."
+     }
+    },
+    {
+     "key": "sherry",
+     "cause": "poison",
+     "name": {
+      "en": "the decanter of sherry",
+      "es": "la licorera de jerez"
+     },
+     "label": {
+      "en": "Decanter of sherry",
+      "es": "Licorera de jerez"
+     },
+     "trace": {
+      "en": "arsenic",
+      "es": "arsénico"
+     },
+     "desc": {
+      "en": "Half empty. The remaining sherry tests positive for arsenic.",
+      "es": "Medio vacía. El jerez restante da positivo en arsénico."
+     }
+    },
+    {
+     "key": "rat_poison",
+     "cause": "poison",
+     "name": {
+      "en": "the tin of rat poison",
+      "es": "la lata de raticida"
+     },
+     "label": {
+      "en": "Tin of rat poison",
+      "es": "Lata de raticida"
+     },
+     "trace": {
+      "en": "strychnine",
+      "es": "estricnina"
+     },
+     "desc": {
+      "en": "From the gardener's shed and nearly empty. The active ingredient is strychnine.",
+      "es": "Del cobertizo del jardinero y casi vacía. El principio activo es estricnina."
+     }
+    },
+    {
+     "key": "cord",
+     "cause": "strangle",
+     "name": {
+      "en": "the velvet curtain cord",
+      "es": "el cordón de terciopelo"
+     },
+     "label": {
+      "en": "Velvet curtain cord",
+      "es": "Cordón de terciopelo"
+     },
+     "trace": {
+      "en": "crimson velvet fibres",
+      "es": "fibras de terciopelo carmesí"
+     },
+     "desc": {
+      "en": "Cut from a set of curtains. Crimson velvet, frayed at both ends.",
+      "es": "Cortado de unas cortinas. Terciopelo carmesí, deshilachado en ambos extremos."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "Rain lashes the manor. Shortly after the storm cut the power, {victim} ({occupation}) was found dead in {scene}. The doctor puts the death between {window}. The roads are flooded and nobody has left. {count} people inside the house had a reason to want {victim} gone, and one of them acted on it.",
+    "es": "La lluvia azota la mansión. Poco después de que la tormenta cortara la luz, el cuerpo de {victim} ({occupation}) apareció en {scene}. El médico sitúa la muerte entre {window}. Los caminos están inundados y nadie se ha ido. {count} personas de la casa tenían motivos para quitar de en medio a {victim}, y una de ellas pasó a la acción."
+   }
+  },
+  "cyber": {
+   "titles": [
+    {
+     "en": "Flatline at Helix Tower",
+     "es": "Línea plana en la Torre Helix"
+    },
+    {
+     "en": "The Ghost in Sector 7",
+     "es": "El fantasma del Sector 7"
+    },
+    {
+     "en": "Neon Requiem",
+     "es": "Réquiem de neón"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Dr. Kaelen Voss",
+     "occupation": {
+      "en": "chief neural engineer",
+      "es": "ingeniera neural jefa"
+     }
+    },
+    {
+     "name": "Seraphina Lin",
+     "occupation": {
+      "en": "quantum data broker",
+      "es": "bróker de datos cuánticos"
+     }
+    },
+    {
+     "name": "Marcus Kane",
+     "occupation": {
+      "en": "CEO of Helix Biotech",
+      "es": "CEO de Helix Biotech"
+     }
+    },
+    {
+     "name": "Ozymandias Reyes",
+     "occupation": {
+      "en": "AI ethics auditor",
+      "es": "auditor de ética de IA"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the server vault",
+      "es": "la bóveda de servidores"
+     },
+     "label": {
+      "en": "Server Vault",
+      "es": "Bóveda de servidores"
+     }
+    },
+    {
+     "name": {
+      "en": "the penthouse holo-suite",
+      "es": "la suite holográfica del ático"
+     },
+     "label": {
+      "en": "Holo-Suite",
+      "es": "Suite holográfica"
+     }
+    },
+    {
+     "name": {
+      "en": "the cryo lab",
+      "es": "el laboratorio criogénico"
+     },
+     "label": {
+      "en": "Cryo Lab",
+      "es": "Laboratorio criogénico"
+     }
+    },
+    {
+     "name": {
+      "en": "the sky garden",
+      "es": "el jardín de altura"
+     },
+     "label": {
+      "en": "Sky Garden",
+      "es": "Jardín de altura"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the VR lounge",
+      "es": "la sala de realidad virtual"
+     },
+     "label": {
+      "en": "VR Lounge",
+      "es": "Sala de realidad virtual"
+     }
+    },
+    {
+     "name": {
+      "en": "the noodle bar on level 40",
+      "es": "el bar de fideos de la planta 40"
+     },
+     "label": {
+      "en": "Level 40 Noodle Bar",
+      "es": "Bar de fideos (planta 40)"
+     }
+    },
+    {
+     "name": {
+      "en": "the security hub",
+      "es": "el centro de seguridad"
+     },
+     "label": {
+      "en": "Security Hub",
+      "es": "Centro de seguridad"
+     }
+    },
+    {
+     "name": {
+      "en": "the gym",
+      "es": "el gimnasio"
+     },
+     "label": {
+      "en": "Gym",
+      "es": "Gimnasio"
+     }
+    },
+    {
+     "name": {
+      "en": "the rooftop hangar",
+      "es": "el hangar de la azotea"
+     },
+     "label": {
+      "en": "Rooftop Hangar",
+      "es": "Hangar de la azotea"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "a maintenance drone operator",
+      "es": "un operador de drones de mantenimiento"
+     },
+     "label": {
+      "en": "Drone Operator",
+      "es": "Operador de drones"
+     }
+    },
+    {
+     "name": {
+      "en": "the night janitor",
+      "es": "la conserje de noche"
+     },
+     "label": {
+      "en": "Night Janitor",
+      "es": "La conserje de noche"
+     }
+    },
+    {
+     "name": {
+      "en": "a delivery courier",
+      "es": "un repartidor"
+     },
+     "label": {
+      "en": "Delivery Courier",
+      "es": "Repartidor"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "Corridor camera 7",
+     "es": "La cámara del pasillo 7"
+    },
+    {
+     "en": "A patrol drone's footage",
+     "es": "La grabación de un dron de patrulla"
+    }
+   ],
+   "floor": {
+    "en": "the anti-static floor coating",
+    "es": "el recubrimiento antiestático del suelo"
+   },
+   "phone": {
+    "en": "The tower comm-net log",
+    "es": "El registro de comunicaciones de la torre"
+   },
+   "suspects": [
+    {
+     "name": "Nova Sato",
+     "role": {
+      "en": "Rogue AI researcher",
+      "es": "Investigadora de IA renegada"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Dex Harlan",
+     "role": {
+      "en": "Head of corporate security",
+      "es": "Jefe de seguridad corporativa"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Mira Okafor",
+     "role": {
+      "en": "Cybernetic surgeon",
+      "es": "Cirujana cibernética"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Viktor Kade",
+     "role": {
+      "en": "Hostile-takeover lawyer",
+      "es": "Abogado de adquisiciones hostiles"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Juno Park",
+     "role": {
+      "en": "Netrunner on retainer",
+      "es": "Hacker a sueldo"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Silas Wren",
+     "role": {
+      "en": "Disgraced co-founder",
+      "es": "Cofundador caído en desgracia"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Lena Marsh",
+     "role": {
+      "en": "Android technician",
+      "es": "Técnica de androides"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Rafe Moreau",
+     "role": {
+      "en": "Venture capitalist",
+      "es": "Inversor de capital riesgo"
+     },
+     "look": "m"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Holds level-5 clearance to every floor of the tower",
+     "es": "Tiene acreditación de nivel 5 para todas las plantas de la torre"
+    },
+    {
+     "en": "Was the last person to access {victim}'s encrypted drive",
+     "es": "Fue la última persona en acceder al disco cifrado de {victim}"
+    },
+    {
+     "en": "Has a neural implant that the tower AI cannot track",
+     "es": "Lleva un implante neural que la IA de la torre no puede rastrear"
+    },
+    {
+     "en": "Filed a formal complaint against {victim} last month",
+     "es": "Presentó una queja formal contra {victim} el mes pasado"
+    },
+    {
+     "en": "Is rumoured to sell secrets to rival corporations",
+     "es": "Se rumorea que vende secretos a corporaciones rivales"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "rail",
+     "cause": "blunt",
+     "name": {
+      "en": "the titanium rack rail",
+      "es": "el riel de titanio"
+     },
+     "label": {
+      "en": "Titanium rack rail",
+      "es": "Riel de titanio"
+     },
+     "trace": {
+      "en": "fine titanium dust",
+      "es": "polvo fino de titanio"
+     },
+     "desc": {
+      "en": "A loose rail from a server rack. Dense titanium, dented at one end.",
+      "es": "Un riel suelto de un rack de servidores. Titanio denso, abollado en un extremo."
+     }
+    },
+    {
+     "key": "trophy",
+     "cause": "blunt",
+     "name": {
+      "en": "the chrome innovation award",
+      "es": "el premio a la innovación"
+     },
+     "label": {
+      "en": "Chrome innovation award",
+      "es": "Premio a la innovación"
+     },
+     "trace": {
+      "en": "chips of chrome plating",
+      "es": "esquirlas de cromado"
+     },
+     "desc": {
+      "en": "A heavy chrome-plated trophy. The plating is chipped on one corner.",
+      "es": "Un trofeo pesado y cromado. El cromado está desconchado en una esquina."
+     }
+    },
+    {
+     "key": "scalpel",
+     "cause": "sharp",
+     "name": {
+      "en": "the ceramic scalpel",
+      "es": "el bisturí de cerámica"
+     },
+     "label": {
+      "en": "Ceramic scalpel",
+      "es": "Bisturí de cerámica"
+     },
+     "trace": {
+      "en": "ceramic micro-shards",
+      "es": "microfragmentos de cerámica"
+     },
+     "desc": {
+      "en": "Surgical grade and invisible to metal detectors. The blade is slightly chipped.",
+      "es": "De grado quirúrgico e invisible a los detectores de metal. La hoja está algo mellada."
+     }
+    },
+    {
+     "key": "injector",
+     "cause": "poison",
+     "name": {
+      "en": "the auto-injector",
+      "es": "el autoinyector"
+     },
+     "label": {
+      "en": "Auto-injector",
+      "es": "Autoinyector"
+     },
+     "trace": {
+      "en": "synthetic tetrodotoxin",
+      "es": "tetrodotoxina sintética"
+     },
+     "desc": {
+      "en": "The cartridge is empty. Residue analysis: synthetic tetrodotoxin.",
+      "es": "El cartucho está vacío. Análisis de residuos: tetrodotoxina sintética."
+     }
+    },
+    {
+     "key": "energy_drink",
+     "cause": "poison",
+     "name": {
+      "en": "the energy drink can",
+      "es": "la lata de bebida energética"
+     },
+     "label": {
+      "en": "Energy drink can",
+      "es": "Lata de bebida energética"
+     },
+     "trace": {
+      "en": "a lethal dose of digoxin",
+      "es": "una dosis letal de digoxina"
+     },
+     "desc": {
+      "en": "Found half-finished. The lab detects a heavy dose of digoxin.",
+      "es": "Encontrada a medio beber. El laboratorio detecta una dosis alta de digoxina."
+     }
+    },
+    {
+     "key": "cable",
+     "cause": "strangle",
+     "name": {
+      "en": "the fibre-optic cable",
+      "es": "el cable de fibra óptica"
+     },
+     "label": {
+      "en": "Fibre-optic cable",
+      "es": "Cable de fibra óptica"
+     },
+     "trace": {
+      "en": "glass micro-fibres",
+      "es": "microfibras de vidrio"
+     },
+     "desc": {
+      "en": "A metre of armoured fibre-optic cable, its sheath scuffed.",
+      "es": "Un metro de cable de fibra óptica blindado, con la funda raspada."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "Between {window}, Helix Tower's medical net registered a flatline. {victim} ({occupation}) was found in {scene}. Seconds later the tower sealed itself: no one in, no one out. {count} people with clearance are still inside, and one of them has already wiped their tracks once.",
+    "es": "Entre {window}, la red médica de la Torre Helix registró una línea plana. El cuerpo de {victim} ({occupation}) apareció en {scene}. Segundos después, la torre se selló: nadie entra, nadie sale. {count} personas con acceso siguen dentro, y una de ellas ya ha borrado su rastro una vez."
+   }
+  },
+  "opera": {
+   "titles": [
+    {
+     "en": "The Final Aria",
+     "es": "El aria final"
+    },
+    {
+     "en": "Death at the Velvet Opera",
+     "es": "Muerte en la Ópera de Terciopelo"
+    },
+    {
+     "en": "Curtain Call for a Corpse",
+     "es": "Telón para un cadáver"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Maestro Julian Mercer",
+     "occupation": {
+      "en": "conductor",
+      "es": "director de orquesta"
+     }
+    },
+    {
+     "name": "Vivian Montgomery",
+     "occupation": {
+      "en": "prima donna",
+      "es": "prima donna"
+     }
+    },
+    {
+     "name": "Clara Bellini",
+     "occupation": {
+      "en": "wealthy patron",
+      "es": "mecenas adinerada"
+     }
+    },
+    {
+     "name": "Lorenzo Vitti",
+     "occupation": {
+      "en": "impresario",
+      "es": "empresario teatral"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the star's dressing room",
+      "es": "el camerino principal"
+     },
+     "label": {
+      "en": "Star's Dressing Room",
+      "es": "Camerino principal"
+     }
+    },
+    {
+     "name": {
+      "en": "the royal box",
+      "es": "el palco real"
+     },
+     "label": {
+      "en": "Royal Box",
+      "es": "Palco real"
+     }
+    },
+    {
+     "name": {
+      "en": "the orchestra pit",
+      "es": "el foso de la orquesta"
+     },
+     "label": {
+      "en": "Orchestra Pit",
+      "es": "Foso de la orquesta"
+     }
+    },
+    {
+     "name": {
+      "en": "the fly gallery",
+      "es": "la galería de tramoya"
+     },
+     "label": {
+      "en": "Fly Gallery",
+      "es": "Galería de tramoya"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the green room",
+      "es": "la sala de descanso"
+     },
+     "label": {
+      "en": "Green Room",
+      "es": "Sala de descanso"
+     }
+    },
+    {
+     "name": {
+      "en": "the costume workshop",
+      "es": "el taller de vestuario"
+     },
+     "label": {
+      "en": "Costume Workshop",
+      "es": "Taller de vestuario"
+     }
+    },
+    {
+     "name": {
+      "en": "the grand foyer",
+      "es": "el gran vestíbulo"
+     },
+     "label": {
+      "en": "Grand Foyer",
+      "es": "Gran vestíbulo"
+     }
+    },
+    {
+     "name": {
+      "en": "the rehearsal hall",
+      "es": "la sala de ensayo"
+     },
+     "label": {
+      "en": "Rehearsal Hall",
+      "es": "Sala de ensayo"
+     }
+    },
+    {
+     "name": {
+      "en": "the café across the street",
+      "es": "el café de enfrente"
+     },
+     "label": {
+      "en": "Café Across the Street",
+      "es": "Café de enfrente"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "a stagehand",
+      "es": "un tramoyista"
+     },
+     "label": {
+      "en": "Stagehand",
+      "es": "Tramoyista"
+     }
+    },
+    {
+     "name": {
+      "en": "the prompter",
+      "es": "la apuntadora"
+     },
+     "label": {
+      "en": "The Prompter",
+      "es": "La apuntadora"
+     }
+    },
+    {
+     "name": {
+      "en": "an usher",
+      "es": "un acomodador"
+     },
+     "label": {
+      "en": "Usher",
+      "es": "Acomodador"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "A press photographer's plate",
+     "es": "Una placa del fotógrafo de prensa"
+    },
+    {
+     "en": "A chorus singer's sketchbook",
+     "es": "El cuaderno de bocetos de una corista"
+    }
+   ],
+   "floor": {
+    "en": "the rosin dust on the stage boards",
+    "es": "el polvo de resina sobre las tablas"
+   },
+   "phone": {
+    "en": "The backstage telephone log",
+    "es": "El registro del teléfono de bastidores"
+   },
+   "suspects": [
+    {
+     "name": "Isadora Fenn",
+     "role": {
+      "en": "Understudy",
+      "es": "Suplente"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Rocco Malvezzi",
+     "role": {
+      "en": "Jealous baritone",
+      "es": "Barítono celoso"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Henrietta Pryce",
+     "role": {
+      "en": "Head of costumes",
+      "es": "Jefa de vestuario"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Felix Marchetti",
+     "role": {
+      "en": "Composer",
+      "es": "Compositor"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Odile Laurent",
+     "role": {
+      "en": "Ballet mistress",
+      "es": "Maestra de ballet"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Bertrand Achebe",
+     "role": {
+      "en": "Theatre critic",
+      "es": "Crítico teatral"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Rosa Calvi",
+     "role": {
+      "en": "Theatre owner",
+      "es": "Dueña del teatro"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Teodor Brandt",
+     "role": {
+      "en": "Stage manager",
+      "es": "Regidor de escena"
+     },
+     "look": "m"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Has worked in this theatre since childhood",
+     "es": "Trabaja en este teatro desde la infancia"
+    },
+    {
+     "en": "Was heard shouting at {victim} after the dress rehearsal",
+     "es": "Se le oyó gritarle a {victim} después del ensayo general"
+    },
+    {
+     "en": "Has a key to every door backstage",
+     "es": "Tiene la llave de todas las puertas entre bastidores"
+    },
+    {
+     "en": "Lost the lead role to someone {victim} favoured",
+     "es": "Perdió el papel protagonista frente a alguien a quien {victim} favorecía"
+    },
+    {
+     "en": "Is said to have staggering gambling debts",
+     "es": "Se dice que tiene enormes deudas de juego"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "counterweight",
+     "cause": "blunt",
+     "name": {
+      "en": "the stage counterweight",
+      "es": "el contrapeso del escenario"
+     },
+     "label": {
+      "en": "Stage counterweight",
+      "es": "Contrapeso del escenario"
+     },
+     "trace": {
+      "en": "hemp fibres and grains of sand",
+      "es": "fibras de cáñamo y granos de arena"
+     },
+     "desc": {
+      "en": "A sandbag counterweight from the fly system, its hemp rope cut.",
+      "es": "Un saco de arena del sistema de tramoya, con la cuerda de cáñamo cortada."
+     }
+    },
+    {
+     "key": "bust",
+     "cause": "blunt",
+     "name": {
+      "en": "the bronze bust of Verdi",
+      "es": "el busto de bronce de Verdi"
+     },
+     "label": {
+      "en": "Bronze bust of Verdi",
+      "es": "Busto de bronce de Verdi"
+     },
+     "trace": {
+      "en": "green flecks of bronze patina",
+      "es": "partículas verdes de pátina de bronce"
+     },
+     "desc": {
+      "en": "A heavy bronze bust from the foyer. Some of its green patina has rubbed off.",
+      "es": "Un pesado busto de bronce del vestíbulo. Parte de su pátina verde se ha desprendido."
+     }
+    },
+    {
+     "key": "rapier",
+     "cause": "sharp",
+     "name": {
+      "en": "the prop rapier",
+      "es": "el estoque de utilería"
+     },
+     "label": {
+      "en": "Prop rapier",
+      "es": "Estoque de utilería"
+     },
+     "trace": {
+      "en": "fresh steel filings",
+      "es": "limaduras de acero recientes"
+     },
+     "desc": {
+      "en": "A prop rapier that someone has secretly sharpened. Fresh filings cling to the blade.",
+      "es": "Un estoque de utilería que alguien afiló en secreto. Hay limaduras recientes en la hoja."
+     }
+    },
+    {
+     "key": "hatpin",
+     "cause": "sharp",
+     "name": {
+      "en": "the jewelled hatpin",
+      "es": "el alfiler de sombrero"
+     },
+     "label": {
+      "en": "Jewelled hatpin",
+      "es": "Alfiler de sombrero"
+     },
+     "trace": {
+      "en": "flecks of gilt",
+      "es": "partículas de dorado"
+     },
+     "desc": {
+      "en": "Eight inches long with a gilt head, the gilt worn thin.",
+      "es": "De veinte centímetros, con cabeza dorada y el dorado desgastado."
+     }
+    },
+    {
+     "key": "throat_spray",
+     "cause": "poison",
+     "name": {
+      "en": "the throat spray",
+      "es": "el espray para la garganta"
+     },
+     "label": {
+      "en": "Throat spray",
+      "es": "Espray para la garganta"
+     },
+     "trace": {
+      "en": "belladonna",
+      "es": "belladona"
+     },
+     "desc": {
+      "en": "A singer's throat spray. The lab finds belladonna mixed into the glycerine.",
+      "es": "Un espray de cantante. El laboratorio encuentra belladona mezclada con la glicerina."
+     }
+    },
+    {
+     "key": "scarf",
+     "cause": "strangle",
+     "name": {
+      "en": "the silk scarf",
+      "es": "el pañuelo de seda"
+     },
+     "label": {
+      "en": "Silk scarf",
+      "es": "Pañuelo de seda"
+     },
+     "trace": {
+      "en": "ivory silk fibres",
+      "es": "fibras de seda color marfil"
+     },
+     "desc": {
+      "en": "Ivory silk, stretched and torn at the middle.",
+      "es": "Seda color marfil, estirada y rasgada por el centro."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "The final curtain fell to thunderous applause, but {victim} ({occupation}) never took a bow. The body was discovered in {scene}, and the house doctor puts the death between {window}. The police have sealed the theatre. {count} members of the company are under suspicion, and every one of them knows how to act.",
+    "es": "El último telón cayó entre aplausos atronadores, pero {victim} ({occupation}) nunca salió a saludar. El cuerpo apareció en {scene} y el médico del teatro sitúa la muerte entre {window}. La policía ha precintado el teatro. {count} miembros de la compañía están bajo sospecha, y todos saben actuar."
+   }
+  },
+  "casino": {
+   "titles": [
+    {
+     "en": "Last Hand at Casino Noir",
+     "es": "La última mano en el Casino Noir"
+    },
+    {
+     "en": "Snake Eyes",
+     "es": "Ojos de serpiente"
+    },
+    {
+     "en": "The House Always Wins",
+     "es": "La banca siempre gana"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Vincent \"Lucky\" Sterling",
+     "occupation": {
+      "en": "casino owner",
+      "es": "dueño del casino"
+     }
+    },
+    {
+     "name": "Cassandra Dupont",
+     "occupation": {
+      "en": "high roller",
+      "es": "gran apostadora"
+     }
+    },
+    {
+     "name": "Dominic Vance",
+     "occupation": {
+      "en": "mob accountant",
+      "es": "contable de la mafia"
+     }
+    },
+    {
+     "name": "Rosalind Cho",
+     "occupation": {
+      "en": "floor boss",
+      "es": "jefa de sala"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the high-limit room",
+      "es": "la sala de apuestas altas"
+     },
+     "label": {
+      "en": "High-Limit Room",
+      "es": "Sala de apuestas altas"
+     }
+    },
+    {
+     "name": {
+      "en": "the counting room",
+      "es": "la sala de recuento"
+     },
+     "label": {
+      "en": "Counting Room",
+      "es": "Sala de recuento"
+     }
+    },
+    {
+     "name": {
+      "en": "the penthouse suite",
+      "es": "la suite del ático"
+     },
+     "label": {
+      "en": "Penthouse Suite",
+      "es": "Suite del ático"
+     }
+    },
+    {
+     "name": {
+      "en": "the rooftop lounge",
+      "es": "la terraza del ático"
+     },
+     "label": {
+      "en": "Rooftop Lounge",
+      "es": "Terraza del ático"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the blackjack pit",
+      "es": "la zona de blackjack"
+     },
+     "label": {
+      "en": "Blackjack Pit",
+      "es": "Zona de blackjack"
+     }
+    },
+    {
+     "name": {
+      "en": "the showroom",
+      "es": "la sala de espectáculos"
+     },
+     "label": {
+      "en": "Showroom",
+      "es": "Sala de espectáculos"
+     }
+    },
+    {
+     "name": {
+      "en": "the steakhouse",
+      "es": "el asador"
+     },
+     "label": {
+      "en": "Steakhouse",
+      "es": "Asador"
+     }
+    },
+    {
+     "name": {
+      "en": "the barber shop",
+      "es": "la barbería"
+     },
+     "label": {
+      "en": "Barber Shop",
+      "es": "Barbería"
+     }
+    },
+    {
+     "name": {
+      "en": "the parking garage",
+      "es": "el aparcamiento"
+     },
+     "label": {
+      "en": "Parking Garage",
+      "es": "Aparcamiento"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "a cocktail waitress",
+      "es": "una camarera de cócteles"
+     },
+     "label": {
+      "en": "Cocktail Waitress",
+      "es": "Camarera de cócteles"
+     }
+    },
+    {
+     "name": {
+      "en": "the valet",
+      "es": "el aparcacoches"
+     },
+     "label": {
+      "en": "The Valet",
+      "es": "El aparcacoches"
+     }
+    },
+    {
+     "name": {
+      "en": "a croupier",
+      "es": "un crupier"
+     },
+     "label": {
+      "en": "Croupier",
+      "es": "Crupier"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "The eye-in-the-sky camera over table 11",
+     "es": "La cámara del techo sobre la mesa 11"
+    },
+    {
+     "en": "A tourist's souvenir photo",
+     "es": "Una foto de recuerdo de un turista"
+    }
+   ],
+   "floor": {
+    "en": "the spilled champagne on the marble",
+    "es": "el champán derramado sobre el mármol"
+   },
+   "phone": {
+    "en": "The casino switchboard",
+    "es": "La centralita del casino"
+   },
+   "suspects": [
+    {
+     "name": "Frankie DeLuca",
+     "role": {
+      "en": "Pit boss",
+      "es": "Jefe de mesas"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Ruby Valentine",
+     "role": {
+      "en": "Lounge singer",
+      "es": "Cantante del salón"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Sal Moretti",
+     "role": {
+      "en": "Loan shark",
+      "es": "Prestamista"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Delilah Shaw",
+     "role": {
+      "en": "Card counter",
+      "es": "Contadora de cartas"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Eddie Kwan",
+     "role": {
+      "en": "Security guard",
+      "es": "Guardia de seguridad"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Gloria Ashford",
+     "role": {
+      "en": "Showgirl",
+      "es": "Corista"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Nicky Bloom",
+     "role": {
+      "en": "Stage magician",
+      "es": "Mago de escenario"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Ivy Lockhart",
+     "role": {
+      "en": "Bookkeeper",
+      "es": "Contable"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Knows where every camera in the building points",
+     "es": "Sabe hacia dónde apunta cada cámara del edificio"
+    },
+    {
+     "en": "Was seen in a heated whisper with {victim} at the bar",
+     "es": "Se le vio discutir en voz baja con {victim} en la barra"
+    },
+    {
+     "en": "Has lost more at these tables than they will admit",
+     "es": "Ha perdido en estas mesas más de lo que admite"
+    },
+    {
+     "en": "Has a master keycard nobody remembers issuing",
+     "es": "Tiene una tarjeta maestra que nadie recuerda haber emitido"
+    },
+    {
+     "en": "Is said to work for the Chicago outfit",
+     "es": "Se dice que trabaja para la mafia de Chicago"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "ashtray",
+     "cause": "blunt",
+     "name": {
+      "en": "the crystal ashtray",
+      "es": "el cenicero de cristal"
+     },
+     "label": {
+      "en": "Crystal ashtray",
+      "es": "Cenicero de cristal"
+     },
+     "trace": {
+      "en": "slivers of lead crystal",
+      "es": "esquirlas de cristal tallado"
+     },
+     "desc": {
+      "en": "Heavy lead crystal, with a sliver chipped from the rim.",
+      "es": "De pesado cristal tallado, con una esquirla rota en el borde."
+     }
+    },
+    {
+     "key": "slot_handle",
+     "cause": "blunt",
+     "name": {
+      "en": "the slot-machine handle",
+      "es": "la palanca de la tragaperras"
+     },
+     "label": {
+      "en": "Slot-machine handle",
+      "es": "Palanca de tragaperras"
+     },
+     "trace": {
+      "en": "tiny flecks of brass",
+      "es": "diminutas partículas de latón"
+     },
+     "desc": {
+      "en": "Wrenched off a broken slot machine. Solid brass.",
+      "es": "Arrancada de una tragaperras averiada. Latón macizo."
+     }
+    },
+    {
+     "key": "ice_pick",
+     "cause": "sharp",
+     "name": {
+      "en": "the bar's ice pick",
+      "es": "el picahielo del bar"
+     },
+     "label": {
+      "en": "Ice pick",
+      "es": "Picahielo"
+     },
+     "trace": {
+      "en": "specks of stainless steel",
+      "es": "motas de acero inoxidable"
+     },
+     "desc": {
+      "en": "From the main bar. Stainless steel, rinsed under a tap.",
+      "es": "De la barra principal. Acero inoxidable, enjuagado bajo un grifo."
+     }
+    },
+    {
+     "key": "martini",
+     "cause": "poison",
+     "name": {
+      "en": "the martini glass",
+      "es": "la copa de martini"
+     },
+     "label": {
+      "en": "Martini glass",
+      "es": "Copa de martini"
+     },
+     "trace": {
+      "en": "cyanide",
+      "es": "cianuro"
+     },
+     "desc": {
+      "en": "The olive is still in it. The dregs test positive for cyanide.",
+      "es": "Aún tiene la aceituna. Los restos dan positivo en cianuro."
+     }
+    },
+    {
+     "key": "whisky",
+     "cause": "poison",
+     "name": {
+      "en": "the whisky tumbler",
+      "es": "el vaso de whisky"
+     },
+     "label": {
+      "en": "Whisky tumbler",
+      "es": "Vaso de whisky"
+     },
+     "trace": {
+      "en": "a massive dose of barbiturates",
+      "es": "una dosis masiva de barbitúricos"
+     },
+     "desc": {
+      "en": "A chalky residue at the bottom: crushed barbiturates.",
+      "es": "Un residuo blanquecino en el fondo: barbitúricos triturados."
+     }
+    },
+    {
+     "key": "piano_wire",
+     "cause": "strangle",
+     "name": {
+      "en": "the length of piano wire",
+      "es": "el trozo de cuerda de piano"
+     },
+     "label": {
+      "en": "Piano wire",
+      "es": "Cuerda de piano"
+     },
+     "trace": {
+      "en": "steel wire burrs",
+      "es": "rebabas de alambre de acero"
+     },
+     "desc": {
+      "en": "Cut from the lounge piano. Steel, with burrs along one end.",
+      "es": "Cortada del piano del salón. Acero, con rebabas en un extremo."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "The dice were still rolling downstairs when security found {victim} ({occupation}) dead in {scene}. The house doctor puts the death between {window}. The casino never closes, but tonight the doors are locked. {count} people had access, debts and secrets. Follow the money before it disappears into the vault.",
+    "es": "Los dados seguían rodando en la planta baja cuando seguridad encontró el cuerpo de {victim} ({occupation}) en {scene}. El médico de la casa sitúa la muerte entre {window}. El casino nunca cierra, pero esta noche las puertas están cerradas. {count} personas tenían acceso, deudas y secretos. Sigan el dinero antes de que desaparezca en la cámara acorazada."
+   }
+  },
+  "express": {
+   "titles": [
+    {
+     "en": "Murder in the Snow",
+     "es": "Asesinato en la nieve"
+    },
+    {
+     "en": "The Midnight Express",
+     "es": "El expreso de medianoche"
+    },
+    {
+     "en": "Last Stop: Belgrade",
+     "es": "Última parada: Belgrado"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Ambassador Montgomery Bell",
+     "occupation": {
+      "en": "diplomat",
+      "es": "diplomático"
+     }
+    },
+    {
+     "name": "Duchess Helene Vane",
+     "occupation": {
+      "en": "exiled aristocrat",
+      "es": "aristócrata exiliada"
+     }
+    },
+    {
+     "name": "Captain Sterling Thorne",
+     "occupation": {
+      "en": "retired officer",
+      "es": "oficial retirado"
+     }
+    },
+    {
+     "name": "Irina Volkova",
+     "occupation": {
+      "en": "jewel dealer",
+      "es": "comerciante de joyas"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "compartment 7",
+      "es": "el compartimento 7"
+     },
+     "label": {
+      "en": "Compartment 7",
+      "es": "Compartimento 7"
+     }
+    },
+    {
+     "name": {
+      "en": "the observation car",
+      "es": "el vagón mirador"
+     },
+     "label": {
+      "en": "Observation Car",
+      "es": "Vagón mirador"
+     }
+    },
+    {
+     "name": {
+      "en": "the luggage van",
+      "es": "el furgón de equipajes"
+     },
+     "label": {
+      "en": "Luggage Van",
+      "es": "Furgón de equipajes"
+     }
+    },
+    {
+     "name": {
+      "en": "the sleeping-car corridor",
+      "es": "el pasillo del coche cama"
+     },
+     "label": {
+      "en": "Sleeping-Car Corridor",
+      "es": "Pasillo del coche cama"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the dining car",
+      "es": "el vagón restaurante"
+     },
+     "label": {
+      "en": "Dining Car",
+      "es": "Vagón restaurante"
+     }
+    },
+    {
+     "name": {
+      "en": "the bar car",
+      "es": "el vagón bar"
+     },
+     "label": {
+      "en": "Bar Car",
+      "es": "Vagón bar"
+     }
+    },
+    {
+     "name": {
+      "en": "the smoking salon",
+      "es": "el salón de fumadores"
+     },
+     "label": {
+      "en": "Smoking Salon",
+      "es": "Salón de fumadores"
+     }
+    },
+    {
+     "name": {
+      "en": "the third-class carriage",
+      "es": "el vagón de tercera"
+     },
+     "label": {
+      "en": "Third-Class Carriage",
+      "es": "Vagón de tercera"
+     }
+    },
+    {
+     "name": {
+      "en": "the library car",
+      "es": "el vagón biblioteca"
+     },
+     "label": {
+      "en": "Library Car",
+      "es": "Vagón biblioteca"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "the conductor",
+      "es": "el revisor"
+     },
+     "label": {
+      "en": "The Conductor",
+      "es": "El revisor"
+     }
+    },
+    {
+     "name": {
+      "en": "a nanny",
+      "es": "una niñera"
+     },
+     "label": {
+      "en": "Nanny",
+      "es": "Niñera"
+     }
+    },
+    {
+     "name": {
+      "en": "the cook",
+      "es": "el cocinero"
+     },
+     "label": {
+      "en": "The Cook",
+      "es": "El cocinero"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "A passenger's Leica photograph",
+     "es": "Una foto de la Leica de un pasajero"
+    },
+    {
+     "en": "A honeymooning couple's photograph",
+     "es": "Una foto de una pareja de recién casados"
+    }
+   ],
+   "floor": {
+    "en": "the snowmelt on the corridor carpet",
+    "es": "la nieve derretida sobre la alfombra del pasillo"
+   },
+   "phone": {
+    "en": "The radio cabin log",
+    "es": "El registro de la cabina de radio"
+   },
+   "suspects": [
+    {
+     "name": "Count Andrei Petrov",
+     "role": {
+      "en": "Penniless nobleman",
+      "es": "Noble arruinado"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Daisy Fairweather",
+     "role": {
+      "en": "American heiress",
+      "es": "Heredera estadounidense"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Professor Hugo Lindqvist",
+     "role": {
+      "en": "Archaeologist",
+      "es": "Arqueólogo"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Sister Agnes Moreau",
+     "role": {
+      "en": "Travelling nun",
+      "es": "Monja viajera"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Cyrus Blackwood",
+     "role": {
+      "en": "Arms dealer",
+      "es": "Traficante de armas"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Lucia Ferraro",
+     "role": {
+      "en": "Lady's maid",
+      "es": "Doncella"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Dr. Omar Haddad",
+     "role": {
+      "en": "Train physician",
+      "es": "Médico del tren"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Beatrix Holloway",
+     "role": {
+      "en": "Mystery novelist",
+      "es": "Novelista de misterio"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Boarded at the last minute without a reservation",
+     "es": "Subió al tren en el último momento y sin reserva"
+    },
+    {
+     "en": "Shares a connecting door with {victim}",
+     "es": "Comparte una puerta comunicante con {victim}"
+    },
+    {
+     "en": "Has travelled under at least two different names",
+     "es": "Ha viajado con al menos dos nombres distintos"
+    },
+    {
+     "en": "Was seen slipping a note under {victim}’s door",
+     "es": "Se le vio deslizar una nota bajo la puerta de {victim}"
+    },
+    {
+     "en": "Carries a locked case that never leaves their side",
+     "es": "Lleva un maletín cerrado con llave que nunca suelta"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "cane",
+     "cause": "blunt",
+     "name": {
+      "en": "the lead-weighted walking cane",
+      "es": "el bastón lastrado con plomo"
+     },
+     "label": {
+      "en": "Weighted walking cane",
+      "es": "Bastón lastrado"
+     },
+     "trace": {
+      "en": "grey flecks of lead",
+      "es": "partículas grises de plomo"
+     },
+     "desc": {
+      "en": "Ebony, with a lead core hidden in the handle.",
+      "es": "De ébano, con un núcleo de plomo oculto en la empuñadura."
+     }
+    },
+    {
+     "key": "shovel",
+     "cause": "blunt",
+     "name": {
+      "en": "the coal shovel",
+      "es": "la pala de carbón"
+     },
+     "label": {
+      "en": "Coal shovel",
+      "es": "Pala de carbón"
+     },
+     "trace": {
+      "en": "black coal dust",
+      "es": "polvo negro de carbón"
+     },
+     "desc": {
+      "en": "From the locomotive tender, black with coal dust.",
+      "es": "Del ténder de la locomotora, negra de polvo de carbón."
+     }
+    },
+    {
+     "key": "carving_knife",
+     "cause": "sharp",
+     "name": {
+      "en": "the carving knife",
+      "es": "el cuchillo trinchador"
+     },
+     "label": {
+      "en": "Carving knife",
+      "es": "Cuchillo trinchador"
+     },
+     "trace": {
+      "en": "traces of silver plate",
+      "es": "restos de baño de plata"
+     },
+     "desc": {
+      "en": "Silver-plated, missing from the dining car since dinner.",
+      "es": "Bañado en plata, desaparecido del vagón restaurante desde la cena."
+     }
+    },
+    {
+     "key": "sleeping_draught",
+     "cause": "poison",
+     "name": {
+      "en": "the sleeping draught",
+      "es": "el somnífero"
+     },
+     "label": {
+      "en": "Sleeping draught",
+      "es": "Somnífero"
+     },
+     "trace": {
+      "en": "chloral hydrate",
+      "es": "hidrato de cloral"
+     },
+     "desc": {
+      "en": "A bottle labelled \"Chloral hydrate. Ten drops only.\" It is empty.",
+      "es": "Un frasco con la etiqueta \"Hidrato de cloral. Solo diez gotas\". Está vacío."
+     }
+    },
+    {
+     "key": "tea",
+     "cause": "poison",
+     "name": {
+      "en": "the cup of tea",
+      "es": "la taza de té"
+     },
+     "label": {
+      "en": "Cup of tea",
+      "es": "Taza de té"
+     },
+     "trace": {
+      "en": "digitalis from foxglove",
+      "es": "digital de dedalera"
+     },
+     "desc": {
+      "en": "Cold tea in a porcelain cup. The lab finds digitalis.",
+      "es": "Té frío en una taza de porcelana. El laboratorio encuentra digital."
+     }
+    },
+    {
+     "key": "strap",
+     "cause": "strangle",
+     "name": {
+      "en": "the leather luggage strap",
+      "es": "la correa de cuero"
+     },
+     "label": {
+      "en": "Leather luggage strap",
+      "es": "Correa de cuero"
+     },
+     "trace": {
+      "en": "brown leather fibres",
+      "es": "fibras de cuero marrón"
+     },
+     "desc": {
+      "en": "A brown leather strap with a brass buckle, stretched out of shape.",
+      "es": "Una correa de cuero marrón con hebilla de latón, deformada de tanto tirar."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "Snowbound in a mountain pass, the express has stopped dead in the night. So has {victim} ({occupation}), found in {scene}. The train physician puts the death between {window}. No one could have left the train. {count} passengers had access, and one of them is still on board, waiting for the thaw.",
+    "es": "Atrapado por la nieve en un paso de montaña, el expreso se ha detenido en plena noche. El cuerpo de {victim} ({occupation}) apareció en {scene}. El médico del tren sitúa la muerte entre {window}. Nadie pudo bajar del tren. {count} pasajeros tenían acceso, y uno de ellos sigue a bordo, esperando el deshielo."
+   }
+  },
+  "hacienda": {
+   "titles": [
+    {
+     "en": "Night of the Dead at Los Cipreses",
+     "es": "Noche de muertos en Los Cipreses"
+    },
+    {
+     "en": "The Marigold Path",
+     "es": "El camino de cempasúchil"
+    },
+    {
+     "en": "An Altar for the Patrón",
+     "es": "Un altar para el patrón"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Don Alejandro Cienfuegos",
+     "occupation": {
+      "en": "mezcal baron",
+      "es": "barón del mezcal"
+     }
+    },
+    {
+     "name": "Doña Inés Villaseñor",
+     "occupation": {
+      "en": "matriarch of the hacienda",
+      "es": "matriarca de la hacienda"
+     }
+    },
+    {
+     "name": "General Rafael Montaño",
+     "occupation": {
+      "en": "retired general",
+      "es": "general retirado"
+     }
+    },
+    {
+     "name": "Lucía Arreola",
+     "occupation": {
+      "en": "celebrated muralist",
+      "es": "muralista célebre"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the family chapel",
+      "es": "la capilla familiar"
+     },
+     "label": {
+      "en": "Family Chapel",
+      "es": "Capilla familiar"
+     }
+    },
+    {
+     "name": {
+      "en": "the agave distillery",
+      "es": "la destilería de agave"
+     },
+     "label": {
+      "en": "Agave Distillery",
+      "es": "Destilería de agave"
+     }
+    },
+    {
+     "name": {
+      "en": "the ofrenda room",
+      "es": "la sala de la ofrenda"
+     },
+     "label": {
+      "en": "Ofrenda Room",
+      "es": "Sala de la ofrenda"
+     }
+    },
+    {
+     "name": {
+      "en": "the courtyard fountain",
+      "es": "la fuente del patio"
+     },
+     "label": {
+      "en": "Courtyard Fountain",
+      "es": "Fuente del patio"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the cemetery",
+      "es": "el panteón"
+     },
+     "label": {
+      "en": "Cemetery",
+      "es": "Panteón"
+     }
+    },
+    {
+     "name": {
+      "en": "the kitchen",
+      "es": "la cocina"
+     },
+     "label": {
+      "en": "Kitchen",
+      "es": "Cocina"
+     }
+    },
+    {
+     "name": {
+      "en": "the stables",
+      "es": "las caballerizas"
+     },
+     "label": {
+      "en": "Stables",
+      "es": "Caballerizas"
+     }
+    },
+    {
+     "name": {
+      "en": "the plaza",
+      "es": "la plaza"
+     },
+     "label": {
+      "en": "Plaza",
+      "es": "Plaza"
+     }
+    },
+    {
+     "name": {
+      "en": "the mezcal cellar",
+      "es": "la bodega de mezcal"
+     },
+     "label": {
+      "en": "Mezcal Cellar",
+      "es": "Bodega de mezcal"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "the stable boy",
+      "es": "el mozo de cuadra"
+     },
+     "label": {
+      "en": "The Stable Boy",
+      "es": "El mozo de cuadra"
+     }
+    },
+    {
+     "name": {
+      "en": "the cook",
+      "es": "la cocinera"
+     },
+     "label": {
+      "en": "The Cook",
+      "es": "La cocinera"
+     }
+    },
+    {
+     "name": {
+      "en": "a mariachi violinist",
+      "es": "un violinista del mariachi"
+     },
+     "label": {
+      "en": "Mariachi Violinist",
+      "es": "Violinista del mariachi"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "The plaza photographer's portrait",
+     "es": "Un retrato del fotógrafo de la plaza"
+    },
+    {
+     "en": "A guest's home movie",
+     "es": "La película casera de un invitado"
+    }
+   ],
+   "floor": {
+    "en": "the marigold petals scattered on the floor",
+    "es": "los pétalos de cempasúchil esparcidos por el suelo"
+   },
+   "phone": {
+    "en": "The party-line operator in town",
+    "es": "La operadora de la línea compartida del pueblo"
+   },
+   "suspects": [
+    {
+     "name": "Mateo Cienfuegos",
+     "role": {
+      "en": "Younger brother",
+      "es": "Hermano menor"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Soledad Ruiz",
+     "role": {
+      "en": "Housekeeper",
+      "es": "Ama de llaves"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Padre Ignacio Luna",
+     "role": {
+      "en": "Village priest",
+      "es": "Párroco del pueblo"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Carmen Echeverría",
+     "role": {
+      "en": "Rival landowner",
+      "es": "Hacendada rival"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Diego Salazar",
+     "role": {
+      "en": "Ranch foreman",
+      "es": "Capataz"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Valeria Montes",
+     "role": {
+      "en": "Goddaughter",
+      "es": "Ahijada"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Dr. Julián Ortega",
+     "role": {
+      "en": "Family doctor",
+      "es": "Médico de la familia"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Rosario \"Chayo\" Pineda",
+     "role": {
+      "en": "Village healer",
+      "es": "Curandera"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Has lived on the hacienda since before the revolution",
+     "es": "Vive en la hacienda desde antes de la revolución"
+    },
+    {
+     "en": "Was heard arguing with {victim} beside the ofrenda",
+     "es": "Se le oyó discutir con {victim} junto a la ofrenda"
+    },
+    {
+     "en": "Knows the old tunnels under the distillery",
+     "es": "Conoce los viejos túneles bajo la destilería"
+    },
+    {
+     "en": "Came back from the capital for the first time in years",
+     "es": "Volvió de la capital por primera vez en años"
+    },
+    {
+     "en": "Is said to owe money to half the valley",
+     "es": "Se dice que le debe dinero a medio valle"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "machete",
+     "cause": "sharp",
+     "name": {
+      "en": "the machete",
+      "es": "el machete"
+     },
+     "label": {
+      "en": "Machete",
+      "es": "Machete"
+     },
+     "trace": {
+      "en": "flecks of carbon steel",
+      "es": "partículas de acero al carbono"
+     },
+     "desc": {
+      "en": "A field machete, its edge recently honed.",
+      "es": "Un machete de campo, con el filo recién afilado."
+     }
+    },
+    {
+     "key": "obsidian",
+     "cause": "sharp",
+     "name": {
+      "en": "the obsidian knife from the altar",
+      "es": "el cuchillo de obsidiana del altar"
+     },
+     "label": {
+      "en": "Obsidian knife",
+      "es": "Cuchillo de obsidiana"
+     },
+     "trace": {
+      "en": "black obsidian splinters",
+      "es": "astillas de obsidiana negra"
+     },
+     "desc": {
+      "en": "A ceremonial blade of black volcanic glass. A splinter is missing from the edge.",
+      "es": "Una hoja ceremonial de vidrio volcánico negro. Le falta una astilla en el filo."
+     }
+    },
+    {
+     "key": "metate",
+     "cause": "blunt",
+     "name": {
+      "en": "the grinding stone",
+      "es": "la mano del metate"
+     },
+     "label": {
+      "en": "Grinding stone",
+      "es": "Mano del metate"
+     },
+     "trace": {
+      "en": "grains of volcanic basalt",
+      "es": "granos de basalto volcánico"
+     },
+     "desc": {
+      "en": "The grinding stone from the kitchen, heavy grey basalt.",
+      "es": "La piedra de moler de la cocina, de pesado basalto gris."
+     }
+    },
+    {
+     "key": "branding_iron",
+     "cause": "blunt",
+     "name": {
+      "en": "the branding iron",
+      "es": "el hierro de marcar"
+     },
+     "label": {
+      "en": "Branding iron",
+      "es": "Hierro de marcar"
+     },
+     "trace": {
+      "en": "rust and charcoal",
+      "es": "óxido y carbón"
+     },
+     "desc": {
+      "en": "The ranch's branding iron, crusted with rust and charcoal.",
+      "es": "El hierro de marcar del rancho, cubierto de óxido y carbón."
+     }
+    },
+    {
+     "key": "chocolate",
+     "cause": "poison",
+     "name": {
+      "en": "the cup of hot chocolate",
+      "es": "la taza de chocolate"
+     },
+     "label": {
+      "en": "Cup of hot chocolate",
+      "es": "Taza de chocolate"
+     },
+     "trace": {
+      "en": "crushed oleander leaves",
+      "es": "hojas de adelfa machacadas"
+     },
+     "desc": {
+      "en": "Spiced chocolate from the ofrenda. The lab finds crushed oleander leaves.",
+      "es": "Chocolate especiado de la ofrenda. El laboratorio encuentra hojas de adelfa machacadas."
+     }
+    },
+    {
+     "key": "lariat",
+     "cause": "strangle",
+     "name": {
+      "en": "the braided lariat",
+      "es": "la reata trenzada"
+     },
+     "label": {
+      "en": "Braided lariat",
+      "es": "Reata trenzada"
+     },
+     "trace": {
+      "en": "coarse sisal fibres",
+      "es": "fibras ásperas de henequén"
+     },
+     "desc": {
+      "en": "A sisal rope from the stables, tied in a slipknot.",
+      "es": "Una cuerda de henequén de las caballerizas, con un nudo corredizo."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "Candles burn on every altar for the Day of the Dead, but at Hacienda Los Cipreses one more soul joined the departed tonight. {victim} ({occupation}) was found in {scene}, and the doctor puts the death between {window}. The fiesta has stopped. {count} guests and family members had reason and opportunity. The marigold path leads somewhere.",
+    "es": "Las velas arden en todos los altares por el Día de Muertos, pero esta noche, en la Hacienda Los Cipreses, un alma más se unió a los difuntos. El cuerpo de {victim} ({occupation}) apareció en {scene}, y el médico sitúa la muerte entre {window}. La fiesta se ha detenido. {count} invitados y familiares tenían motivo y oportunidad. El camino de cempasúchil lleva a alguna parte."
+   }
+  },
+  "studio": {
+   "titles": [
+    {
+     "en": "Death on Stage Nine",
+     "es": "Muerte en el plató nueve"
+    },
+    {
+     "en": "The Final Take",
+     "es": "La última toma"
+    },
+    {
+     "en": "Cut to Black",
+     "es": "Fundido a negro"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Howard Kessler",
+     "occupation": {
+      "en": "studio boss",
+      "es": "jefe del estudio"
+     }
+    },
+    {
+     "name": "Lana Delacroix",
+     "occupation": {
+      "en": "screen star",
+      "es": "estrella de cine"
+     }
+    },
+    {
+     "name": "Max Albright",
+     "occupation": {
+      "en": "star director",
+      "es": "director estrella"
+     }
+    },
+    {
+     "name": "Dolores Whitfield",
+     "occupation": {
+      "en": "gossip columnist",
+      "es": "columnista de chismes"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "stage nine",
+      "es": "el plató nueve"
+     },
+     "label": {
+      "en": "Stage Nine",
+      "es": "Plató nueve"
+     }
+    },
+    {
+     "name": {
+      "en": "the star trailer",
+      "es": "la caravana de la estrella"
+     },
+     "label": {
+      "en": "Star Trailer",
+      "es": "Caravana de la estrella"
+     }
+    },
+    {
+     "name": {
+      "en": "the screening room",
+      "es": "la sala de proyección"
+     },
+     "label": {
+      "en": "Screening Room",
+      "es": "Sala de proyección"
+     }
+    },
+    {
+     "name": {
+      "en": "the prop warehouse",
+      "es": "el almacén de utilería"
+     },
+     "label": {
+      "en": "Prop Warehouse",
+      "es": "Almacén de utilería"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the commissary",
+      "es": "la cantina del estudio"
+     },
+     "label": {
+      "en": "Commissary",
+      "es": "Cantina del estudio"
+     }
+    },
+    {
+     "name": {
+      "en": "the makeup department",
+      "es": "el departamento de maquillaje"
+     },
+     "label": {
+      "en": "Makeup Department",
+      "es": "Maquillaje"
+     }
+    },
+    {
+     "name": {
+      "en": "the editing bay",
+      "es": "la sala de montaje"
+     },
+     "label": {
+      "en": "Editing Bay",
+      "es": "Sala de montaje"
+     }
+    },
+    {
+     "name": {
+      "en": "the backlot western town",
+      "es": "el pueblo del oeste del estudio"
+     },
+     "label": {
+      "en": "Backlot Western Town",
+      "es": "Pueblo del oeste"
+     }
+    },
+    {
+     "name": {
+      "en": "the publicity office",
+      "es": "la oficina de publicidad"
+     },
+     "label": {
+      "en": "Publicity Office",
+      "es": "Oficina de publicidad"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "a night watchman",
+      "es": "un vigilante nocturno"
+     },
+     "label": {
+      "en": "Night Watchman",
+      "es": "Vigilante nocturno"
+     }
+    },
+    {
+     "name": {
+      "en": "the script girl",
+      "es": "la secretaria de rodaje"
+     },
+     "label": {
+      "en": "The Script Supervisor",
+      "es": "La secretaria de rodaje"
+     }
+    },
+    {
+     "name": {
+      "en": "a grip",
+      "es": "un maquinista"
+     },
+     "label": {
+      "en": "Grip",
+      "es": "Maquinista"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "A publicity photographer's contact sheet",
+     "es": "Una hoja de contactos del fotógrafo de publicidad"
+    },
+    {
+     "en": "A screen test still",
+     "es": "Un fotograma de una prueba de cámara"
+    }
+   ],
+   "floor": {
+    "en": "the fake snow on the soundstage floor",
+    "es": "la nieve falsa del suelo del plató"
+   },
+   "phone": {
+    "en": "The studio switchboard",
+    "es": "La centralita del estudio"
+   },
+   "suspects": [
+    {
+     "name": "Vera Lockwood",
+     "role": {
+      "en": "Fading leading lady",
+      "es": "Primera actriz en decadencia"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Sonny Marlowe",
+     "role": {
+      "en": "Stunt double",
+      "es": "Doble de riesgo"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Irving Gold",
+     "role": {
+      "en": "Studio lawyer",
+      "es": "Abogado del estudio"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Peggy Ruiz",
+     "role": {
+      "en": "Wardrobe supervisor",
+      "es": "Jefa de vestuario"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Clifford Haynes",
+     "role": {
+      "en": "Blacklisted screenwriter",
+      "es": "Guionista en la lista negra"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Rita Moon",
+     "role": {
+      "en": "Ingénue under contract",
+      "es": "Joven actriz con contrato"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Buck Tanner",
+     "role": {
+      "en": "Cowboy star",
+      "es": "Estrella de westerns"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Edith Crane",
+     "role": {
+      "en": "Producer's secretary",
+      "es": "Secretaria del productor"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Has a contract that ends the day {victim} decides",
+     "es": "Tiene un contrato que termina el día que {victim} decida"
+    },
+    {
+     "en": "Was thrown off the set by {victim} last week",
+     "es": "Fue expulsado del plató por {victim} la semana pasada"
+    },
+    {
+     "en": "Knows every catwalk and trapdoor on the lot",
+     "es": "Conoce cada pasarela y trampilla del estudio"
+    },
+    {
+     "en": "Is rumoured to sell secrets to the gossip papers",
+     "es": "Se rumorea que vende secretos a la prensa del corazón"
+    },
+    {
+     "en": "Owes the studio a fortune in advances",
+     "es": "Le debe al estudio una fortuna en anticipos"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "oscar",
+     "cause": "blunt",
+     "name": {
+      "en": "the gilded award statuette",
+      "es": "la estatuilla dorada"
+     },
+     "label": {
+      "en": "Gilded award statuette",
+      "es": "Estatuilla dorada"
+     },
+     "trace": {
+      "en": "flakes of gold leaf",
+      "es": "escamas de pan de oro"
+     },
+     "desc": {
+      "en": "Heavy, gilded, and missing a little of its gold leaf at the base.",
+      "es": "Pesada, dorada, y con algo de pan de oro desprendido en la base."
+     }
+    },
+    {
+     "key": "sandbag",
+     "cause": "blunt",
+     "name": {
+      "en": "the lighting sandbag",
+      "es": "el saco de arena de iluminación"
+     },
+     "label": {
+      "en": "Lighting sandbag",
+      "es": "Saco de arena de iluminación"
+     },
+     "trace": {
+      "en": "grains of sand and canvas threads",
+      "es": "granos de arena e hilos de lona"
+     },
+     "desc": {
+      "en": "A canvas sandbag used to weigh down light stands, split along one seam.",
+      "es": "Un saco de lona para sujetar los focos, descosido por una costura."
+     }
+    },
+    {
+     "key": "prop_knife",
+     "cause": "sharp",
+     "name": {
+      "en": "the real knife from the prop table",
+      "es": "el cuchillo real de la mesa de utilería"
+     },
+     "label": {
+      "en": "Knife from the prop table",
+      "es": "Cuchillo de utilería"
+     },
+     "trace": {
+      "en": "flecks of freshly sharpened steel",
+      "es": "partículas de acero recién afilado"
+     },
+     "desc": {
+      "en": "Meant to be a rubber prop, but this one is real steel, freshly sharpened.",
+      "es": "Debía ser de goma, pero este es de acero de verdad y está recién afilado."
+     }
+    },
+    {
+     "key": "champagne",
+     "cause": "poison",
+     "name": {
+      "en": "the wrap-party champagne",
+      "es": "el champán de la fiesta de fin de rodaje"
+     },
+     "label": {
+      "en": "Wrap-party champagne",
+      "es": "Champán de fin de rodaje"
+     },
+     "trace": {
+      "en": "cyanide",
+      "es": "cianuro"
+     },
+     "desc": {
+      "en": "An open bottle from the trailer. The dregs test positive for cyanide.",
+      "es": "Una botella abierta de la caravana. Los restos dan positivo en cianuro."
+     }
+    },
+    {
+     "key": "pills",
+     "cause": "poison",
+     "name": {
+      "en": "the bottle of sleeping pills",
+      "es": "el frasco de somníferos"
+     },
+     "label": {
+      "en": "Bottle of sleeping pills",
+      "es": "Frasco de somníferos"
+     },
+     "trace": {
+      "en": "a lethal dose of barbiturates",
+      "es": "una dosis letal de barbitúricos"
+     },
+     "desc": {
+      "en": "Prescribed to someone else. Most of the barbiturates are gone.",
+      "es": "Recetado a otra persona. Faltan casi todos los barbitúricos."
+     }
+    },
+    {
+     "key": "film",
+     "cause": "strangle",
+     "name": {
+      "en": "the strip of film stock",
+      "es": "la tira de película"
+     },
+     "label": {
+      "en": "Strip of film stock",
+      "es": "Tira de película"
+     },
+     "trace": {
+      "en": "shreds of celluloid",
+      "es": "restos de celuloide"
+     },
+     "desc": {
+      "en": "A length of 35mm film from the editing bay, twisted and torn.",
+      "es": "Un trozo de película de 35 mm de la sala de montaje, retorcido y roto."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "The cameras stopped rolling at nine. By eleven, {victim} ({occupation}) was found dead in {scene}, and the studio doctor puts the death between {window}. The gates are shut and the press is circling. {count} people on the lot had a reason, and every one of them can cry on cue.",
+    "es": "Las cámaras dejaron de rodar a las nueve. A las once, el cuerpo de {victim} ({occupation}) apareció en {scene}, y el médico del estudio sitúa la muerte entre {window}. Las puertas están cerradas y la prensa ronda. {count} personas del estudio tenían motivos, y todas saben llorar cuando se lo piden."
+   }
+  },
+  "arctic": {
+   "titles": [
+    {
+     "en": "Whiteout at Station Borealis",
+     "es": "Ventisca en la estación Borealis"
+    },
+    {
+     "en": "Ninety Days of Night",
+     "es": "Noventa días de noche"
+    },
+    {
+     "en": "The Ice Core",
+     "es": "El núcleo de hielo"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Dr. Magnus Holm",
+     "occupation": {
+      "en": "station director",
+      "es": "director de la estación"
+     }
+    },
+    {
+     "name": "Dr. Ingrid Sørensen",
+     "occupation": {
+      "en": "lead glaciologist",
+      "es": "glacióloga jefa"
+     }
+    },
+    {
+     "name": "Commander Ray Duquette",
+     "occupation": {
+      "en": "logistics chief",
+      "es": "jefe de logística"
+     }
+    },
+    {
+     "name": "Dr. Yuki Arakawa",
+     "occupation": {
+      "en": "climate scientist",
+      "es": "climatóloga"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the ice core freezer",
+      "es": "el congelador de núcleos de hielo"
+     },
+     "label": {
+      "en": "Ice Core Freezer",
+      "es": "Congelador de núcleos"
+     }
+    },
+    {
+     "name": {
+      "en": "the radio shack",
+      "es": "la caseta de radio"
+     },
+     "label": {
+      "en": "Radio Shack",
+      "es": "Caseta de radio"
+     }
+    },
+    {
+     "name": {
+      "en": "the generator room",
+      "es": "la sala del generador"
+     },
+     "label": {
+      "en": "Generator Room",
+      "es": "Sala del generador"
+     }
+    },
+    {
+     "name": {
+      "en": "the observation dome",
+      "es": "la cúpula de observación"
+     },
+     "label": {
+      "en": "Observation Dome",
+      "es": "Cúpula de observación"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the galley",
+      "es": "la cocina"
+     },
+     "label": {
+      "en": "Galley",
+      "es": "Cocina"
+     }
+    },
+    {
+     "name": {
+      "en": "the sauna",
+      "es": "la sauna"
+     },
+     "label": {
+      "en": "Sauna",
+      "es": "Sauna"
+     }
+    },
+    {
+     "name": {
+      "en": "the bunk module",
+      "es": "el módulo de literas"
+     },
+     "label": {
+      "en": "Bunk Module",
+      "es": "Módulo de literas"
+     }
+    },
+    {
+     "name": {
+      "en": "the lab module",
+      "es": "el módulo de laboratorio"
+     },
+     "label": {
+      "en": "Lab Module",
+      "es": "Módulo de laboratorio"
+     }
+    },
+    {
+     "name": {
+      "en": "the vehicle garage",
+      "es": "el garaje de vehículos"
+     },
+     "label": {
+      "en": "Vehicle Garage",
+      "es": "Garaje de vehículos"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "the station cook",
+      "es": "la cocinera de la estación"
+     },
+     "label": {
+      "en": "The Station Cook",
+      "es": "La cocinera"
+     }
+    },
+    {
+     "name": {
+      "en": "a visiting pilot",
+      "es": "un piloto de paso"
+     },
+     "label": {
+      "en": "Visiting Pilot",
+      "es": "Piloto de paso"
+     }
+    },
+    {
+     "name": {
+      "en": "the night mechanic",
+      "es": "el mecánico de noche"
+     },
+     "label": {
+      "en": "Night Mechanic",
+      "es": "Mecánico de noche"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "The automatic weather-camera frame",
+     "es": "Un fotograma de la cámara meteorológica automática"
+    },
+    {
+     "en": "A Polaroid from the station's bulletin board",
+     "es": "Una Polaroid del tablón de la estación"
+    }
+   ],
+   "floor": {
+    "en": "the frost on the rubber floor mats",
+    "es": "la escarcha de las alfombrillas de goma"
+   },
+   "phone": {
+    "en": "The satellite radio log",
+    "es": "El registro de la radio por satélite"
+   },
+   "suspects": [
+    {
+     "name": "Dr. Petra Lindgren",
+     "role": {
+      "en": "Rival glaciologist",
+      "es": "Glacióloga rival"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Hank Mullins",
+     "role": {
+      "en": "Heavy-equipment operator",
+      "es": "Operador de maquinaria pesada"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Dr. Arjun Mehta",
+     "role": {
+      "en": "Station physician",
+      "es": "Médico de la estación"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Sasha Volkov",
+     "role": {
+      "en": "Radio operator",
+      "es": "Operadora de radio"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Erik Dahl",
+     "role": {
+      "en": "Graduate student",
+      "es": "Estudiante de doctorado"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Colette Brun",
+     "role": {
+      "en": "Corporate observer",
+      "es": "Observadora de la empresa"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Tomás Ibarra",
+     "role": {
+      "en": "Station cook",
+      "es": "Cocinero de la estación"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Nadia Okonkwo",
+     "role": {
+      "en": "Electrical engineer",
+      "es": "Ingeniera eléctrica"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Has been on the ice for two winters without a break",
+     "es": "Lleva dos inviernos en el hielo sin descanso"
+    },
+    {
+     "en": "Argued with {victim} over the radio for anyone to hear",
+     "es": "Discutió con {victim} por radio, para que lo oyera todo el mundo"
+    },
+    {
+     "en": "Knows how to get outside without tripping the door alarms",
+     "es": "Sabe salir sin activar las alarmas de las puertas"
+    },
+    {
+     "en": "Had a research grant cancelled on {victim}’s word",
+     "es": "Perdió una beca de investigación por decisión de {victim}"
+    },
+    {
+     "en": "Has been sending coded messages home",
+     "es": "Ha estado enviando mensajes cifrados a casa"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "ice_axe",
+     "cause": "sharp",
+     "name": {
+      "en": "the ice axe",
+      "es": "el piolet"
+     },
+     "label": {
+      "en": "Ice axe",
+      "es": "Piolet"
+     },
+     "trace": {
+      "en": "chips of forged steel",
+      "es": "esquirlas de acero forjado"
+     },
+     "desc": {
+      "en": "A mountaineering axe from the gear locker, its pick recently wiped.",
+      "es": "Un piolet del armario del equipo, con la punta recién limpiada."
+     }
+    },
+    {
+     "key": "core_drill",
+     "cause": "sharp",
+     "name": {
+      "en": "the hand core drill",
+      "es": "la barrena manual"
+     },
+     "label": {
+      "en": "Hand core drill",
+      "es": "Barrena manual"
+     },
+     "trace": {
+      "en": "a ring of aluminium filings",
+      "es": "un anillo de limaduras de aluminio"
+     },
+     "desc": {
+      "en": "An aluminium ice-coring drill with a cutting crown, smeared and bent.",
+      "es": "Una barrena de aluminio para sacar núcleos de hielo, manchada y doblada."
+     }
+    },
+    {
+     "key": "wrench",
+     "cause": "blunt",
+     "name": {
+      "en": "the pipe wrench",
+      "es": "la llave de tubo"
+     },
+     "label": {
+      "en": "Pipe wrench",
+      "es": "Llave de tubo"
+     },
+     "trace": {
+      "en": "black flakes of cast iron",
+      "es": "escamas negras de hierro fundido"
+     },
+     "desc": {
+      "en": "A heavy cast-iron wrench from the generator room.",
+      "es": "Una pesada llave de hierro fundido de la sala del generador."
+     }
+    },
+    {
+     "key": "core_sample",
+     "cause": "blunt",
+     "name": {
+      "en": "the frozen ice core",
+      "es": "el núcleo de hielo congelado"
+     },
+     "label": {
+      "en": "Frozen ice core",
+      "es": "Núcleo de hielo"
+     },
+     "trace": {
+      "en": "meltwater with ancient volcanic ash",
+      "es": "agua de deshielo con ceniza volcánica antigua"
+     },
+     "desc": {
+      "en": "A metre-long cylinder of ancient ice, cracked at one end. It contains a layer of volcanic ash.",
+      "es": "Un cilindro de hielo antiguo de un metro, agrietado en un extremo. Contiene una capa de ceniza volcánica."
+     }
+    },
+    {
+     "key": "methanol",
+     "cause": "poison",
+     "name": {
+      "en": "the flask of “vodka”",
+      "es": "la petaca de «vodka»"
+     },
+     "label": {
+      "en": "Flask of “vodka”",
+      "es": "Petaca de «vodka»"
+     },
+     "trace": {
+      "en": "methanol from the fuel stores",
+      "es": "metanol del almacén de combustible"
+     },
+     "desc": {
+      "en": "It smells like vodka, but the lab finds methanol from the fuel stores.",
+      "es": "Huele a vodka, pero el laboratorio encuentra metanol del almacén de combustible."
+     }
+    },
+    {
+     "key": "tow_rope",
+     "cause": "strangle",
+     "name": {
+      "en": "the snowmobile tow rope",
+      "es": "la cuerda de remolque de la motonieve"
+     },
+     "label": {
+      "en": "Snowmobile tow rope",
+      "es": "Cuerda de remolque"
+     },
+     "trace": {
+      "en": "orange nylon fibres",
+      "es": "fibras de nailon naranja"
+     },
+     "desc": {
+      "en": "Bright orange nylon, frayed where it was pulled tight.",
+      "es": "Nailon naranja brillante, deshilachado donde se tensó."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "The storm cut Station Borealis off from the world three days ago. Tonight, {victim} ({occupation}) was found dead in {scene}, and the station physician puts the death between {window}. No plane can land until the wind drops. {count} people share these corridors, and one of them is a killer.",
+    "es": "La tormenta dejó a la estación Borealis aislada del mundo hace tres días. Esta noche, el cuerpo de {victim} ({occupation}) apareció en {scene}, y el médico de la estación sitúa la muerte entre {window}. Ningún avión puede aterrizar hasta que amaine el viento. {count} personas comparten estos pasillos, y una de ellas ha matado."
+   }
+  },
+  "carnival": {
+   "titles": [
+    {
+     "en": "Masks of Venice",
+     "es": "Máscaras de Venecia"
+    },
+    {
+     "en": "Death at the Carnival Ball",
+     "es": "Muerte en el baile de carnaval"
+    },
+    {
+     "en": "The Last Gondola",
+     "es": "La última góndola"
+    }
+   ],
+   "victims": [
+    {
+     "name": "Count Alvise Morosini",
+     "occupation": {
+      "en": "Venetian senator",
+      "es": "senador veneciano"
+     }
+    },
+    {
+     "name": "Contessa Bianca Foscari",
+     "occupation": {
+      "en": "carnival hostess",
+      "es": "anfitriona del carnaval"
+     }
+    },
+    {
+     "name": "Signor Ottavio Grimani",
+     "occupation": {
+      "en": "glass merchant",
+      "es": "comerciante de vidrio"
+     }
+    },
+    {
+     "name": "Madame Celestine Arnaud",
+     "occupation": {
+      "en": "French envoy",
+      "es": "enviada francesa"
+     }
+    }
+   ],
+   "scenes": [
+    {
+     "name": {
+      "en": "the mirror gallery",
+      "es": "la galería de los espejos"
+     },
+     "label": {
+      "en": "Mirror Gallery",
+      "es": "Galería de los espejos"
+     }
+    },
+    {
+     "name": {
+      "en": "the water-gate landing",
+      "es": "el embarcadero de la puerta de agua"
+     },
+     "label": {
+      "en": "Water-Gate Landing",
+      "es": "Embarcadero"
+     }
+    },
+    {
+     "name": {
+      "en": "the card room",
+      "es": "el salón de naipes"
+     },
+     "label": {
+      "en": "Card Room",
+      "es": "Salón de naipes"
+     }
+    },
+    {
+     "name": {
+      "en": "the rooftop altana",
+      "es": "la altana de la azotea"
+     },
+     "label": {
+      "en": "Rooftop Altana",
+      "es": "Altana de la azotea"
+     }
+    }
+   ],
+   "alibiPlaces": [
+    {
+     "name": {
+      "en": "the ballroom",
+      "es": "el salón de baile"
+     },
+     "label": {
+      "en": "Ballroom",
+      "es": "Salón de baile"
+     }
+    },
+    {
+     "name": {
+      "en": "the chapel",
+      "es": "la capilla"
+     },
+     "label": {
+      "en": "Chapel",
+      "es": "Capilla"
+     }
+    },
+    {
+     "name": {
+      "en": "the music salon",
+      "es": "el salón de música"
+     },
+     "label": {
+      "en": "Music Salon",
+      "es": "Salón de música"
+     }
+    },
+    {
+     "name": {
+      "en": "the garden courtyard",
+      "es": "el patio del jardín"
+     },
+     "label": {
+      "en": "Garden Courtyard",
+      "es": "Patio del jardín"
+     }
+    },
+    {
+     "name": {
+      "en": "the wine cellar",
+      "es": "la bodega"
+     },
+     "label": {
+      "en": "Wine Cellar",
+      "es": "Bodega"
+     }
+    }
+   ],
+   "witnesses": [
+    {
+     "name": {
+      "en": "a gondolier",
+      "es": "un gondolero"
+     },
+     "label": {
+      "en": "Gondolier",
+      "es": "Gondolero"
+     }
+    },
+    {
+     "name": {
+      "en": "the maid",
+      "es": "la doncella"
+     },
+     "label": {
+      "en": "The Maid",
+      "es": "La doncella"
+     }
+    },
+    {
+     "name": {
+      "en": "a footman",
+      "es": "un lacayo"
+     },
+     "label": {
+      "en": "Footman",
+      "es": "Lacayo"
+     }
+    }
+   ],
+   "cameras": [
+    {
+     "en": "A court painter's sketch of the ball",
+     "es": "Un boceto del baile hecho por el pintor de la corte"
+    },
+    {
+     "en": "A silhouette cut by the paper artist",
+     "es": "Una silueta recortada por el artista del papel"
+    }
+   ],
+   "floor": {
+    "en": "the spilled candle wax on the terrazzo",
+    "es": "la cera derramada sobre el terrazo"
+   },
+   "phone": {
+    "en": "The message boy at the gate",
+    "es": "El mensajero de la puerta"
+   },
+   "suspects": [
+    {
+     "name": "Lorenzo Venier",
+     "role": {
+      "en": "Disgraced nephew",
+      "es": "Sobrino deshonrado"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Isabella Contarini",
+     "role": {
+      "en": "Former fiancée",
+      "es": "Antigua prometida"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Fra Matteo",
+     "role": {
+      "en": "Confessor",
+      "es": "Confesor"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Giulia Barbaro",
+     "role": {
+      "en": "Rival glassmaker",
+      "es": "Vidriera rival"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Captain Nicolò Zeno",
+     "role": {
+      "en": "Naval officer",
+      "es": "Oficial de la armada"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Chiara Dandolo",
+     "role": {
+      "en": "Lady-in-waiting",
+      "es": "Dama de compañía"
+     },
+     "look": "f"
+    },
+    {
+     "name": "Signor Pietro Loredan",
+     "role": {
+      "en": "Moneylender",
+      "es": "Prestamista"
+     },
+     "look": "m"
+    },
+    {
+     "name": "Marguerite Duval",
+     "role": {
+      "en": "Opera singer",
+      "es": "Cantante de ópera"
+     },
+     "look": "f"
+    }
+   ],
+   "bioLines": [
+    {
+     "en": "Wore a different mask every hour of the ball",
+     "es": "Llevó una máscara distinta cada hora del baile"
+    },
+    {
+     "en": "Was seen whispering with {victim} on the stairs",
+     "es": "Se le vio cuchichear con {victim} en la escalera"
+    },
+    {
+     "en": "Knows the secret passages behind the mirrors",
+     "es": "Conoce los pasadizos secretos tras los espejos"
+    },
+    {
+     "en": "Lost a fortune to {victim} at cards last season",
+     "es": "Perdió una fortuna con {victim} a las cartas la temporada pasada"
+    },
+    {
+     "en": "Is said to carry letters for the Council of Ten",
+     "es": "Se dice que lleva cartas para el Consejo de los Diez"
+    }
+   ],
+   "weapons": [
+    {
+     "key": "stiletto",
+     "cause": "sharp",
+     "name": {
+      "en": "the stiletto from a mask case",
+      "es": "el estilete del estuche de una máscara"
+     },
+     "label": {
+      "en": "Stiletto",
+      "es": "Estilete"
+     },
+     "trace": {
+      "en": "traces of steel from a narrow, three-sided blade",
+      "es": "restos de acero de una hoja estrecha de tres filos"
+     },
+     "desc": {
+      "en": "A slim triangular blade hidden in a velvet mask case.",
+      "es": "Una fina hoja triangular escondida en un estuche de máscara de terciopelo."
+     }
+    },
+    {
+     "key": "glass_shard",
+     "cause": "sharp",
+     "name": {
+      "en": "the shard of Murano glass",
+      "es": "el fragmento de cristal de Murano"
+     },
+     "label": {
+      "en": "Shard of Murano glass",
+      "es": "Fragmento de cristal de Murano"
+     },
+     "trace": {
+      "en": "specks of red Murano glass",
+      "es": "motas de cristal rojo de Murano"
+     },
+     "desc": {
+      "en": "A dagger-shaped piece of a red Murano chandelier.",
+      "es": "Un trozo con forma de daga de una lámpara roja de Murano."
+     }
+    },
+    {
+     "key": "candelabra",
+     "cause": "blunt",
+     "name": {
+      "en": "the silver candelabra",
+      "es": "el candelabro de plata"
+     },
+     "label": {
+      "en": "Silver candelabra",
+      "es": "Candelabro de plata"
+     },
+     "trace": {
+      "en": "drops of candle wax and tarnished silver",
+      "es": "gotas de cera y plata ennegrecida"
+     },
+     "desc": {
+      "en": "Five branches, heavy silver, wax still clinging to it.",
+      "es": "Cinco brazos, plata pesada, aún con cera pegada."
+     }
+    },
+    {
+     "key": "oar",
+     "cause": "blunt",
+     "name": {
+      "en": "the gondolier's oar",
+      "es": "el remo del gondolero"
+     },
+     "label": {
+      "en": "Gondolier's oar",
+      "es": "Remo de gondolero"
+     },
+     "trace": {
+      "en": "splinters of beech wood and canal water",
+      "es": "astillas de haya y agua del canal"
+     },
+     "desc": {
+      "en": "A long beech oar, still wet, with a split near the blade.",
+      "es": "Un largo remo de haya, aún mojado, con una grieta cerca de la pala."
+     }
+    },
+    {
+     "key": "wine",
+     "cause": "poison",
+     "name": {
+      "en": "the goblet of wine",
+      "es": "la copa de vino"
+     },
+     "label": {
+      "en": "Goblet of wine",
+      "es": "Copa de vino"
+     },
+     "trace": {
+      "en": "arsenic",
+      "es": "arsénico"
+     },
+     "desc": {
+      "en": "A gilded goblet left in the card room. The wine tests positive for arsenic.",
+      "es": "Una copa dorada abandonada en el salón de naipes. El vino da positivo en arsénico."
+     }
+    },
+    {
+     "key": "sash",
+     "cause": "strangle",
+     "name": {
+      "en": "the silk carnival sash",
+      "es": "la banda de seda del carnaval"
+     },
+     "label": {
+      "en": "Silk carnival sash",
+      "es": "Banda de seda"
+     },
+     "trace": {
+      "en": "gold-thread silk fibres",
+      "es": "fibras de seda con hilo de oro"
+     },
+     "desc": {
+      "en": "A sash embroidered with gold thread, torn from a costume.",
+      "es": "Una banda bordada con hilo de oro, arrancada de un disfraz."
+     }
+    }
+   ],
+   "synopsis": {
+    "en": "Behind the masks of the carnival ball, someone came to kill. {victim} ({occupation}) was found dead in {scene} as the musicians played on, and the physician puts the death between {window}. The canals are closed by order of the Doge. {count} guests had a reason, and every one of them wore a mask.",
+    "es": "Tras las máscaras del baile de carnaval, alguien vino a matar. El cuerpo de {victim} ({occupation}) apareció en {scene} mientras los músicos seguían tocando, y el médico sitúa la muerte entre {window}. Los canales están cerrados por orden del Dux. {count} invitados tenían un motivo, y todos llevaban máscara."
+   }
+  }
+ }
+}

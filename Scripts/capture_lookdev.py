@@ -1,4 +1,4 @@
-"""Renders Cam_Hero, Cam_Board and Cam_Window in L_LookDev to Saved/Screenshots/, then quits.
+"""Renders the look-dev cameras in L_LookDev to Saved/Screenshots/, then quits.
 
 Needs a real RHI (no -nullrhi):
   UnrealEditor.exe NoirMystery.uproject -ExecCmds="py Scripts/capture_lookdev.py" -unattended -nosplash
@@ -12,7 +12,7 @@ levels.load_level("/Game/Maps/L_LookDev")
 
 WARMUP_S = 90  # first run compiles material shaders; Lumen and fog then converge
 SHOTS = [("Cam_Hero", "lookdev.png"), ("Cam_Board", "lookdev_board.png"),
-         ("Cam_Window", "lookdev_window.png")]
+         ("Cam_Window", "lookdev_window.png"), ("Cam_Shafts", "lookdev_shafts.png")]
 state = {"t": 0.0, "i": 0}
 
 

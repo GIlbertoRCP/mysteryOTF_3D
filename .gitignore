@@ -22,3 +22,13 @@ Thumbs.db
 
 # Mood-board stills (copyrighted, local only)
 Reference/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
+node_modules/
+
+

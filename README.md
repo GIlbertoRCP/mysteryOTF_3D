@@ -23,10 +23,12 @@ Then open `NoirMystery.uproject`. The editor starts in `L_LookDev`.
 
 ```
 Source/NoirMystery/   game module (player, interaction, search, interrogation, case board)
-Source/MysteryCore/   (milestone 3) plain C++ port of the seeded case generator
+Source/MysteryCore/   plain C++ port of the web game's seeded case generator (no Unreal types)
+Tests/MysteryCoreTests/  parity test: the port against the TypeScript engine on 1,080 cases
+Tools/MysteryExport/  exports content.json and the golden reference from the web game
 Content/Maps/         L_LookDev: milestone 1 look-development room
 Content/Materials/    M_Master and its instances
-Content/Data/         case text in English and Spanish
+Content/Data/Mystery/ content.json: all case text in English and Spanish (exported, do not hand-edit)
 Content/Art/          imported kits, kept as bought
 Scripts/              editor Python that builds and captures the look-dev level
 ```
@@ -44,3 +46,27 @@ exposure, teal shadows / warm highlights, grain, vignette).
 
 `Scripts/capture_lookdev.py` renders `Cam_Hero` to `Saved/Screenshots/` for comparison against the mood board (run it with `-ExecCmds="py Scripts/capture_lookdev.py"`; `-ExecutePythonScript` quits before it can render).
 Re-running the build script overwrites the level, so copy any values you tune in the editor back into the script.
+
+## Case generator (milestone 3)
+
+`Source/MysteryCore` is a port of the web game's generator (`server/src/mysteryEngine.ts` in
+[GIlbertoRCP/MysteryOTF](https://github.com/GIlbertoRCP/MysteryOTF)): the same seed, theme and difficulty give the
+same case in both games, down to every id and sentence. It builds the language-neutral blueprint, then localizes
+it (English or Spanish), and also ports confrontations, searching, hints, the true story and the daily case.
+
+The text is not duplicated by hand. `Tools/MysteryExport/export.mts` runs the web game's own code and writes
+`Content/Data/Mystery/content.json`, plus a golden reference of every output for the 1,080 cases the web game's
+test uses. Keep the web repo checked out next to this one (here: `B:/DetectiveBoardSync`) and re-export after
+changing its content:
+
+```bash
+cd B:/DetectiveBoardSync/server && npm ci && npx tsx B:/mysteryOTF/Tools/MysteryExport/export.mts B:/DetectiveBoardSync B:/mysteryOTF
+```
+
+Then build the module on its own (no Unreal) and compare all 1,080 cases:
+
+```bash
+cmd //c "Tests\MysteryCoreTests\run.bat"
+```
+
+In the game, the console command `Noir.GenerateCase [seed] [theme] [difficulty] [en|es]` logs a generated case.
