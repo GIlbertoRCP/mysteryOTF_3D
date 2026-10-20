@@ -19,3 +19,6 @@ Plugins/*/Intermediate/
 # OS
 Thumbs.db
 .DS_Store
+
+# Mood-board stills (copyrighted, local only)
+Reference/
