@@ -1,5 +1,7 @@
 #include "NoirSuspect.h"
 
+#include "TimerManager.h"
+
 #include "NoirSave.h"
 
 #include "NoirCaseContent.h"
@@ -90,6 +92,53 @@ FText ANoirSuspect::Ask(int32 TopicIndex, ANoirCharacter* Detective)
 	return Topics[TopicIndex].Answer;
 }
 
+bool ANoirSuspect::HasStatements() const
+{
+	return Director.IsValid() && Topics.ContainsByPredicate([](const FNoirTopic& T) { return !T.StatementId.IsNone(); });
+}
+
+TArray<int32> ANoirSuspect::GetChallengeableTopics() const
+{
+	TArray<int32> Out;
+	for (int32 i = 0; i < Topics.Num(); ++i)
+	{
+		if (!Topics[i].StatementId.IsNone() && AskedTopics.Contains(i)) Out.Add(i);
+	}
+	return Out;
+}
+
+FText ANoirSuspect::Challenge(int32 Topic, const FNoirClue& Clue, ANoirCharacter* Detective)
+{
+	ANoirCaseDirector* Case = Director.Get();
+	if (!Case || !Topics.IsValidIndex(Topic) || Topics[Topic].StatementId.IsNone())
+	{
+		return Present(Clue, Detective);
+	}
+	const FName SuspectId(*CaseSuspectId), ClueId(*Clue.Id);
+	if (Case->EvaluateContradiction(SuspectId, Topics[Topic].StatementId, ClueId))
+	{
+		if (Detective && !bCracked)
+		{
+			Detective->ShowMessage(FText::Format(NoirTr(TEXT("Contradiction: {0}"), TEXT("Contradicción: {0}")), Topics[Topic].Question));
+		}
+		return Present(Clue, Detective);
+	}
+	bool bAlready = false;
+	Challenges.Add(FString::FromInt(Topic) + TEXT("|") + Clue.Id, &bAlready);
+	if (!bAlready && !bCracked)
+	{
+		Stress = FMath::Min(Stress + 0.1f, 0.9f);
+		Composure = FMath::Clamp(1.f - Stress, 0.f, 1.f);
+	}
+	if (Case->EvaluateContradiction(SuspectId, FName(TEXT("any")), ClueId))
+	{
+		// The right clue, aimed at the wrong thing they said: close.
+		return NoirTr(TEXT("You're twisting my words. That has nothing to do with what I told you."),
+			TEXT("Está tergiversando mis palabras. Eso no tiene nada que ver con lo que le dije."));
+	}
+	return Case->Confront(CaseSuspectId, Clue.Id).Line;
+}
+
 FNoirSuspectSave ANoirSuspect::SaveState() const
 {
 	FNoirSuspectSave S;
@@ -142,6 +191,7 @@ FText ANoirSuspect::Present(const FNoirClue& Clue, ANoirCharacter* Detective)
 		{
 			bCracked = true;
 			Stress = 1.f;
+			Composure = 0.f;
 			if (!Result.FollowUpQuestion.IsEmpty())
 			{
 				FNoirTopic* Existing = Topics.FindByPredicate(
@@ -159,6 +209,7 @@ FText ANoirSuspect::Present(const FNoirClue& Clue, ANoirCharacter* Detective)
 		else if (!bAlreadyShown && !bCracked)
 		{
 			Stress = FMath::Min(Stress + 0.15f, 0.9f);
+			Composure = FMath::Clamp(1.0f - Stress, 0.0f, 1.0f);
 		}
 		return Result.Line;
 	}
@@ -173,6 +224,7 @@ FText ANoirSuspect::Present(const FNoirClue& Clue, ANoirCharacter* Detective)
 	if (!bAlreadyShown && !bCracked)
 	{
 		Stress = FMath::Clamp(Stress + Reaction->Stress, 0.f, 1.f);
+		Composure = FMath::Clamp(1.0f - Stress, 0.0f, 1.0f);
 		if (Stress >= 1.f)
 		{
 			bCracked = true;
@@ -186,6 +238,25 @@ FText ANoirSuspect::Present(const FNoirClue& Clue, ANoirCharacter* Detective)
 	return Reaction->Response;
 }
 
+bool ANoirSuspect::EvaluateContradiction(FName StatementId, FName EvidenceId)
+{
+	if (ANoirCaseDirector* Case = Director.Get())
+	{
+		return Case->EvaluateContradiction(FName(*CaseSuspectId), StatementId, EvidenceId);
+	}
+
+	const FString EvStr = EvidenceId.ToString();
+	for (const FNoirEvidenceReaction& R : Reactions)
+	{
+		if (R.Evidence && (R.Evidence->GetName().Contains(EvStr) || R.Evidence->GetActorLabel().Contains(EvStr)))
+		{
+			return R.Stress > 0.4f;
+		}
+	}
+	return false;
+}
+
+
 UStaticMeshComponent* ANoirSuspect::Part(USceneComponent* Parent, const TCHAR* Shape, const FVector& At, const FVector& SizeCm,
 	UMaterialInterface* Material, const FRotator& Rotation)
 {
@@ -195,13 +266,40 @@ UStaticMeshComponent* ANoirSuspect::Part(USceneComponent* Parent, const TCHAR* S
 	M->SetRelativeLocationAndRotation(At, Rotation);
 	M->SetRelativeScale3D(SizeCm / 100.f);
 	M->SetMaterial(0, Material);
+	M->OverrideMaterials = { Material };
 	M->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	M->RegisterComponent();
+	DressParts.Add(M);
 	return M;
+}
+
+void ANoirSuspect::BeginPlay()
+{
+	Super::BeginPlay();
+	// Suspects placed by hand (the look-dev room) dress themselves; a case director dresses the
+	// ones it spawns right after spawning them, so wait a tick to see whether that happens.
+	GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]()
+	{
+		if (bDressed) return;
+		FNoirLook Look;
+		const FString NameStr = DisplayName.ToString();
+		Look.bFemale = NameStr.Contains(TEXT("Margaret")) || NameStr.Contains(TEXT("Lady")) || NameStr.Contains(TEXT("Miss")) || NameStr.Contains(TEXT("Mrs"));
+		Look.Height = 1.0f;
+		Look.Coat = SignatureColor.GetLuminance() > 0.05f ? SignatureColor : FLinearColor(0.04f, 0.035f, 0.03f);
+		Look.Accent = SignatureColor;
+		Look.Seed = static_cast<int32>(GetTypeHash(NameStr.IsEmpty() ? GetName() : NameStr));
+		Dress(Look);
+	}));
 }
 
 void ANoirSuspect::Dress(const FNoirLook& Look)
 {
+	// Dressing again replaces the figure (never two coats on one suspect).
+	for (UStaticMeshComponent* Old : DressParts)
+	{
+		if (Old) Old->DestroyComponent();
+	}
+	DressParts.Reset();
 	// Skin and hair from the suspect's name, the coat from what a witness could describe.
 	static const FLinearColor Skins[] = {FLinearColor(0.42f, 0.28f, 0.2f), FLinearColor(0.32f, 0.2f, 0.13f), FLinearColor(0.2f, 0.12f, 0.07f),
 		FLinearColor(0.48f, 0.34f, 0.26f)};
@@ -209,18 +307,51 @@ void ANoirSuspect::Dress(const FNoirLook& Look)
 		FLinearColor(0.25f, 0.24f, 0.22f)};
 	const uint32 H = static_cast<uint32>(Look.Seed);
 	auto Mat = [this](const FLinearColor& C, float Rough) { return NoirEvidenceModels::MakeMaterial(this, C, Rough); };
-	UMaterialInterface* Coat = Mat(Look.Coat, 0.6f);
-	UMaterialInterface* CoatDark = Mat(Look.Coat * 0.55f, 0.6f);
-	UMaterialInterface* Trousers = Mat(FLinearColor(0.025f, 0.022f, 0.02f), 0.7f);
-	UMaterialInterface* Skin = Mat(Skins[H % 4], 0.5f);
+
+	UMaterialInterface* WoolParent = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Suspect_Margaret.MI_Suspect_Margaret"));
+	auto WoolMat = [this, WoolParent, &Mat](const FLinearColor& C, float Rough) -> UMaterialInterface* {
+		if (WoolParent)
+		{
+			UMaterialInstanceDynamic* Mid = UMaterialInstanceDynamic::Create(WoolParent, this);
+			Mid->SetVectorParameterValue(TEXT("BaseColor"), C);
+			Mid->SetScalarParameterValue(TEXT("Roughness"), 1.f); // the texture carries the roughness
+			return Mid;
+		}
+		return Mat(C, Rough);
+	};
+
+	UMaterialInterface* LeatherParent = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Leather_Green.MI_Leather_Green"));
+	auto LeatherMat = [this, LeatherParent, &Mat](const FLinearColor& C, float Rough) -> UMaterialInterface* {
+		if (LeatherParent)
+		{
+			UMaterialInstanceDynamic* Mid = UMaterialInstanceDynamic::Create(LeatherParent, this);
+			Mid->SetVectorParameterValue(TEXT("BaseColor"), C);
+			Mid->SetScalarParameterValue(TEXT("Roughness"), 1.f); // the texture carries the roughness
+			return Mid;
+		}
+		return Mat(C, Rough);
+	};
+
+	UMaterialInterface* Coat = WoolMat(Look.Coat, 0.6f);
+	UMaterialInterface* CoatDark = WoolMat(Look.Coat * 0.55f, 0.6f);
+	UMaterialInterface* Trousers = WoolMat(FLinearColor(0.04f, 0.035f, 0.03f), 0.7f);
+
+	UMaterialInterface* SkinParent = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Skin_Placeholder.MI_Skin_Placeholder"));
+	UMaterialInstanceDynamic* SkinMid = SkinParent ? UMaterialInstanceDynamic::Create(SkinParent, this) : nullptr;
+	if (SkinMid)
+	{
+		SkinMid->SetVectorParameterValue(TEXT("BaseColor"), Skins[H % 4]);
+		SkinMid->SetScalarParameterValue(TEXT("Roughness"), 1.f); // the texture carries the roughness
+	}
+	UMaterialInterface* Skin = SkinMid ? SkinMid : Mat(Skins[H % 4], 0.5f);
 	UMaterialInterface* Hair = Mat(Hairs[(H / 4) % 4], 0.6f);
-	UMaterialInterface* Accent = Mat(Look.Accent * 0.6f, 0.5f);
-	UMaterialInterface* Shoe = Mat(FLinearColor(0.02f, 0.015f, 0.012f), 0.3f);
-	UMaterialInterface* Felt = Mat(FLinearColor(0.03f, 0.028f, 0.025f), 0.8f);
+	UMaterialInterface* Accent = WoolMat(Look.Accent * 0.8f, 0.5f);
+	UMaterialInterface* Shoe = LeatherMat(FLinearColor(0.12f, 0.09f, 0.07f), 0.35f);
+	UMaterialInterface* Felt = WoolMat(FLinearColor(0.05f, 0.045f, 0.04f), 0.8f);
 
 	// The plain placeholder makes way.
-	Body->SetVisibility(false);
-	Head->SetVisibility(false);
+	if (IsValid(Body)) Body->SetVisibility(false);
+	if (IsValid(Head)) Head->SetVisibility(false);
 
 	const bool F = Look.bFemale;
 	for (const float Side : {-1.f, 1.f})

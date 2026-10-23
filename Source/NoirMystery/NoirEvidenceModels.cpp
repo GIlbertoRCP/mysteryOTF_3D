@@ -49,18 +49,41 @@ namespace
 		UMaterialInterface* Glass;
 		UMaterialInterface* Cloth;
 		UMaterialInterface* Cord;
+		UMaterialInterface* WatchDial;
+		UMaterialInterface* Letter;
+		UMaterialInterface* Yarn;
 
 		explicit FPalette(UObject* Outer)
 		{
-			Brass = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.5f, 0.36f, 0.16f), 0.35f, 1.f);
-			Paper = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.42f, 0.37f, 0.28f), 0.85f);
+			Brass = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Brass.MI_Brass"));
+			if (!Brass) Brass = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.8f, 0.65f, 0.35f), 0.35f, 1.f);
+
+			Paper = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Letter.MI_Letter"));
+			if (!Paper) Paper = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.42f, 0.37f, 0.28f), 0.85f);
+
 			Ink = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.012f, 0.012f, 0.015f), 0.6f);
 			Steel = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.2f, 0.2f, 0.21f), 0.25f, 1.f);
-			DarkWood = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.035f, 0.018f, 0.01f), 0.45f);
-			Leather = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.06f, 0.03f, 0.018f), 0.5f);
+
+			DarkWood = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Wood_Dark.MI_Wood_Dark"));
+			if (!DarkWood) DarkWood = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.035f, 0.018f, 0.01f), 0.45f);
+
+			Leather = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Leather_Green.MI_Leather_Green"));
+			if (!Leather) Leather = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.06f, 0.03f, 0.018f), 0.5f);
+
 			Glass = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.03f, 0.06f, 0.045f), 0.1f);
-			Cloth = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.5f, 0.47f, 0.4f), 0.95f);
-			Cord = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.12f, 0.09f, 0.05f), 0.9f);
+
+			Cloth = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Suspect_Margaret.MI_Suspect_Margaret"));
+			if (!Cloth) Cloth = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.5f, 0.47f, 0.4f), 0.95f);
+
+			Cord = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Yarn.MI_Yarn"));
+			if (!Cord) Cord = NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.12f, 0.09f, 0.05f), 0.9f);
+
+			WatchDial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_WatchDial.MI_WatchDial"));
+			Letter = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Letter.MI_Letter"));
+			Yarn = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Yarn.MI_Yarn"));
+			if (!WatchDial) WatchDial = Paper;
+			if (!Letter) Letter = Paper;
+			if (!Yarn) Yarn = Cord;
 		}
 	};
 
@@ -120,7 +143,7 @@ FNoirEvidenceSpec NoirEvidenceModels::Build(UObject* Outer, const mystery::Conte
 		// The victim's watch, broken in the fall: the hands give the time of death.
 		const int32 Min = E.model->min;
 		B.Disc(P.Brass, 0, 5.f, 1.2f);
-		B.Disc(P.Paper, 0.62f, 4.4f, 0.2f);
+		B.Disc(P.WatchDial, 0.62f, 4.4f, 0.2f);
 		Hand(B, P.Ink, ((Min / 60) % 12 + (Min % 60) / 60.f) * 30.f, 1.2f, 0.2f, 0.75f);
 		Hand(B, P.Ink, (Min % 60) * 6.f, 1.8f, 0.12f, 0.78f);
 		B.Disc(P.Brass, 0.8f, 0.25f, 0.25f);
@@ -139,7 +162,7 @@ FNoirEvidenceSpec NoirEvidenceModels::Build(UObject* Outer, const mystery::Conte
 	{
 		// A sealed letter; the seal is the colour of the person it is about.
 		UMaterialInterface* Wax = MakeMaterial(Outer, E.model ? FromHex(E.model->seal) * 0.35f : FLinearColor(0.25f, 0.01f, 0.01f), 0.35f);
-		B.Box(P.Paper, FVector::ZeroVector, FVector(0.5f, 16, 10));
+		B.Box(P.Letter, FVector::ZeroVector, FVector(0.5f, 16, 10));
 		const float Lines[][2] = {{7, 1.2f}, {8, 0}, {5, -1.2f}};
 		for (const auto& L : Lines)
 		{
@@ -285,7 +308,7 @@ FNoirEvidenceSpec NoirEvidenceModels::Build(UObject* Outer, const mystery::Conte
 		B.Box(P.Glass, FVector::ZeroVector, FVector(0.3f, 7.5f, 2.5f));
 		B.Box(NoirEvidenceModels::MakeMaterial(Outer, FLinearColor(0.2f, 0.01f, 0.01f), 0.3f), FVector(0.2f, 0, 0), FVector(0.1f, 2, 1.2f));
 		B.Cylinder(P.Glass, FVector(0, 0, -6), FVector(1.6f, 1.6f, 6));
-		B.Cylinder(P.Cord, FVector(0, 0, -2.5f), FVector(1.4f, 1.4f, 1.2f));
+		B.Cylinder(P.Yarn, FVector(0, 0, -2.5f), FVector(1.4f, 1.4f, 1.2f));
 		Spec.Details.Add(Detail(Front, Details));
 	}
 

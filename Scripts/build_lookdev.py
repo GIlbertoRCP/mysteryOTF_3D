@@ -44,7 +44,7 @@ def rgb(r, g, b):
 # ---------------------------------------------------------------- materials
 
 def build_master_material():
-    """M_Master: tinted base colour with world-space wear, plus optional emissive."""
+    """M_Master: PBR pipeline with BaseColor, Normal, ORM, and procedural UV tiling."""
     path = MAT_DIR + "/M_Master"
     if eal.does_asset_exist(path):
         mat = unreal.load_asset(path)
@@ -54,40 +54,144 @@ def build_master_material():
     # Also drawn as instances (the train's falling snow).
     mat.set_editor_property("used_with_instanced_static_meshes", True)
 
+    t_white = unreal.load_asset("/Engine/EngineResources/WhiteSquareTexture")
+    t_normal = unreal.load_asset("/Engine/EngineMaterials/DefaultNormal")
+    t_flat_normal = unreal.load_asset("/Engine/EngineMaterials/FlatNormal")
+    t_orm_default = unreal.load_asset("/Game/Art/Textures/T_Default_ORM")
+    if not t_orm_default:
+        png_path = "B:/mysteryOTF/Content/Art/Textures/T_Default_ORM.png"
+        if os.path.exists(png_path):
+            task = unreal.AssetImportTask()
+            task.filename = png_path.replace("\\", "/")
+            task.destination_path = "/Game/Art/Textures"
+            task.destination_name = "T_Default_ORM"
+            task.replace_existing = True
+            task.automated = True
+            task.save = True
+            unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
+            t_orm_default = unreal.load_asset("/Game/Art/Textures/T_Default_ORM")
+            if t_orm_default:
+                t_orm_default.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_MASKS)
+                t_orm_default.set_editor_property("srgb", False)
+                eal.save_loaded_asset(t_orm_default)
+
     def param(cls, name, x, y, default):
         node = mel.create_material_expression(mat, cls, x, y)
         node.set_editor_property("parameter_name", name)
         node.set_editor_property("default_value", default)
         return node
 
-    base = param(unreal.MaterialExpressionVectorParameter, "BaseColor", -600, -200,
-                 unreal.LinearColor(0.2, 0.2, 0.2, 1))
-    rough = param(unreal.MaterialExpressionScalarParameter, "Roughness", -600, 0, 0.7)
-    metal = param(unreal.MaterialExpressionScalarParameter, "Metallic", -600, 100, 0.0)
-    spec = param(unreal.MaterialExpressionScalarParameter, "Specular", -600, 200, 0.5)
-    emissive = param(unreal.MaterialExpressionVectorParameter, "Emissive", -600, 300,
-                     unreal.LinearColor(0, 0, 0, 1))
+    def tex_param(name, x, y, default_tex, sampler_type=unreal.MaterialSamplerType.SAMPLERTYPE_COLOR):
+        node = mel.create_material_expression(mat, unreal.MaterialExpressionTextureSampleParameter2D, x, y)
+        node.set_editor_property("parameter_name", name)
+        if default_tex:
+            node.set_editor_property("texture", default_tex)
+        node.set_editor_property("sampler_type", sampler_type)
+        return node
 
-    # World-space noise breaks up flat placeholder surfaces ("nothing looks new").
-    noise = mel.create_material_expression(mat, unreal.MaterialExpressionNoise, -600, -400)
+    # UV Tiling
+    tex_coord = mel.create_material_expression(mat, unreal.MaterialExpressionTextureCoordinate, -1200, -200)
+    uv_tiling = param(unreal.MaterialExpressionScalarParameter, "UV_Tiling", -1200, -100, 1.0)
+    uv_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -1000, -150)
+    mel.connect_material_expressions(tex_coord, "", uv_mul, "A")
+    mel.connect_material_expressions(uv_tiling, "", uv_mul, "B")
+
+    detail_uv_tiling = param(unreal.MaterialExpressionScalarParameter, "Detail_UV_Tiling", -1200, 400, 5.0)
+    detail_uv_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -1000, 350)
+    mel.connect_material_expressions(tex_coord, "", detail_uv_mul, "A")
+    mel.connect_material_expressions(detail_uv_tiling, "", detail_uv_mul, "B")
+
+    # Base Color: Tinted Base * T2D_BaseColor * Noise
+    t2d_base = tex_param("T2D_BaseColor", -800, -350, t_white, unreal.MaterialSamplerType.SAMPLERTYPE_COLOR)
+    mel.connect_material_expressions(uv_mul, "", t2d_base, "Coordinates")
+    base_tint = param(unreal.MaterialExpressionVectorParameter, "BaseColor", -800, -150, unreal.LinearColor(1.0, 1.0, 1.0, 1))
+    tint_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -600, -250)
+    mel.connect_material_expressions(t2d_base, "", tint_mul, "A")
+    mel.connect_material_expressions(base_tint, "", tint_mul, "B")
+
+    noise = mel.create_material_expression(mat, unreal.MaterialExpressionNoise, -600, -450)
     noise.set_editor_property("scale", 0.05)
     noise.set_editor_property("output_min", 0.88)
     noise.set_editor_property("output_max", 1.0)
-    mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -300, -250)
-    mel.connect_material_expressions(base, "", mul, "A")
-    mel.connect_material_expressions(noise, "", mul, "B")
 
-    mel.connect_material_property(mul, "", unreal.MaterialProperty.MP_BASE_COLOR)
-    mel.connect_material_property(rough, "", unreal.MaterialProperty.MP_ROUGHNESS)
-    mel.connect_material_property(metal, "", unreal.MaterialProperty.MP_METALLIC)
+    final_base = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -400, -300)
+    mel.connect_material_expressions(tint_mul, "", final_base, "A")
+    mel.connect_material_expressions(noise, "", final_base, "B")
+    mel.connect_material_property(final_base, "", unreal.MaterialProperty.MP_BASE_COLOR)
+
+    # ORM
+    t2d_orm = tex_param("T2D_ORM", -800, 50, t_orm_default, unreal.MaterialSamplerType.SAMPLERTYPE_MASKS)
+    mel.connect_material_expressions(uv_mul, "", t2d_orm, "Coordinates")
+
+    # AO (R)
+    ao_scale = param(unreal.MaterialExpressionScalarParameter, "AmbientOcclusion", -600, 0, 1.0)
+    ao_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -400, 20)
+    mel.connect_material_expressions(t2d_orm, "R", ao_mul, "A")
+    mel.connect_material_expressions(ao_scale, "", ao_mul, "B")
+    mel.connect_material_property(ao_mul, "", unreal.MaterialProperty.MP_AMBIENT_OCCLUSION)
+
+    # Roughness (G) + MicroRoughness
+    rough_scale = param(unreal.MaterialExpressionScalarParameter, "Roughness", -600, 120, 0.7)
+    rough_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -400, 140)
+    mel.connect_material_expressions(t2d_orm, "G", rough_mul, "A")
+    mel.connect_material_expressions(rough_scale, "", rough_mul, "B")
+
+    micro_rough = param(unreal.MaterialExpressionScalarParameter, "MicroRoughness", -400, 240, 0.0)
+    rough_add = mel.create_material_expression(mat, unreal.MaterialExpressionAdd, -250, 160)
+    mel.connect_material_expressions(rough_mul, "", rough_add, "A")
+    mel.connect_material_expressions(micro_rough, "", rough_add, "B")
+
+    rough_clamp = mel.create_material_expression(mat, unreal.MaterialExpressionClamp, -100, 160)
+    rough_clamp.set_editor_property("min_default", 0.0)
+    rough_clamp.set_editor_property("max_default", 1.0)
+    mel.connect_material_expressions(rough_add, "", rough_clamp, "")
+    mel.connect_material_property(rough_clamp, "", unreal.MaterialProperty.MP_ROUGHNESS)
+
+    # Metallic (B)
+    metal_scale = param(unreal.MaterialExpressionScalarParameter, "Metallic", -600, 260, 0.0)
+    metal_mul = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -400, 280)
+    mel.connect_material_expressions(t2d_orm, "B", metal_mul, "A")
+    mel.connect_material_expressions(metal_scale, "", metal_mul, "B")
+    mel.connect_material_property(metal_mul, "", unreal.MaterialProperty.MP_METALLIC)
+
+    # Specular & Emissive
+    spec = param(unreal.MaterialExpressionScalarParameter, "Specular", -400, 380, 0.5)
     mel.connect_material_property(spec, "", unreal.MaterialProperty.MP_SPECULAR)
+    emissive = param(unreal.MaterialExpressionVectorParameter, "Emissive", -400, 480, unreal.LinearColor(0, 0, 0, 1))
     mel.connect_material_property(emissive, "", unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+
+    # Normal & Detail Normal
+    t2d_norm = tex_param("T2D_Normal", -800, 600, t_normal, unreal.MaterialSamplerType.SAMPLERTYPE_NORMAL)
+    mel.connect_material_expressions(uv_mul, "", t2d_norm, "Coordinates")
+    t2d_detail = tex_param("T2D_DetailNormal", -800, 800, t_flat_normal, unreal.MaterialSamplerType.SAMPLERTYPE_NORMAL)
+    mel.connect_material_expressions(detail_uv_mul, "", t2d_detail, "Coordinates")
+
+    # NormalStrength blends from flat (0) to the map as painted (1).
+    flat = mel.create_material_expression(mat, unreal.MaterialExpressionConstant3Vector, -600, 540)
+    flat.set_editor_property("constant", unreal.LinearColor(0, 0, 1, 1))
+    norm_strength = param(unreal.MaterialExpressionScalarParameter, "NormalStrength", -600, 660, 1.0)
+    norm_scaled = mel.create_material_expression(mat, unreal.MaterialExpressionLinearInterpolate, -400, 620)
+    mel.connect_material_expressions(flat, "", norm_scaled, "A")
+    mel.connect_material_expressions(t2d_norm, "", norm_scaled, "B")
+    mel.connect_material_expressions(norm_strength, "", norm_scaled, "Alpha")
+
+    norm_add = mel.create_material_expression(mat, unreal.MaterialExpressionAdd, -300, 700)
+    mel.connect_material_expressions(norm_scaled, "", norm_add, "A")
+    mel.connect_material_expressions(t2d_detail, "", norm_add, "B")
+    mel.connect_material_property(norm_add, "", unreal.MaterialProperty.MP_NORMAL)
+
     mel.recompile_material(mat)
     eal.save_loaded_asset(mat)
     return mat
 
 
-def make_instance(parent, name, color, roughness, metallic=0.0, emissive=(0, 0, 0)):
+
+def make_instance(parent, name, color, roughness, metallic=0.0, emissive=(0, 0, 0),
+                  tex_bc=None, tex_norm=None, tex_orm=None, uv_tiling=1.0, normal_strength=1.0):
+    # With an ORM texture the texture's G channel is the roughness; the scalar only scales it,
+    # so leave it at 1 (a leftover 0.6 would turn 0.85 wool into a 0.5 semi-gloss that mirrors lamps).
+    if tex_orm:
+        roughness = 1.0
     path = MAT_DIR + "/" + name
     if eal.does_asset_exist(path):
         mi = unreal.load_asset(path)
@@ -99,6 +203,18 @@ def make_instance(parent, name, color, roughness, metallic=0.0, emissive=(0, 0, 
     mel.set_material_instance_vector_parameter_value(mi, "Emissive", unreal.LinearColor(*emissive, 1))
     mel.set_material_instance_scalar_parameter_value(mi, "Roughness", roughness)
     mel.set_material_instance_scalar_parameter_value(mi, "Metallic", metallic)
+    if tex_bc:
+        t = unreal.load_asset(f"/Game/Art/Textures/{tex_bc}")
+        if t: mel.set_material_instance_texture_parameter_value(mi, "T2D_BaseColor", t)
+    if tex_norm:
+        t = unreal.load_asset(f"/Game/Art/Textures/{tex_norm}")
+        if t: mel.set_material_instance_texture_parameter_value(mi, "T2D_Normal", t)
+    if tex_orm:
+        t = unreal.load_asset(f"/Game/Art/Textures/{tex_orm}")
+        if t: mel.set_material_instance_texture_parameter_value(mi, "T2D_ORM", t)
+    if uv_tiling != 1.0:
+        mel.set_material_instance_scalar_parameter_value(mi, "UV_Tiling", uv_tiling)
+    mel.set_material_instance_scalar_parameter_value(mi, "NormalStrength", normal_strength)
     eal.save_loaded_asset(mi)
     return mi
 
@@ -108,38 +224,42 @@ def build_materials():
     m = lambda *a, **k: make_instance(master, *a, **k)
     return {
         # Dark stained panelling: brown with a little red, never orange.
-        "wall": m("MI_Wall_Oxblood", (0.045, 0.018, 0.012), 0.7),
-        "floor": m("MI_Floor_DarkWood", (0.05, 0.028, 0.016), 0.5),
-        "ceiling": m("MI_Ceiling_Plaster", (0.06, 0.05, 0.04), 0.9),
-        "wood": m("MI_Wood_Dark", (0.035, 0.018, 0.01), 0.45),
-        "brass": m("MI_Brass", (0.5, 0.36, 0.16), 0.35, 1.0),
-        "rug": m("MI_Rug_Oxblood", (0.09, 0.02, 0.018), 0.95),
+        "wall": m("MI_Wall_Oxblood", (1.0, 1.0, 1.0), 0.7, tex_bc="T_Wall_BaseColor", tex_norm="T_Wall_Normal", tex_orm="T_Wall_ORM", uv_tiling=2.5),
+        "floor": m("MI_Floor_DarkWood", (1.0, 1.0, 1.0), 0.5, tex_bc="T_WoodFloor_BaseColor", tex_norm="T_WoodFloor_Normal", tex_orm="T_WoodFloor_ORM", uv_tiling=3.0),
+        "ceiling": m("MI_Ceiling_Plaster", (1.0, 1.0, 1.0), 0.9, tex_bc="T_Ceiling_BaseColor", tex_norm="T_Ceiling_Normal", tex_orm="T_Ceiling_ORM", uv_tiling=4.0),
+        "wood": m("MI_Wood_Dark", (1.0, 1.0, 1.0), 0.45, tex_bc="T_WoodFloor_BaseColor", tex_norm="T_WoodFloor_Normal", tex_orm="T_WoodFloor_ORM", uv_tiling=2.0),
+        "brass": m("MI_Brass", (0.8, 0.65, 0.35), 0.35, 1.0, tex_bc="T_Brass_BaseColor", tex_norm="T_Brass_Normal", tex_orm="T_Brass_ORM", uv_tiling=1.5),
+        "rug": m("MI_Rug_Oxblood", (1.0, 1.0, 1.0), 0.95, tex_bc="T_Rug_BaseColor", tex_norm="T_Rug_Normal", tex_orm="T_Rug_ORM", uv_tiling=1.0),
+        "corkboard": m("MI_Corkboard", (1.0, 1.0, 1.0), 0.88, tex_bc="T_Corkboard_BaseColor", tex_norm="T_Corkboard_Normal", tex_orm="T_Corkboard_ORM", uv_tiling=7.0, normal_strength=0.45),
+        "watch_dial": m("MI_WatchDial", (1.0, 1.0, 1.0), 0.3, tex_bc="T_WatchDial_BaseColor", tex_norm="T_WatchDial_Normal", tex_orm="T_WatchDial_ORM", uv_tiling=1.0),
+        "letter": m("MI_Letter", (1.0, 1.0, 1.0), 0.8, tex_bc="T_Letter_BaseColor", tex_norm="T_Letter_Normal", tex_orm="T_Letter_ORM", uv_tiling=1.0),
+        "yarn": m("MI_Yarn", (1.0, 1.0, 1.0), 0.9, tex_bc="T_Yarn_BaseColor", tex_norm="T_Yarn_Normal", tex_orm="T_Yarn_ORM", uv_tiling=4.0),
         # The one saturated accent allowed by the palette.
         "wax": m("MI_Wax_Red", (0.25, 0.012, 0.01), 0.35),
         "ink": m("MI_Ink", (0.012, 0.012, 0.015), 0.6),
         "steel": m("MI_Steel_Dark", (0.15, 0.15, 0.16), 0.3, 1.0),
         # Suspects: one signature colour each.
-        "skin": m("MI_Skin_Placeholder", (0.3, 0.2, 0.15), 0.6),
-        "margaret": m("MI_Suspect_Margaret", (0.012, 0.07, 0.04), 0.5),
-        "edmund": m("MI_Suspect_Edmund", (0.2, 0.12, 0.02), 0.6),
-        "leather": m("MI_Leather_Green", (0.035, 0.045, 0.025), 0.45),
+        "skin": m("MI_Skin_Placeholder", (0.75, 0.55, 0.45), 0.5, tex_bc="T_Skin_BaseColor", tex_norm="T_Skin_Normal", tex_orm="T_Skin_ORM", uv_tiling=1.0, normal_strength=0.3),
+        "margaret": m("MI_Suspect_Margaret", (0.03, 0.18, 0.10), 0.5, tex_bc="T_Fabric_Wool_BaseColor", tex_norm="T_Fabric_Wool_Normal", tex_orm="T_Fabric_Wool_ORM", uv_tiling=2.5, normal_strength=0.35),
+        "edmund": m("MI_Suspect_Edmund", (0.35, 0.22, 0.08), 0.6, tex_bc="T_Fabric_Wool_BaseColor", tex_norm="T_Fabric_Wool_Normal", tex_orm="T_Fabric_Wool_ORM", uv_tiling=2.5, normal_strength=0.35),
+        "leather": m("MI_Leather_Green", (0.05, 0.15, 0.08), 0.45, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=2.0, normal_strength=0.6),
         "paper": m("MI_Paper_Aged", (0.42, 0.37, 0.28), 0.85),
         "photo": m("MI_Photo_Dark", (0.06, 0.06, 0.055), 0.3),
-        "frame": m("MI_Frame_Gilt", (0.3, 0.2, 0.08), 0.5, 1.0),
-        "canvas": m("MI_Canvas_Murky", (0.05, 0.045, 0.03), 0.8),
+        "frame": m("MI_Frame_Gilt", (0.7, 0.55, 0.25), 0.5, 1.0, tex_bc="T_Brass_BaseColor", tex_norm="T_Brass_Normal", tex_orm="T_Brass_ORM", uv_tiling=2.0),
+        "canvas": m("MI_Canvas_Murky", (0.15, 0.13, 0.10), 0.8, tex_bc="T_Canvas_BaseColor", tex_norm="T_Canvas_Normal", tex_orm="T_Canvas_ORM", uv_tiling=1.0, normal_strength=0.6),
         # Lamp shades read as glowing cream, like the sconces on the AW2 board.
         "shade": m("MI_LampShade_Glow", (0.5, 0.42, 0.3), 0.9, emissive=(2.6, 1.9, 1.05)),
         "shade_green": m("MI_LampShade_Banker", (0.02, 0.06, 0.03), 0.3, emissive=(0.06, 0.22, 0.09)),
         "books": [
-            m("MI_Book_Oxblood", (0.08, 0.015, 0.012), 0.6),
-            m("MI_Book_Green", (0.02, 0.04, 0.025), 0.6),
-            m("MI_Book_Brown", (0.06, 0.035, 0.018), 0.6),
-            m("MI_Book_Navy", (0.015, 0.02, 0.035), 0.6),
-            m("MI_Book_Cream", (0.25, 0.21, 0.15), 0.7),
+            m("MI_Book_Oxblood", (0.25, 0.04, 0.03), 0.6, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=3.0, normal_strength=0.6),
+            m("MI_Book_Green", (0.05, 0.16, 0.08), 0.6, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=3.0, normal_strength=0.6),
+            m("MI_Book_Brown", (0.20, 0.11, 0.05), 0.6, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=3.0, normal_strength=0.6),
+            m("MI_Book_Navy", (0.04, 0.07, 0.18), 0.6, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=3.0, normal_strength=0.6),
+            m("MI_Book_Cream", (0.80, 0.72, 0.55), 0.7, tex_bc="T_Leather_BaseColor", tex_norm="T_Leather_Normal", tex_orm="T_Leather_ORM", uv_tiling=3.0, normal_strength=0.6),
         ],
         # Exterior: everything outside is near-black and read through fog.
-        "ground": m("MI_Ground_Wet", (0.025, 0.03, 0.025), 0.25),
-        "path": m("MI_Ground_Path", (0.06, 0.06, 0.05), 0.4),
+        "ground": m("MI_Ground_Wet", (1.0, 1.0, 1.0), 0.25, tex_bc="T_Ground_BaseColor", tex_norm="T_Ground_Normal", tex_orm="T_Ground_ORM", uv_tiling=3.0),
+        "path": m("MI_Ground_Path", (1.0, 1.0, 1.0), 0.4, tex_bc="T_Ground_BaseColor", tex_norm="T_Ground_Normal", tex_orm="T_Ground_ORM", uv_tiling=2.5),
         "bark": m("MI_Bark_Dark", (0.025, 0.022, 0.018), 0.8),
         "foliage": m("MI_Foliage_Pine", (0.015, 0.025, 0.018), 0.8),
         "moon": m("MI_Moon_Glow", (0.5, 0.55, 0.52), 1.0, emissive=(30.0, 36.0, 34.0)),
@@ -156,6 +276,7 @@ def block(label, center, size_cm, material, folder="Room", shadow=True, mesh=CUB
     a.set_folder_path(folder)
     smc = a.static_mesh_component
     smc.set_material(0, material)
+    smc.set_editor_property("override_materials", [material])
     if not shadow:
         smc.set_editor_property("cast_shadow", False)
     return a
@@ -334,10 +455,12 @@ def _hand(mat, clock_deg, length, width, x):
 
 def evidence_models(mats):
     brass, ink = mats["brass"], mats["ink"]
+    watch_face = mats.get("watch_dial", mats["paper"])
+    letter_mat = mats.get("letter", mats["paper"])
     # Pocket watch, stopped at 10:42; engraving on the case back.
     watch = [
         _disc(brass, 0, 5.0, 1.2),
-        _disc(mats["paper"], 0.62, 4.4, 0.2),
+        _disc(watch_face, 0.62, 4.4, 0.2),
         _hand(ink, (10 + 42 / 60) * 30, 1.2, 0.2, 0.75),
         _hand(ink, 42 * 6, 1.8, 0.12, 0.78),
         _disc(brass, 0.8, 0.25, 0.25),
@@ -346,7 +469,7 @@ def evidence_models(mats):
         _disc(mats["frame"], -0.62, 3.2, 0.1),
     ]
     # Sealed letter: address on the front, unbroken wax seal on the back.
-    letter = [_box(mats["paper"], (0, 0, 0), (0.5, 16, 10))]
+    letter = [_box(letter_mat, (0, 0, 0), (0.5, 16, 10))]
     for w, z in ((7, 1.2), (8, 0), (5, -1.2)):
         letter.append(_box(ink, (0.28, 1.5, z), (0.1, w, 0.35)))
     letter.append(_box(mats["books"][0], (0.28, -6, 3), (0.1, 2, 2.4)))
@@ -401,8 +524,12 @@ def suspect(label, loc, yaw, mats, colour, name, occupation, greeting, topics, r
     a = actors.spawn_actor_from_class(unreal.NoirSuspect, unreal.Vector(*loc), unreal.Rotator(0, 0, yaw))
     a.set_actor_label(label)
     a.set_folder_path("Gameplay/Suspects")
-    a.get_editor_property("body").set_material(0, mats[colour])
-    a.get_editor_property("head").set_material(0, mats["skin"])
+    body = a.get_editor_property("body")
+    body.set_material(0, mats[colour])
+    body.set_editor_property("override_materials", [mats[colour]])
+    head = a.get_editor_property("head")
+    head.set_material(0, mats["skin"])
+    head.set_editor_property("override_materials", [mats["skin"]])
     for key, value in (("display_name", name), ("occupation", occupation), ("greeting", greeting),
                        ("cracked_line", cracked), ("cracked_clue", clue)):
         a.set_editor_property(key, unreal.Text(value))
@@ -450,7 +577,7 @@ def build_level(mats):
     # South wall: the case board between two sconces (AW2 Mind Place).
     bx, bw = 170, 240
     # The cards on it are pinned in play by NoirCase, from what the detective knows.
-    block("CaseBoard", (bx, -296, 160), (bw, 4, 110), wood, "Props/CaseBoard")
+    block("CaseBoard", (bx, -296, 160), (bw, 4, 110), mats.get("corkboard", wood), "Props/CaseBoard")
     for i, x in enumerate((bx - bw / 2 + 25, bx + bw / 2 - 25)):
         block("Sconce%d_Arm" % i, (x, -290, 228), (4, 20, 4), brass, "Props/CaseBoard")
         block("Sconce%d_Shade" % i, (x, -280, 220), (16, 16, 14), mats["shade"], "Props/CaseBoard", shadow=False)

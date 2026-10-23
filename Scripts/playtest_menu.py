@@ -40,6 +40,7 @@ STEPS = [
     (6.0, report("title")), (0.5, shot),
     (0.5, lambda: pc().show_menu_page("case")), (0.8, shot),
     (0.3, lambda: pc().show_menu_page("settings")), (0.8, shot),
+    (0.3, lambda: pc().show_menu_page("controls")), (0.8, shot),
     (0.3, lambda: pc().show_menu_page("main")),
     (0.5, lambda: pc().start_case("TEST-gothic-Detective-0", "Detective", False)),
     (25.0, report("case")), (0.5, shot),

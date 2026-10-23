@@ -173,6 +173,8 @@ bool ANoirCaseDirector::BuildCase()
 	State->Lang = Language == ENoirCaseLanguage::Spanish ? mystery::Lang::Es : mystery::Lang::En;
 	State->Bp = mystery::BuildBlueprint(*State->Content, NoirUtf8(Difficulty), NoirUtf8(Theme), NoirUtf8(PlayedSeed));
 	State->Case = mystery::Localize(*State->Content, State->Bp, State->Lang);
+	Hints.Reset();
+	for (const std::string& Hint : mystery::HintsFor(*State->Content, State->Bp, State->Lang)) Hints.Add(NoirText(Hint));
 	UE_LOG(LogNoirCase, Display, TEXT("Case \"%s\" (seed %s, %s, %s)"), *NoirStr(State->Case.title), *PlayedSeed, *Theme, *Difficulty);
 	return true;
 }
@@ -183,7 +185,10 @@ void ANoirCaseDirector::Stage()
 	UWorld* World = GetWorld();
 
 	// ─── Read the level: rooms, the furniture and stand points inside each ───
-	for (TActorIterator<ANoirRoom> It(World); It; ++It) Rooms.Add(*It);
+	for (TActorIterator<ANoirRoom> It(World); It; ++It)
+	{
+		if (It->bCast) Rooms.Add(*It);
+	}
 	Rooms.Sort([](const ANoirRoom& A, const ANoirRoom& B) { return A.RoomId.LexicalLess(B.RoomId); });
 
 	TArray<ANoirSearchable*> AllFurniture;
@@ -202,6 +207,7 @@ void ANoirCaseDirector::Stage()
 		mystery::StageRoom StageRoom;
 		StageRoom.id = NoirUtf8(Room->RoomId.ToString());
 		StageRoom.canBeScene = Room->bCanBeScene;
+		StageRoom.exclusive = Room->bOnlySuits;
 		for (const FString& Label : Room->Suits) StageRoom.suits.push_back(NoirUtf8(Label));
 		RoomById.Add(Room->RoomId.ToString(), Room);
 		for (ANoirSearchable* F : AllFurniture)
@@ -213,7 +219,8 @@ void ANoirCaseDirector::Stage()
 			F->Items.Reset();
 			F->SearchText = FText::GetEmpty();
 			F->ClueText = FText::GetEmpty();
-			F->DisplayName = FurnitureName(F->FurnitureKind, F->DisplayName, Theme);
+			// An outbuilding's furniture keeps its own names (the pew, the potting bench).
+			if (!Room->bOnlySuits) F->DisplayName = FurnitureName(F->FurnitureKind, F->DisplayName, Theme);
 		}
 		for (ANoirStandPoint* Stand : AllStands)
 		{
@@ -361,9 +368,13 @@ void ANoirCaseDirector::Stage()
 		Suspect->Topics.Reset();
 		for (const mystery::QA& Qa : PS.interview)
 		{
+			// The four case questions, in the generator's order.
+			static const TCHAR* Statements[] = {TEXT("where"), TEXT("relation"), TEXT("heard"), TEXT("noticed")};
+			const int32 Index = Suspect->Topics.Num();
 			FNoirTopic& Topic = Suspect->Topics.AddDefaulted_GetRef();
 			Topic.Question = NoirText(Qa.q);
 			Topic.Answer = NoirText(Qa.a);
+			if (Index < UE_ARRAY_COUNT(Statements)) Topic.StatementId = Statements[Index];
 		}
 		Suspect->SignatureColor = FLinearColor(FColor::FromHex(NoirStr(PS.color)));
 		// Dressed as a witness would describe them: height and coat colour.
@@ -456,8 +467,8 @@ void ANoirCaseDirector::BriefDetective()
 	{
 		Detective->LearnClue(Clue);
 	}
-	Detective->ShowMessage(FText::Format(NoirTr(TEXT("{0}   (Tab: Mind Place    N: notes)"),
-		TEXT("{0}   (Tab: palacio mental    N: notas)")), Briefing));
+	Detective->ShowMessage(FText::Format(NoirTr(TEXT("{0}   (Tab: Mind Place    N: case file)"),
+		TEXT("{0}   (Tab: palacio mental    N: expediente)")), Briefing));
 	if (LateLead)
 	{
 		GetWorldTimerManager().SetTimer(LateLeadTimer, this, &ANoirCaseDirector::DeliverLateLead, LateLeadSeconds, false);
@@ -535,6 +546,7 @@ void ANoirCaseDirector::SaveCase()
 		if (!C.Puzzle.IsOpen() && !C.Puzzle.Reveal.IsEmpty()) Save->SolvedPuzzles.Add(C.Id);
 	}
 	for (const FText& Note : Detective->GetNotes()) Save->Notes.Add(Note.ToString());
+	Save->HintsUsed = HintsUsed;
 	const FTimerManager& Timers = GetWorldTimerManager();
 	Save->LateLeadIn = Timers.TimerExists(LateLeadTimer) ? Timers.GetTimerRemaining(LateLeadTimer)
 		: (LateLead && !bLateLeadDelivered ? LateLeadSeconds : -1.f);
@@ -554,6 +566,119 @@ void ANoirCaseDirector::SaveCase()
 	UE_LOG(LogNoirCase, Display, TEXT("Saved case %s: at %s, %d clues (%d puzzles solved), %d notes, %d searched, %d suspects, %d moved cards, %d strings, late lead in %.0fs"),
 		*Save->Seed, *Save->Where.GetLocation().ToCompactString(), Save->KnownClues.Num(), Save->SolvedPuzzles.Num(), Save->Notes.Num(),
 		Save->Searched.Num(), Save->Suspects.Num(), Save->MovedCards.Num(), Save->StringsA.Num(), Save->LateLeadIn);
+}
+
+FNoirCaseSummary ANoirCaseDirector::GetCaseSummary() const
+{
+	FNoirCaseSummary Out;
+	if (!State) return Out;
+	const mystery::PublicMystery& C = State->Case;
+	Out.Title = NoirText(C.title);
+	Out.Synopsis = NoirText(C.synopsis);
+	Out.VictimName = NoirText(C.victim.name);
+	Out.VictimAge = C.victim.age;
+	Out.VictimOccupation = NoirText(C.victim.occupation);
+	Out.Scene = NoirText(C.victim.scene);
+	Out.TimeWindow = NoirText(C.victim.timeWindow);
+	if (C.modifier)
+	{
+		Out.ComplicationLabel = NoirText(C.modifier->label);
+		Out.ComplicationNote = NoirText(C.modifier->note);
+	}
+	Out.Place = Theme == TEXT("express") ? NoirTr(TEXT("The Midnight Express"), TEXT("El expreso de medianoche"))
+		: NoirTr(TEXT("Blackwood Manor"), TEXT("Mansión Blackwood"));
+	Out.SuspectCount = static_cast<int32>(C.suspects.size());
+	Out.bAccomplice = C.accompliceOption;
+	for (int32 i = 0; i < HintsUsed && Hints.IsValidIndex(i); ++i) Out.HintsTaken.Add(Hints[i]);
+	return Out;
+}
+
+FNoirCaseProgress ANoirCaseDirector::GetCaseProgress(const ANoirCharacter* Detective) const
+{
+	FNoirCaseProgress Out;
+	if (!State || !Detective) return Out;
+	const mystery::PublicMystery& C = State->Case;
+	TSet<FString> Known;
+	for (const FNoirClue& Clue : Detective->GetKnownClues()) Known.Add(Clue.Id);
+
+	// Which question each kind of evidence bears on.
+	enum EQ { Killer, Why, Weapon, Alibi, Accomplice, Count };
+	static const TMap<FString, int32> KindToQuestion = {
+		{TEXT("witness"), Killer}, {TEXT("camera"), Killer}, {TEXT("phone"), Killer}, {TEXT("scrapings"), Killer},
+		{TEXT("smudge"), Killer}, {TEXT("shoeprint"), Killer}, {TEXT("trace"), Killer}, {TEXT("sighting"), Killer},
+		{TEXT("claim"), Killer}, {TEXT("planted"), Killer},
+		{TEXT("document"), Why},
+		{TEXT("weapon"), Weapon}, {TEXT("autopsy"), Weapon},
+		{TEXT("record"), Alibi}, {TEXT("diary"), Alibi},
+		{TEXT("receipt"), Accomplice},
+	};
+	const bool bAccomplice = Board && Board->bHasAccomplice;
+	int32 Found[Count] = {}, Total[Count] = {};
+	TSet<FString> Confirmed; // case suspect ids an alibi check found so far clears
+	for (const mystery::PublicEvidence& E : C.evidence)
+	{
+		const FString Id = NoirStr(E.id);
+		const bool bKnown = Known.Contains(Id);
+		++Out.CluesTotal;
+		Out.CluesFound += bKnown;
+		const int32* Q = KindToQuestion.Find(NoirStr(E.kind));
+		if (Q && (*Q != Accomplice || bAccomplice))
+		{
+			++Total[*Q];
+			Found[*Q] += bKnown;
+		}
+		if (bKnown && E.kind == "record" && E.confirms)
+		{
+			for (const std::string& S : *E.confirms) Confirmed.Add(NoirStr(S));
+		}
+	}
+	if (Board)
+	{
+		const ENoirAccusationPart Parts[] = {ENoirAccusationPart::Killer, ENoirAccusationPart::Motive, ENoirAccusationPart::Weapon,
+			ENoirAccusationPart::BrokenAlibi, ENoirAccusationPart::Accomplice};
+		for (int32 q = 0; q < Count; ++q)
+		{
+			if (q == Accomplice && !bAccomplice) continue;
+			Out.Questions.Add({Board->GetQuestion(Parts[q]), Found[q], Total[q]});
+		}
+	}
+
+	for (TActorIterator<ANoirSearchable> It(GetWorld()); It; ++It)
+	{
+		++Out.SearchTotal;
+		Out.Searched += It->IsSearched();
+	}
+	for (const ANoirSuspect* S : Suspects)
+	{
+		if (!S) continue;
+		++Out.SuspectTotal;
+		bool bAsked = false;
+		for (int32 t = 0; t < S->Topics.Num() && !bAsked; ++t) bAsked = S->WasAsked(t);
+		Out.Questioned += bAsked;
+		Out.Cracked += S->IsCracked();
+		FText Stamp;
+		if (S->IsCracked()) Stamp = NoirTr(TEXT("CRACKED"), TEXT("SE QUEBRÓ"));
+		else if (Confirmed.Contains(S->GetCaseSuspectId())) Stamp = NoirTr(TEXT("ALIBI CONFIRMED"), TEXT("COARTADA CONFIRMADA"));
+		else if (bAsked) Stamp = NoirTr(TEXT("QUESTIONED"), TEXT("INTERROGADO"));
+		if (!Stamp.IsEmpty()) Out.Stamps.Add(S->GetName(), Stamp);
+	}
+	Out.HintsUsed = HintsUsed;
+	return Out;
+}
+
+FText ANoirCaseDirector::TakeHint()
+{
+	if (!Hints.IsValidIndex(HintsUsed))
+	{
+		return FText();
+	}
+	const FText Hint = Hints[HintsUsed++];
+	if (ANoirCharacter* Detective = Cast<ANoirCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+	{
+		Detective->AddClue(FText::Format(NoirTr(TEXT("Hint {0}: {1}"), TEXT("Pista {0}: {1}")), HintsUsed, Hint));
+	}
+	UE_LOG(LogNoirCase, Display, TEXT("Hint %d of %d: %s"), HintsUsed, Hints.Num(), *Hint.ToString());
+	return Hint;
 }
 
 void ANoirCaseDirector::ResumeCase()
@@ -585,6 +710,7 @@ void ANoirCaseDirector::ResumeCase()
 	TArray<FText> Notes;
 	for (const FString& Note : Save->Notes) Notes.Add(FText::FromString(Note));
 	Detective->RestoreKnowledge(Known, Notes);
+	HintsUsed = FMath::Clamp(Save->HintsUsed, 0, Hints.Num());
 
 	for (TActorIterator<ANoirSearchable> It(GetWorld()); It; ++It)
 	{
@@ -666,11 +792,27 @@ FNoirConfrontResult ANoirCaseDirector::Confront(const FString& SuspectId, const 
 	return Result;
 }
 
+bool ANoirCaseDirector::EvaluateContradiction(FName SuspectId, FName StatementId, FName EvidenceId) const
+{
+	if (!State || !State->Content)
+	{
+		return false;
+	}
+	return mystery::EvaluateContradiction(*State->Content, State->Bp, NoirUtf8(SuspectId.ToString()),
+		NoirUtf8(StatementId.ToString()), NoirUtf8(EvidenceId.ToString()));
+}
+
+
 FText ANoirCaseDirector::RoomLabelAt(const FVector& Location) const
 {
 	for (const ANoirRoom* Room : Rooms)
 	{
 		if (Room && Room->Contains(Location)) return Room->Label;
+	}
+	// Halls and corridors the case leaves alone keep their own names.
+	for (TActorIterator<ANoirRoom> It(GetWorld()); It; ++It)
+	{
+		if (!It->bCast && It->Contains(Location)) return It->GetDisplayLabel();
 	}
 	return FText::GetEmpty();
 }

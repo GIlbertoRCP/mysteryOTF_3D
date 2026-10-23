@@ -7,6 +7,7 @@
 class SNoirMenu;
 class SNoirPuzzle;
 class SNoirMap;
+class SNoirCaseNotebook;
 struct FNoirClue;
 
 /**
@@ -66,8 +67,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Map")
 	void ToggleMap();
 
+	/** With the map open: the house or the grounds (G on the map does the same). */
+	UFUNCTION(BlueprintCallable, Category = "Map")
+	void ToggleMapView();
+
 	UFUNCTION(BlueprintPure, Category = "Map")
 	bool IsMapOpen() const { return Map.IsValid(); }
+
+	/** The case notebook / dossier (N); N or Esc closes it. */
+	UFUNCTION(BlueprintCallable, Category = "Case")
+	void ToggleCaseNotebook();
+
+	UFUNCTION(BlueprintPure, Category = "Case")
+	bool IsCaseNotebookOpen() const { return CaseNotebook.IsValid(); }
 
 	/** Opens the puzzle on a clue over the game (the detective keeps inspecting behind it). */
 	void OpenPuzzle(const FNoirClue& Clue);
@@ -91,6 +103,11 @@ public:
 	FString GetCaseSeed() const;
 	FString GetCaseTheme() const;
 
+	/** The pause menu's hint: closes the menu and shows the case's next hint. */
+	UFUNCTION(BlueprintCallable, Category = "Menu")
+	void TakeHint();
+	int32 GetHintsLeft() const;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
@@ -103,6 +120,7 @@ private:
 	TSharedPtr<SNoirMenu> Menu;
 	TSharedPtr<SNoirPuzzle> Puzzle;
 	TSharedPtr<SNoirMap> Map;
+	TSharedPtr<SNoirCaseNotebook> CaseNotebook;
 	TSharedPtr<class SWidget> MenuContainer;
 	/** In the menu map: the camera the title screen is seen through, drifting slowly. */
 	TWeakObjectPtr<AActor> MenuCamera;

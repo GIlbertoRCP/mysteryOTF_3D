@@ -24,6 +24,12 @@ public:
 	UPROPERTY(Config, BlueprintReadOnly, Category = "Controls")
 	bool bInvertLook = false;
 
+	/** How much the view moves with the detective's stride: 2 full, 1 reduced, 0 off (comfort). */
+	UPROPERTY(Config, BlueprintReadOnly, Category = "Controls")
+	int32 HeadBob = 2;
+
+	float HeadBobScale() const { return HeadBob >= 2 ? 1.f : HeadBob == 1 ? 0.45f : 0.f; }
+
 	/** The language new cases (and the menus) are played in. */
 	UPROPERTY(Config, BlueprintReadOnly, Category = "Case")
 	bool bSpanish = false;

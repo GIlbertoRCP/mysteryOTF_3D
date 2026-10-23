@@ -43,6 +43,7 @@ void ANoirEvidence::OnConstruction(const FTransform& Transform)
 		if (Part.Material)
 		{
 			Piece->SetMaterial(0, Part.Material);
+			Piece->OverrideMaterials = { Part.Material };
 		}
 		Piece->SetupAttachment(RootComponent);
 		Piece->SetRelativeTransform(Part.Transform);

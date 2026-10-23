@@ -38,7 +38,16 @@ def script(world, pawn, pc):
         pc.toggle_map()
         unreal.log("[Map] open %s" % pc.is_map_open())
 
-    return [(0.5, search_some), (0.5, toggle), (1.0, shot), (0.3, toggle), (0.5, None)]
+    def outside():
+        # Out on the drive, if the level has grounds: the map should open on them.
+        pawn.teleport(unreal.Vector(-6200.0, -800.0, 150.0), unreal.Rotator(0, 0, 180))
+
+    def view():
+        pc.toggle_map_view()
+        unreal.log("[Map] switched view")
+
+    return [(0.5, search_some), (0.5, toggle), (1.0, shot), (0.3, toggle),
+            (0.3, outside), (1.0, toggle), (1.0, shot), (0.3, view), (1.0, shot), (0.3, toggle), (0.5, None)]
 
 
 def tick(dt):

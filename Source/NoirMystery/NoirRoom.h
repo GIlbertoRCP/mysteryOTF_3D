@@ -24,6 +24,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room")
 	FName RoomId;
 
+	/** Off: a hall or corridor the case never casts. It keeps its own name (below) on the map and
+	 *  on screen, and nothing in it is staged. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room")
+	bool bCast = true;
+
+	/** An uncast room's name, in English and Spanish. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room", meta = (EditCondition = "!bCast"))
+	FString FixedName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room", meta = (EditCondition = "!bCast"))
+	FString FixedNameEs;
+
+	/** Plays only the case places in Suits, and is left out of a case that has none of them (an
+	 *  outbuilding on the grounds: the chapel is never cast as the kitchen). Its furniture keeps
+	 *  its own names (the pew, the lectern). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room")
+	bool bOnlySuits = false;
+
+	/** A named stretch of the grounds rather than a room: rain falls and the fog stays thick. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room", meta = (EditCondition = "!bCast"))
+	bool bOutdoors = false;
+
+	/** What the map and the HUD call it: the case's name for it, or an uncast room's own. */
+	FText GetDisplayLabel() const;
+
 	/** Has space for the body; the crime scene is cast from these rooms. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Room")
 	bool bCanBeScene = false;

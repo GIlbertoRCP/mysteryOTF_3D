@@ -1,4 +1,5 @@
 #include "NoirPuzzle.h"
+#include "NoirStyle.h"
 
 using namespace NoirDraw;
 
@@ -17,11 +18,11 @@ using namespace NoirDraw;
 #include "Widgets/SOverlay.h"
 #include "Widgets/Text/STextBlock.h"
 
-namespace
+namespace NoirPuzzleLocal
 {
-	const FLinearColor Cream(0.86f, 0.8f, 0.68f);
-	const FLinearColor Amber(1.f, 0.62f, 0.22f);
-	const FLinearColor Dim(0.5f, 0.47f, 0.42f);
+	using NoirStyle::Cream;
+	using NoirStyle::Amber;
+	using NoirStyle::Dim;
 	const FLinearColor Blood(0.75f, 0.12f, 0.1f);
 	const FLinearColor Solved(0.45f, 0.78f, 0.52f);
 
@@ -146,6 +147,7 @@ namespace
 		return NoirTr(TEXT("Rubber soles"), TEXT("Suela de goma"));
 	}
 }
+using namespace NoirPuzzleLocal;
 
 // ─── SNoirPuzzle ───
 
@@ -202,34 +204,37 @@ void SNoirPuzzle::Construct(const FArguments& InArgs)
 	ChildSlot
 	[
 		SNew(SOverlay)
-		+ SOverlay::Slot()[SNew(SBorder).BorderImage(Fill(FLinearColor(0.f, 0.f, 0.f, 0.45f))).Padding(0.f)]
+		+ SOverlay::Slot()[SNew(SBorder).BorderImage(Fill(FLinearColor(0.f, 0.f, 0.f, 0.62f))).Padding(0.f)]
 		+ SOverlay::Slot().HAlign(HAlign_Center).VAlign(VAlign_Center)
 		[
 			SNew(SBox).WidthOverride(820.f)
 			[
-				SNew(SBorder).BorderImage(Fill(FLinearColor(0.012f, 0.01f, 0.008f, 0.94f))).Padding(FMargin(44.f, 34.f))
+				// A brass hairline round the panel, as on the HUD's keycaps.
+				SNew(SBorder).BorderImage(Fill(NoirStyle::PanelEdge)).Padding(1.f)
+				[
+				SNew(SBorder).BorderImage(Fill(FLinearColor(0.012f, 0.01f, 0.008f, 0.97f))).Padding(FMargin(44.f, 34.f))
 				[
 					SNew(SVerticalBox)
 					+ SVerticalBox::Slot().AutoHeight()
 					[
 						SNew(STextBlock).Text(Clue.Title).Font(Font("Regular", 13, 200)).ColorAndOpacity(Amber)
 					]
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 8, 0, 0)
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 8, 0, 0))
 					[
 						SNew(STextBlock).Text(Title).Font(Font("Light", 26, 10)).ColorAndOpacity(Cream)
 					]
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 6, 0, 0)
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 6, 0, 0))
 					[
 						SNew(STextBlock).Text(Body).Font(Font("Regular", 13)).ColorAndOpacity(Dim).AutoWrapText(true)
 					]
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 20, 0, 0)[Content]
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 12, 0, 0)
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 20, 0, 0))[Content]
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 12, 0, 0))
 					[
 						SNew(STextBlock).Text_Lambda([this]() { return Status; }).Font(Font("Regular", 13)).ColorAndOpacity(Blood)
 						.Visibility_Lambda([this]() { return Status.IsEmpty() || bSolved ? EVisibility::Collapsed : EVisibility::Visible; })
 					]
 					// What it really says, once worked out.
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 16, 0, 0)
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 16, 0, 0))
 					[
 						SNew(SVerticalBox)
 						.Visibility_Lambda([this]() { return bSolved ? EVisibility::Visible : EVisibility::Collapsed; })
@@ -237,12 +242,12 @@ void SNoirPuzzle::Construct(const FArguments& InArgs)
 						[
 							SNew(STextBlock).Text(NoirTr(TEXT("WORKED OUT"), TEXT("RESUELTO"))).Font(Font("Bold", 13, 300)).ColorAndOpacity(Solved)
 						]
-						+ SVerticalBox::Slot().AutoHeight().Padding(0, 6, 0, 0)
+						+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 6, 0, 0))
 						[
 							SNew(STextBlock).Text(Clue.Puzzle.Reveal).Font(Font("Regular", 15)).ColorAndOpacity(Cream).AutoWrapText(true)
 						]
 					]
-					+ SVerticalBox::Slot().AutoHeight().Padding(0, 26, 0, 0)
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 26, 0, 0))
 					[
 						SNew(SHorizontalBox)
 						+ SHorizontalBox::Slot().AutoWidth()
@@ -261,6 +266,7 @@ void SNoirPuzzle::Construct(const FArguments& InArgs)
 							}), [this]() { if (OnClose) OnClose(); }, 15.f)
 						]
 					]
+				]
 				]
 			]
 		]
@@ -325,7 +331,7 @@ TSharedRef<SWidget> SNoirPuzzle::MakeHand()
 	};
 	return SNew(SVerticalBox)
 		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)[Sketch]
-		+ SVerticalBox::Slot().AutoHeight().Padding(0, 12, 0, 0)
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 12, 0, 0))
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot().AutoWidth()[Button(NoirTr(TEXT("Flip hand"), TEXT("Girar mano")), [this]() { bRightHand = !bRightHand; Status = FText(); })]
@@ -368,7 +374,7 @@ TSharedRef<SWidget> SNoirPuzzle::MakeSole()
 			Box(G, Out, L, FVector2D(84, 176) * 0.4, FVector2D(84, 176) * 0.8, FLinearColor(0.55f, 0.5f, 0.4f));
 			Sole(G, Out, L + 1, FVector2D::ZeroVector, 0.8f, K, FLinearColor(0.08f, 0.06f, 0.04f));
 		};
-		Refs->AddSlot().AutoWidth().Padding(6, 0)
+		Refs->AddSlot().AutoWidth().Padding(FMargin(6, 0))
 		[
 			SNew(SButton).ButtonStyle(&PlainButton()).ContentPadding(FMargin(8.f))
 			.OnClicked_Lambda([this, K, Answer]()
@@ -380,7 +386,7 @@ TSharedRef<SWidget> SNoirPuzzle::MakeSole()
 			[
 				SNew(SVerticalBox)
 				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)[Ref]
-				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 6, 0, 0)
+				+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0, 6, 0, 0))
 				[
 					SNew(STextBlock).Text(SoleName(K)).Font(Font("Regular", 11)).ColorAndOpacity(Cream)
 				]
@@ -392,12 +398,12 @@ TSharedRef<SWidget> SNoirPuzzle::MakeSole()
 		[
 			SNew(SVerticalBox)
 			+ SVerticalBox::Slot().AutoHeight()[Cast]
-			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 6, 0, 0)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0, 6, 0, 0))
 			[
 				SNew(STextBlock).Text(NoirTr(TEXT("Cast from the scene"), TEXT("Molde de la escena"))).Font(Font("Bold", 11)).ColorAndOpacity(Dim)
 			]
 		]
-		+ SHorizontalBox::Slot().AutoWidth().Padding(28, 0, 0, 0).VAlign(VAlign_Bottom)[Refs];
+		+ SHorizontalBox::Slot().AutoWidth().Padding(FMargin(28, 0, 0, 0)).VAlign(VAlign_Bottom)[Refs];
 }
 
 // ─── UV lamp ───
@@ -468,19 +474,19 @@ TSharedRef<SWidget> SNoirPuzzle::MakeBlood()
 		};
 		return SNew(SVerticalBox)
 			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)[Sketch]
-			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 6, 0, 0)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0, 6, 0, 0))
 			[
 				SNew(STextBlock).Text(bA ? NoirTr(TEXT("Anti-A serum"), TEXT("Suero anti-A")) : NoirTr(TEXT("Anti-B serum"), TEXT("Suero anti-B")))
 				.Font(Font("Bold", 12)).ColorAndOpacity(Cream)
 			]
-			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 4, 0, 0)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0, 4, 0, 0))
 			[
 				SNew(SBox).Visibility_Lambda([this, bA]() { return (bA ? bAddedA : bAddedB) ? EVisibility::Collapsed : EVisibility::Visible; })
 				[
 					Button(NoirTr(TEXT("Add sample"), TEXT("Añadir muestra")), [this, bA]() { (bA ? bAddedA : bAddedB) = true; }, 12.f)
 				]
 			]
-			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(0, 4, 0, 0)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0, 4, 0, 0))
 			[
 				SNew(STextBlock).Font(Font("Regular", 12)).ColorAndOpacity(Dim)
 				.Text(bClumps ? NoirTr(TEXT("Clumped"), TEXT("Aglutinada")) : NoirTr(TEXT("Smooth"), TEXT("Uniforme")))
@@ -491,7 +497,7 @@ TSharedRef<SWidget> SNoirPuzzle::MakeBlood()
 	for (const TCHAR* Type : {TEXT("A"), TEXT("B"), TEXT("AB"), TEXT("O")})
 	{
 		const FString T = Type;
-		Types->AddSlot().AutoWidth().Padding(0, 0, 8, 0)[Button(FText::FromString(T), [this, T, Answer]()
+		Types->AddSlot().AutoWidth().Padding(FMargin(0, 0, 8, 0))[Button(FText::FromString(T), [this, T, Answer]()
 		{
 			if (T == Answer) Solve();
 			else Wrong(NoirTr(TEXT("That doesn't fit how the sample reacted."), TEXT("No cuadra con cómo reaccionó la muestra.")));
@@ -502,9 +508,9 @@ TSharedRef<SWidget> SNoirPuzzle::MakeBlood()
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot().AutoWidth()[Well(true)]
-			+ SHorizontalBox::Slot().AutoWidth().Padding(30, 0, 0, 0)[Well(false)]
+			+ SHorizontalBox::Slot().AutoWidth().Padding(FMargin(30, 0, 0, 0))[Well(false)]
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(0, 16, 0, 0)
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 16, 0, 0))
 		[
 			SNew(SVerticalBox)
 			.Visibility_Lambda([this]() { return bAddedA && bAddedB ? EVisibility::Visible : EVisibility::Collapsed; })
@@ -512,7 +518,7 @@ TSharedRef<SWidget> SNoirPuzzle::MakeBlood()
 			[
 				SNew(STextBlock).Text(NoirTr(TEXT("Which blood type is it?"), TEXT("¿Qué grupo sanguíneo es?"))).Font(Font("Bold", 13)).ColorAndOpacity(Cream)
 			]
-			+ SVerticalBox::Slot().AutoHeight().Padding(0, 8, 0, 0)[Types]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 8, 0, 0))[Types]
 		];
 }
 
@@ -530,8 +536,8 @@ TSharedRef<SWidget> SNoirPuzzle::MakeTorn()
 
 	auto Scrap = [this](int32 i) -> TSharedRef<SWidget>
 	{
-		return SNew(STextBlock).Text(FText::FromString(Clue.Puzzle.Pieces[i])).Font(FCoreStyle::GetDefaultFontStyle("Mono", 12))
-			.ColorAndOpacity(FLinearColor(0.13f, 0.09f, 0.05f)).AutoWrapText(true);
+		return SNew(STextBlock).Text(FText::FromString(Clue.Puzzle.Pieces[i])).Font(FCoreStyle::GetDefaultFontStyle("Mono", 13))
+			.ColorAndOpacity(FLinearColor(0.1f, 0.07f, 0.04f)).AutoWrapText(true);
 	};
 	TSharedRef<SWrapBox> Pool = SNew(SWrapBox).UseAllottedSize(true).InnerSlotPadding(FVector2D(8, 8));
 	for (const int32 i : Shuffled)
@@ -565,15 +571,17 @@ TSharedRef<SWidget> SNoirPuzzle::MakeTorn()
 			]
 		];
 	}
+	// Once worked out, the scraps step aside: the clue's full text says it all.
+	auto Working = [this]() { return bSolved ? EVisibility::Collapsed : EVisibility::Visible; };
 	return SNew(SVerticalBox)
 		+ SVerticalBox::Slot().AutoHeight()
 		[
-			SNew(SBorder).BorderImage(Fill(FLinearColor(1, 1, 1, 0.03f))).Padding(10.f)
+			SNew(SBorder).Visibility_Lambda(Working).BorderImage(Fill(FLinearColor(1, 1, 1, 0.03f))).Padding(10.f)
 			[
 				SNew(SBox).MinDesiredHeight(60.f)[SAssignNew(PlacedBox, SVerticalBox)]
 			]
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(0, 14, 0, 0)[Pool];
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 14, 0, 0))[SNew(SBox).Visibility_Lambda(Working)[Pool]];
 }
 
 void SNoirPuzzle::RebuildTorn()
@@ -582,7 +590,7 @@ void SNoirPuzzle::RebuildTorn()
 	PlacedBox->ClearChildren();
 	for (const int32 i : Placed)
 	{
-		PlacedBox->AddSlot().AutoHeight().Padding(0, 2)
+		PlacedBox->AddSlot().AutoHeight().Padding(FMargin(0, 2))
 		[
 			SNew(STextBlock).Text(FText::FromString(Clue.Puzzle.Pieces[i])).Font(FCoreStyle::GetDefaultFontStyle("Mono", 12))
 			.ColorAndOpacity(Cream).AutoWrapText(true)
@@ -614,21 +622,21 @@ TSharedRef<SWidget> SNoirPuzzle::MakeCipher()
 			.Text_Lambda([this]() { return FText::FromString(ShiftText(Encoded, -Dial)); })
 			.ColorAndOpacity_Lambda([this]() { return FSlateColor(Dial == Clue.Puzzle.Shift ? Solved : Cream); })
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(0, 18, 0, 0)
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0, 18, 0, 0))
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
 			[
 				SNew(STextBlock).Text(NoirTr(TEXT("Shift"), TEXT("Desplazamiento"))).Font(Font("Bold", 12)).ColorAndOpacity(Dim)
 			]
-			+ SHorizontalBox::Slot().AutoWidth().Padding(12, 0, 6, 0)[Button(FText::FromString(TEXT("<")), [this, Turn]() { Turn(Dial - 1); })]
+			+ SHorizontalBox::Slot().AutoWidth().Padding(FMargin(12, 0, 6, 0))[Button(FText::FromString(TEXT("<")), [this, Turn]() { Turn(Dial - 1); })]
 			+ SHorizontalBox::Slot().FillWidth(1.f).VAlign(VAlign_Center)
 			[
 				SNew(SSlider).MinValue(0.f).MaxValue(25.f).StepSize(1.f).MouseUsesStep(true)
 				.Value_Lambda([this]() { return float(Dial); })
 				.OnValueChanged_Lambda([Turn](float V) { Turn(FMath::RoundToInt(V)); })
 			]
-			+ SHorizontalBox::Slot().AutoWidth().Padding(6, 0, 12, 0)[Button(FText::FromString(TEXT(">")), [this, Turn]() { Turn(Dial + 1); })]
+			+ SHorizontalBox::Slot().AutoWidth().Padding(FMargin(6, 0, 12, 0))[Button(FText::FromString(TEXT(">")), [this, Turn]() { Turn(Dial + 1); })]
 			+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
 			[
 				SNew(SBox).WidthOverride(30.f)

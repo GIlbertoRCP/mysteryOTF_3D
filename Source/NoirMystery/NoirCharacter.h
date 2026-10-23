@@ -88,8 +88,23 @@ public:
 	void TogglePresent();
 
 	bool IsPresenting() const { return bPresenting; }
+	/** In Present: the statement being challenged (a topic index), or INDEX_NONE while choosing it. */
+	int32 GetChallengedTopic() const { return ChallengedTopic; }
+	/** In Present: still picking which statement to challenge (generated-case suspects). */
+	bool IsChoosingStatement() const;
 	TArray<FNoirInterviewOption> GetInterviewOptions() const;
 	const FText& GetDialogueLine() const { return DialogueLine; }
+
+	/** For playtests: what the suspect last said, and the ids of everything known, in order. */
+	UFUNCTION(BlueprintPure, Category = "Interview")
+	FString GetDialogueText() const { return DialogueLine.ToString(); }
+	UFUNCTION(BlueprintPure, Category = "Interview")
+	TArray<FString> GetKnownClueIds() const
+	{
+		TArray<FString> Ids;
+		for (const FNoirClue& C : KnownClues) Ids.Add(C.Id);
+		return Ids;
+	}
 
 	/** Opens the accusation at the case board. */
 	void BeginAccusation(ANoirCase* InCase);
@@ -110,6 +125,7 @@ public:
 	/** Where to put the detective back in a saved case (out of the Mind Place, if in it). */
 	FTransform GetResumeTransform(FRotator& OutLooking) const;
 	bool IsTorchOn() const;
+	UFUNCTION(BlueprintCallable, Category = "Torch")
 	void SetTorchOn(bool bOn);
 	const TArray<FText>& GetNotes() const { return Clues; }
 	/** A saved case's knowledge, put back as it was (no notes or messages added). */
@@ -154,6 +170,41 @@ public:
 	/** How quickly the torch catches up with the view; lower feels heavier. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Torch")
 	float TorchFollowSpeed = 14.f;
+
+	// ─── Walking and running ───
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float WalkSpeed = 220.f;
+
+	/** Running (Shift held, or the left stick clicked): a hurried jog, not a sprint across a field. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float SprintSpeed = 480.f;
+
+	/** Seconds of running from full breath, and seconds to get it all back. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float SprintSeconds = 7.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float RecoverSeconds = 5.f;
+
+	/** Degrees the view widens at a full run. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float SprintFOVKick = 7.f;
+
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	bool IsSprinting() const { return bSprinting; }
+
+	/** Breath, 0 (winded) to 1. */
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	float GetStamina() const { return Stamina; }
+
+	/** For playtests: the board view's zoom (1 = whole board) and centre, as the wheel and WASD set them. */
+	UFUNCTION(BlueprintCallable, Category = "Board")
+	void SetBoardView(float Zoom, FVector2D Focus) { BoardZoom = FMath::Clamp(Zoom, 1.f, 3.2f); BoardFocus = Focus; }
+
+	/** For playtests: as if Shift were held (or let go). */
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void SetSprintHeld(bool bHeld) { bSprintHeld = bHeld; }
 
 	/** Narrower view while inspecting: larger object, less distortion, shallower focus. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inspect")
@@ -240,6 +291,39 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UInputAction> MapAction;
 	void OpenMap();
+
+	UPROPERTY(Transient)
+	TObjectPtr<UInputAction> CaseNotebookAction;
+	void OpenCaseNotebook();
+
+	// Running: Shift is held, the left stick's click toggles (until the stick is let go).
+	UPROPERTY()
+	TObjectPtr<UInputAction> SprintAction;
+	UPROPERTY()
+	TObjectPtr<UInputAction> SprintToggleAction;
+	void SprintPressed() { bSprintHeld = true; }
+	void SprintReleased() { bSprintHeld = false; }
+	void SprintToggle() { bSprintToggled = !bSprintToggled; }
+	/** Speed, breath, and the view and torch moving with the stride; returns the torch's sway. */
+	FTransform UpdateGait(float DeltaSeconds);
+	bool bSprintHeld = false;
+	bool bSprintToggled = false;
+	bool bSprinting = false;
+	/** Out of breath: no running until some of it is back. */
+	bool bWinded = false;
+	float Stamina = 1.f;
+	float SinceSprint = 0.f;
+	/** Walk-to-run blend, and stood-still-to-walking blend, both eased. */
+	float SprintBlend = 0.f;
+	float MoveBlend = 0.f;
+	/** Advances with distance walked: one step per half turn. */
+	float GaitPhase = 0.f;
+	float Lean = 0.f;
+	float GaitTime = 0.f;
+
+	// The board view: zoom (1 = whole board) and where it is centred, wanted and eased.
+	float BoardZoom = 1.f, BoardZoomNow = 1.f;
+	FVector2D BoardFocus = FVector2D::ZeroVector, BoardFocusNow = FVector2D::ZeroVector;
 	void Pause();
 	void MindPlaceTravel();
 	bool bInMindPlace = false;
@@ -281,5 +365,6 @@ private:
 	TWeakObjectPtr<ANoirSuspect> RevealAccused; // moved into view for the reveal
 	FTransform RevealOrigin;                     // where they stood before
 	bool bPresenting = false;
+	int32 ChallengedTopic = INDEX_NONE;
 	FText DialogueLine;
 };

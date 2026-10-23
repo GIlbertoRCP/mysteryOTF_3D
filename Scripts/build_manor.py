@@ -227,6 +227,18 @@ L_MATS = {}
 
 # ---------------------------------------------------------------- level
 
+def add_hall(hall_end):
+    hall = actors.spawn_actor_from_class(unreal.NoirRoom, unreal.Vector(0, 0, WALL_H / 2))
+    hall.set_actor_label("Room_Hall")
+    hall.set_folder_path("Gameplay/Rooms")
+    hall.set_editor_property("room_id", unreal.Name("Hall"))
+    hall.set_editor_property("cast", False)
+    hall.set_editor_property("fixed_name", "Hall")
+    hall.set_editor_property("fixed_name_es", "Vestíbulo")
+    hall.get_editor_property("bounds").set_box_extent(unreal.Vector(hall_end, HALL_Y, WALL_H / 2))
+    return hall
+
+
 def build_level(m):
     rng = random.Random(1888)
 
@@ -256,6 +268,9 @@ def build_level(m):
         for side in (-1, 1):
             block("HallCorner%d_%d" % (sx, side), (sx * (half_len + 50), side * HALL_Y, WALL_H / 2),
                   (100, 20, WALL_H), m["wall"], "Walls")
+
+    # The hall: never cast by the case, but on the map and named on screen.
+    add_hall(hall_end)
 
     # Rooms.
     for room_id, cx, side, can_be_scene, kinds in ROOMS:

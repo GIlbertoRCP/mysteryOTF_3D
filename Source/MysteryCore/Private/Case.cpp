@@ -953,4 +953,23 @@ Json PublicMystery::ToJson() const
 	return j;
 }
 
+bool EvaluateContradiction(const Content& content, const Blueprint& bp,
+	const std::string& suspectId, const std::string& statementId, const std::string& evidenceId)
+{
+	// Only evidence that would crack this suspect contradicts anything they said...
+	const BlueprintEvidence* e = bp.FindEvidence(evidenceId);
+	const auto outcome = Confront(content, bp, suspectId, evidenceId, Lang::En);
+	if (!e || !outcome || !outcome->cracked) return false;
+	if (statementId.empty() || statementId == "any" || statementId == "*") return true;
+
+	// ...and only the statement it breaks. Every suspect is asked the same four questions:
+	// "where" (their alibi), "relation" (to the victim), "heard" (how they learned of the death)
+	// and "noticed" (anything unusual), which nothing contradicts.
+	const std::string said = statementId == "alibi" ? "where" : statementId;
+	if (e->kind == "document") return said == "relation"; // the motive they played down
+	if (e->kind == "autopsy") return said == "heard";      // the killer's slip: knew what only the killer could
+	return said == "where";                               // records, receipts, sightings, planted items, false claims
+}
+
 } // namespace mystery
+

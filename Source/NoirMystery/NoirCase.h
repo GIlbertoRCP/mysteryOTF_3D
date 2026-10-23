@@ -40,6 +40,9 @@ struct FNoirBoardCard
 	TObjectPtr<UStaticMeshComponent> Pin;
 	UPROPERTY()
 	TObjectPtr<UTextRenderComponent> Label;
+	/** On a suspect's photograph: QUESTIONED, ALIBI CONFIRMED, CRACKED. */
+	UPROPERTY()
+	TObjectPtr<UTextRenderComponent> Stamp;
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> Material;
 };
@@ -107,6 +110,10 @@ public:
 
 	/** What plays during the reveal for these picks (the true story only if the killer is right). */
 	TArray<FText> GetRevealLines(const TArray<int32>& Picks) const;
+
+	/** Evaluates whether EvidenceId contradicts StatementId for SuspectId. */
+	UFUNCTION(BlueprintCallable, Category = "Case")
+	bool EvaluateContradiction(FName SuspectId, FName StatementId, FName EvidenceId);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Case")
 	FText Title;
@@ -180,6 +187,10 @@ public:
 	/** Pins new cards for whatever the detective now knows; cards already up stay where they are. */
 	void SyncCards(const TArray<FNoirClue>& Clues);
 
+	/** Frames the board view: 1 is the whole board; closer is Zoom times nearer, centred on Focus
+	 *  (board centimetres), kept inside the board. Returns the focus actually used. */
+	FVector2D SetViewZoom(float Zoom, FVector2D Focus);
+
 	/** Where a world-space ray meets the board's face, in board centimetres. */
 	bool RayToBoard(const FVector& Origin, const FVector& Direction, FVector2D& OutPosition) const;
 
@@ -205,11 +216,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Board")
 	int32 NumStrings() const { return Strings.Num(); }
 
+	/** The accusation's questions across the board, each with how much of its evidence has turned up,
+	 *  and the stamps on the suspects' photographs; from the case director. */
+	void RefreshProgress();
+
 	/** Lifts the hovered card a little and lights the one picked for tying. */
 	void SetHighlight(const FString& Hovered, const FString& Picked);
 
 private:
 	void UpdateBoardView();
+	/** The board view's distance for the whole board. */
+	float ViewDistance = 300.f;
 	FNoirBoardCard* FindCardMutable(const FString& Id);
 	void AddCard(FNoirBoardCard Card);
 	void LayOut();
@@ -227,9 +244,21 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UStaticMeshComponent> TimelineCord;
 
+	/** The question cards (not moved or tied: they belong to the case, not the detective). */
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UStaticMeshComponent>> QuestionPapers;
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UTextRenderComponent>> QuestionLabels;
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UMaterialInstanceDynamic>> QuestionMaterials;
+
 	UPROPERTY(Transient)
 	TObjectPtr<UMaterialInterface> PinMaterial;
 
 	FString HoveredId;
 	FString PickedId;
 };
+
+/** Alias for compatibility. */
+typedef ANoirCase UNoirCase;
+

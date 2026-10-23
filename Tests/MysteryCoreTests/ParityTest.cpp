@@ -95,10 +95,52 @@ namespace
 		return layout;
 	}
 
+	/** L_Manor as built: the six rooms of the house (furniture as Scripts/build_manor.py lays it),
+	 *  and on the grounds the conservatory and the chapel, which play only those places. */
+	StageLayout ManorLayout()
+	{
+		struct Room { const char* id; bool scene; std::vector<std::string> kinds; };
+		const std::vector<Room> house = {
+			{"N1", false, {"cupboard", "coatrack", "desk", "rug"}},
+			{"N2", true, {"bookshelf", "window", "desk", "sofa"}},
+			{"N3", false, {"window", "bookshelf", "wastebasket", "sofa"}},
+			{"S1", true, {"desk", "bookshelf", "wastebasket", "rug"}},
+			{"S2", false, {"window", "cupboard", "coatrack", "sofa"}},
+			{"S3", false, {"cupboard", "window", "desk", "rug"}},
+		};
+		StageLayout layout;
+		for (const Room& h : house)
+		{
+			StageRoom room;
+			room.id = h.id;
+			room.canBeScene = h.scene;
+			room.standPoints = 2;
+			for (size_t f = 0; f < h.kinds.size(); ++f) room.furniture.push_back({room.id + "_" + h.kinds[f], h.kinds[f]});
+			layout.rooms.push_back(room);
+		}
+		StageRoom conservatory;
+		conservatory.id = "Conservatory";
+		conservatory.canBeScene = true;
+		conservatory.exclusive = true;
+		conservatory.suits = {"Conservatory"};
+		conservatory.standPoints = 2;
+		for (const char* k : {"desk", "window", "cupboard", "sofa", "wastebasket"}) conservatory.furniture.push_back({std::string("Con_") + k, k});
+		layout.rooms.push_back(conservatory);
+		StageRoom chapel;
+		chapel.id = "Chapel";
+		chapel.exclusive = true;
+		chapel.suits = {"Chapel"};
+		chapel.standPoints = 3;
+		for (const char* k : {"desk", "sofa", "cupboard", "window", "rug"}) chapel.furniture.push_back({std::string("Chp_") + k, k});
+		layout.rooms.push_back(chapel);
+		return layout;
+	}
+
 	int dressedCast = 0, castTotal = 0;
+	int outbuildingCases = 0, conservatoryScenes = 0, chapelCases = 0, gothicCases = 0;
 
 	/** Every case must be fair to play once staged: findable items, honest alibis, no double booking. */
-	void CheckStaging(const Content& content, const Blueprint& bp, const StageLayout& layout)
+	void CheckStaging(const Content& content, const Blueprint& bp, const StageLayout& layout, bool countDressing = true)
 	{
 		const Staging st = StageCase(content, bp, layout);
 		for (const std::string& p : st.problems) StagingFail(bp.seed, p);
@@ -113,7 +155,7 @@ namespace
 			const std::string label = caseRoom == 0 ? theme.scenes[bp.sceneIdx].label.en : theme.alibiPlaces[caseRoom - 1].label.en;
 			for (const StageRoom& r : layout.rooms)
 			{
-				if (r.id != roomId || r.suits.empty()) continue;
+				if (!countDressing || r.id != roomId || r.suits.empty()) continue;
 				++castTotal;
 				dressedCast += std::find(r.suits.begin(), r.suits.end(), label) != r.suits.end();
 			}
@@ -267,10 +309,43 @@ int main(int argc, char** argv)
 		if (failures != before) ++failedCases;
 		static const StageLayout layout = SampleLayout();
 		CheckStaging(content, bp, layout);
+		// Every clue that cracks a suspect breaks exactly one of their four statements, never "noticed".
+		for (const BlueprintSuspect& sus : bp.suspects)
+		{
+			for (const BlueprintEvidence& ev : bp.evidence)
+			{
+				const auto o = Confront(content, bp, sus.id, ev.id, Lang::En);
+				if (!o || !o->cracked) continue;
+				int broken = 0;
+				for (const char* st : {"where", "relation", "heard", "noticed"}) broken += EvaluateContradiction(content, bp, sus.id, st, ev.id);
+				if (broken != 1 || EvaluateContradiction(content, bp, sus.id, "noticed", ev.id))
+					StagingFail(bp.seed, ev.kind + " cracks " + sus.id + " but breaks " + std::to_string(broken) + " statements");
+			}
+		}
 		if (bp.theme == "express")
 		{
 			static const StageLayout train = TrainLayout();
 			CheckStaging(content, bp, train);
+		}
+		if (bp.theme == "gothic")
+		{
+			static const StageLayout manor = ManorLayout();
+			CheckStaging(content, bp, manor, false);
+			// Outbuildings play only their own places, and only when the case has them.
+			const Staging st = StageCase(content, bp, manor);
+			const Theme& theme = content.themes.at(bp.theme);
+			bool usesOut = false;
+			for (const auto& [caseRoom, roomId] : st.roomFor)
+			{
+				const std::string label = caseRoom == 0 ? theme.scenes[bp.sceneIdx].label.en : theme.alibiPlaces[caseRoom - 1].label.en;
+				if ((roomId == "Conservatory" || roomId == "Chapel") && label != roomId)
+					StagingFail(bp.seed, roomId + " cast as " + label);
+				if (roomId == "Chapel") ++chapelCases;
+				if (roomId == "Conservatory" && caseRoom == 0) ++conservatoryScenes;
+				usesOut |= roomId == "Conservatory" || roomId == "Chapel";
+			}
+			outbuildingCases += usesOut;
+			++gothicCases;
 		}
 	}
 
@@ -282,6 +357,8 @@ int main(int argc, char** argv)
 	}
 	std::printf("staging: all %d cases fit the five-room wing fairly; express cases fit the train, %d of %d places in a carriage dressed for them\n",
 		cases, dressedCast, castTotal);
+	std::printf("staging: gothic cases fit the manor and its grounds; %d of %d use an outbuilding (%d with the body in the conservatory, the chapel cast in %d)\n",
+		outbuildingCases, gothicCases, conservatoryScenes, chapelCases);
 	if (failures)
 	{
 		std::printf("\nx %d mismatches in %d of %d cases (%d daily dates checked), %.1fs\n", failures, failedCases, cases, dailies, seconds);

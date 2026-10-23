@@ -13,6 +13,7 @@
 #include "NoirGameMode.h"
 #include "NoirMenu.h"
 #include "NoirMap.h"
+#include "NoirCaseNotebook.h"
 #include "NoirPuzzle.h"
 #include "NoirSave.h"
 
@@ -98,12 +99,22 @@ void ANoirPlayerController::BeginPlay()
 
 bool ANoirPlayerController::InputKey(const FInputKeyEventArgs& Params)
 {
+	if (Params.Key == EKeys::N && Params.Event == IE_Pressed)
+	{
+		ToggleCaseNotebook();
+		return true;
+	}
 	const bool bHandled = Super::InputKey(Params);
 	if (ShouldLogInput() && !Params.Key.IsMouseButton() && Params.Event == IE_Pressed)
 	{
 		UE_LOG(LogTemp, Display, TEXT("[Input] key %s (handled %d)"), *Params.Key.ToString(), bHandled);
 	}
 	return bHandled;
+}
+
+void ANoirPlayerController::ToggleMapView()
+{
+	if (Map) Map->SetGrounds(!Map->IsShowingGrounds());
 }
 
 void ANoirPlayerController::ToggleMap()
@@ -117,12 +128,35 @@ void ANoirPlayerController::ToggleMap()
 	}
 	ANoirCharacter* Detective = Cast<ANoirCharacter>(GetPawn());
 	if (!Detective || Menu || Puzzle || !GEngine || !GEngine->GameViewport) return;
+	if (CaseNotebook) ToggleCaseNotebook();
 	SAssignNew(Map, SNoirMap).Detective(Detective).OnClose([this]() { ToggleMap(); });
 	GEngine->GameViewport->AddViewportWidgetContent(Map.ToSharedRef(), 40);
 	FInputModeUIOnly Mode;
 	Mode.SetWidgetToFocus(Map);
 	Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	SetInputMode(Mode);
+}
+
+void ANoirPlayerController::ToggleCaseNotebook()
+{
+	if (CaseNotebook)
+	{
+		if (GEngine && GEngine->GameViewport) GEngine->GameViewport->RemoveViewportWidgetContent(CaseNotebook.ToSharedRef());
+		CaseNotebook.Reset();
+		if (ANoirCharacter* Detective = Cast<ANoirCharacter>(GetPawn())) Detective->RestoreInputMode();
+		return;
+	}
+	ANoirCharacter* Detective = Cast<ANoirCharacter>(GetPawn());
+	if (!Detective || Menu || Puzzle || !GEngine || !GEngine->GameViewport) return;
+	if (Map) ToggleMap();
+	SAssignNew(CaseNotebook, SNoirCaseNotebook).Detective(Detective).Owner(this).OnClose([this]() { ToggleCaseNotebook(); });
+	GEngine->GameViewport->AddViewportWidgetContent(CaseNotebook.ToSharedRef(), 40);
+	bShowMouseCursor = true;
+	FInputModeUIOnly Mode;
+	Mode.SetWidgetToFocus(CaseNotebook);
+	Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(Mode);
+	FSlateApplication::Get().SetKeyboardFocus(CaseNotebook, EFocusCause::SetDirectly);
 }
 
 void ANoirPlayerController::OpenPuzzle(const FNoirClue& Clue)
@@ -178,6 +212,11 @@ void ANoirPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 		GEngine->GameViewport->RemoveViewportWidgetContent(Map.ToSharedRef());
 	}
 	Map.Reset();
+	if (CaseNotebook && GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->RemoveViewportWidgetContent(CaseNotebook.ToSharedRef());
+	}
+	CaseNotebook.Reset();
 	if (MenuContainer && GEngine && GEngine->GameViewport)
 	{
 		GEngine->GameViewport->RemoveViewportWidgetContent(MenuContainer.ToSharedRef());
@@ -208,6 +247,14 @@ void ANoirPlayerController::OpenMenu(bool bPause, bool bClosed, const FText& Ver
 	{
 		return;
 	}
+	if (CaseNotebook)
+	{
+		ToggleCaseNotebook();
+	}
+	if (Map)
+	{
+		ToggleMap();
+	}
 	if (bPause || bClosed)
 	{
 		SetPause(true);
@@ -230,9 +277,15 @@ void ANoirPlayerController::ShowMainMenu()
 
 void ANoirPlayerController::ShowCaseClosed(int32 Correct, int32 Parts)
 {
-	const FText Verdict = Correct == Parts
+	FText Verdict = Correct == Parts
 		? FText::Format(NoirTr(TEXT("Solved: {0} of {1}. Every part of it."), TEXT("Resuelto: {0} de {1}. Todo.")), Correct, Parts)
 		: FText::Format(NoirTr(TEXT("{0} of {1} right. The rest of the truth is in the dossier."), TEXT("{0} de {1} correctas. El resto de la verdad está en el expediente.")), Correct, Parts);
+	const ANoirCaseDirector* Director = FindDirector(this);
+	const int32 HintsUsed = Director ? Director->GetHintsUsed() : 0;
+	const FText HintLine = HintsUsed == 0 ? NoirTr(TEXT("Without a single hint."), TEXT("Sin una sola pista."))
+		: HintsUsed == 1 ? NoirTr(TEXT("With one hint."), TEXT("Con una pista."))
+		: FText::Format(NoirTr(TEXT("With {0} hints."), TEXT("Con {0} pistas.")), HintsUsed);
+	Verdict = FText::Format(INVTEXT("{0} {1}"), Verdict, HintLine);
 	UNoirSaveGame::Delete(); // the case is closed: nothing to continue
 	OpenMenu(true, true, Verdict);
 }
@@ -336,6 +389,27 @@ void ANoirPlayerController::QuitToMainMenu()
 void ANoirPlayerController::QuitGame()
 {
 	UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false);
+}
+
+void ANoirPlayerController::TakeHint()
+{
+	ANoirCaseDirector* Director = FindDirector(this);
+	const FText Hint = Director ? Director->TakeHint() : FText();
+	if (Hint.IsEmpty())
+	{
+		return;
+	}
+	CloseMenu();
+	if (ANoirCharacter* Detective = Cast<ANoirCharacter>(GetPawn()))
+	{
+		Detective->ShowMessage(Hint);
+	}
+}
+
+int32 ANoirPlayerController::GetHintsLeft() const
+{
+	const ANoirCaseDirector* Director = FindDirector(this);
+	return Director ? Director->GetHintsLeft() : 0;
 }
 
 FText ANoirPlayerController::GetCaseTitle() const

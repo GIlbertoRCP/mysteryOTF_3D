@@ -2,6 +2,7 @@
 
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
+#include "NoirCaseContent.h"
 
 ANoirRoom::ANoirRoom()
 {
@@ -17,6 +18,11 @@ bool ANoirRoom::Contains(const FVector& WorldLocation) const
 	const FVector Local = Bounds->GetComponentTransform().InverseTransformPosition(WorldLocation);
 	const FVector Extent = Bounds->GetUnscaledBoxExtent();
 	return FMath::Abs(Local.X) <= Extent.X && FMath::Abs(Local.Y) <= Extent.Y && FMath::Abs(Local.Z) <= Extent.Z;
+}
+
+FText ANoirRoom::GetDisplayLabel() const
+{
+	return bCast ? Label : NoirTr(*FixedName, FixedNameEs.IsEmpty() ? *FixedName : *FixedNameEs);
 }
 
 ANoirStandPoint::ANoirStandPoint()

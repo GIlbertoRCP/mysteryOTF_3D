@@ -9,6 +9,9 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "NoirClue.h"
 #include "NoirEvidenceModels.h"
+#include "NoirCaseDirector.h"
+#include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
 #include "NoirCharacter.h"
 #include "NoirSuspect.h"
 
@@ -172,12 +175,24 @@ void ANoirCase::UpdateBoardView()
 	// Far enough back that the board fits a 16:9 view at this field of view, with a margin.
 	const float HalfTan = FMath::Tan(FMath::DegreesToRadians(BoardView->FieldOfView * 0.5f));
 	const float Distance = 1.08f * FMath::Max(BoardSize.X / (2.f * HalfTan), BoardSize.Y / (2.f * HalfTan * 9.f / 16.f));
+	ViewDistance = Distance;
 	BoardView->SetRelativeLocationAndRotation(FVector(Bounds->GetUnscaledBoxExtent().X + Distance, 0.f, 0.f), FRotator(0.f, 180.f, 0.f));
+}
+
+FVector2D ANoirCase::SetViewZoom(float Zoom, FVector2D Focus)
+{
+	Zoom = FMath::Max(Zoom, 1.f);
+	// What the view spans at this zoom; the focus may not carry it off the board.
+	const FVector2D Half = BoardSize * 0.5f;
+	const FVector2D Reach = Half - Half / Zoom;
+	Focus = FVector2D(FMath::Clamp(Focus.X, -Reach.X, Reach.X), FMath::Clamp(Focus.Y, -Reach.Y, Reach.Y));
+	BoardView->SetRelativeLocation(FVector(Bounds->GetUnscaledBoxExtent().X + ViewDistance / Zoom, Focus.X, Focus.Y));
+	return Focus;
 }
 
 FVector2D ANoirCase::CardSize() const
 {
-	const float W = FMath::Min(34.f, BoardSize.X / 7.f);
+	const float W = FMath::Min(40.f, BoardSize.X / 7.f);
 	return FVector2D(W, W * 0.68f);
 }
 
@@ -271,6 +286,63 @@ void ANoirCase::SyncCards(const TArray<FNoirClue>& Clues)
 		AddCard(MoveTemp(Card));
 	}
 	LayOut();
+	RefreshProgress();
+}
+
+void ANoirCase::RefreshProgress()
+{
+	const ANoirCaseDirector* Director = Cast<ANoirCaseDirector>(UGameplayStatics::GetActorOfClass(this, ANoirCaseDirector::StaticClass()));
+	const ANoirCharacter* Detective = Cast<ANoirCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (!Director || !Detective) return;
+	const FNoirCaseProgress Progress = Director->GetCaseProgress(Detective);
+
+	// Stamps on the photographs.
+	for (FNoirBoardCard& C : Cards)
+	{
+		if (!C.Stamp) continue;
+		const FText* Stamp = Progress.Stamps.Find(C.Id.RightChop(8)); // "suspect:<actor name>"
+		C.Stamp->SetText(Stamp ? *Stamp : FText::GetEmpty());
+	}
+
+	// The questions, in a band just above the timeline.
+	static UStaticMesh* Cube = BasicShape(TEXT("Cube"));
+	const int32 N = Progress.Questions.Num();
+	const FVector2D Size = CardSize();
+	const float Gap = 8.f;
+	const float W = FMath::Min(72.f, (BoardSize.X - 10.f) / FMath::Max(N, 1) - Gap);
+	const float H = 24.f;
+	const float Y = -BoardSize.Y * 0.5f + Size.Y + 2.f + 6.f + H * 0.5f;
+	for (int32 i = 0; i < N; ++i)
+	{
+		if (!QuestionPapers.IsValidIndex(i))
+		{
+			UMaterialInstanceDynamic* Mat = NoirEvidenceModels::MakeMaterial(this, FLinearColor(0.05f, 0.008f, 0.006f), 0.6f);
+			QuestionMaterials.Add(Mat);
+			QuestionPapers.Add(NewMesh(this, Bounds, Cube, Mat));
+			UTextRenderComponent* Label = NewObject<UTextRenderComponent>(this);
+			Label->SetupAttachment(Bounds);
+			Label->SetHorizontalAlignment(EHTA_Center);
+			Label->SetVerticalAlignment(EVRTA_TextCenter);
+			Label->SetWorldSize(2.9f);
+			Label->RegisterComponent();
+			QuestionLabels.Add(Label);
+		}
+		const FNoirQuestionProgress& Q = Progress.Questions[i];
+		const float X = ((N - 1) * 0.5f - i) * (W + Gap); // the board's X runs right to left seen from the front
+		QuestionPapers[i]->SetRelativeLocation(BoardToLocal(FVector2D(X, Y), 0.3f));
+		QuestionPapers[i]->SetRelativeScale3D(FVector(0.004f, W / 100.f, H / 100.f));
+		// Complete: brass-gilt card, the count replaced by the verdict that the evidence is all in.
+		const bool bDone = Q.IsComplete();
+		QuestionMaterials[i]->SetVectorParameterValue(TEXT("BaseColor"), bDone ? FLinearColor(0.07f, 0.04f, 0.012f) : FLinearColor(0.05f, 0.008f, 0.006f));
+		QuestionMaterials[i]->SetVectorParameterValue(TEXT("Emissive"), bDone ? FLinearColor(0.02f, 0.012f, 0.004f) : FLinearColor::Black);
+		const FString Count = bDone
+			? NoirTrS(TEXT("ALL THE EVIDENCE IS IN"), TEXT("TODAS LAS PRUEBAS REUNIDAS"))
+			: Q.Total == 0 ? NoirTrS(TEXT("nothing to find: reason it out"), TEXT("nada que buscar: razónalo"))
+			: FString::Format(*NoirTrS(TEXT("{0} of {1} clues found"), TEXT("{0} de {1} pistas halladas")), {Q.Found, Q.Total});
+		QuestionLabels[i]->SetText(FText::FromString(WrapForCard(Q.Question.ToString().ToUpper(), FMath::FloorToInt(W / 3.6f), 2) + TEXT("<br>") + Count));
+		QuestionLabels[i]->SetTextRenderColor(bDone ? FColor(255, 185, 80) : FColor(230, 205, 160)); // amber: all the evidence is in
+		QuestionLabels[i]->SetRelativeLocation(BoardToLocal(FVector2D(X, Y - 1.f), 0.55f));
+	}
 }
 
 void ANoirCase::AddCard(FNoirBoardCard Card)
@@ -287,7 +359,7 @@ void ANoirCase::AddCard(FNoirBoardCard Card)
 	Card.Label->SetupAttachment(Bounds);
 	Card.Label->SetHorizontalAlignment(EHTA_Center);
 	Card.Label->SetVerticalAlignment(EVRTA_TextCenter);
-	Card.Label->SetWorldSize(2.5f);
+	Card.Label->SetWorldSize(3.1f);
 	// Light ink on dark photographs, dark ink on paper and on pale photographs.
 	FLinearColor Paper;
 	Card.Material->GetVectorParameterValue(FMaterialParameterInfo(TEXT("BaseColor")), Paper);
@@ -308,6 +380,22 @@ void ANoirCase::AddCard(FNoirBoardCard Card)
 	}
 	Card.Label->SetText(FText::FromString(Text));
 	Card.Label->RegisterComponent();
+	if (Card.bPortrait)
+	{
+		// Room for a rubber stamp under the name.
+		Card.Stamp = NewObject<UTextRenderComponent>(this);
+		Card.Stamp->SetupAttachment(Bounds);
+		Card.Stamp->SetHorizontalAlignment(EHTA_Center);
+		Card.Stamp->SetVerticalAlignment(EVRTA_TextCenter);
+		Card.Stamp->SetWorldSize(2.3f);
+		Card.Stamp->SetTextRenderColor(bLightInk ? FColor(235, 90, 60) : FColor(80, 4, 2));
+		if (!bLightInk)
+		{
+			static UMaterialInterface* UnlitInk = LoadObject<UMaterialInterface>(nullptr, TEXT("/Engine/EngineMaterials/UnlitText.UnlitText"));
+			if (UnlitInk) Card.Stamp->SetTextMaterial(UnlitInk);
+		}
+		Card.Stamp->RegisterComponent();
+	}
 	Cards.Add(MoveTemp(Card));
 }
 
@@ -354,8 +442,9 @@ void ANoirCase::LayOut()
 
 	if (!TimelineCord && !Timed.IsEmpty())
 	{
+		static UMaterialInterface* YarnMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Yarn.MI_Yarn"));
 		static UStaticMesh* Cylinder = BasicShape(TEXT("Cylinder"));
-		TimelineCord = NewMesh(this, Bounds, Cylinder, NoirEvidenceModels::MakeMaterial(this, FLinearColor(0.08f, 0.05f, 0.03f), 0.9f));
+		TimelineCord = NewMesh(this, Bounds, Cylinder, YarnMat ? YarnMat : NoirEvidenceModels::MakeMaterial(this, FLinearColor(0.08f, 0.05f, 0.03f), 0.9f));
 	}
 	if (TimelineCord)
 	{
@@ -373,6 +462,7 @@ void ANoirCase::PlaceCard(FNoirBoardCard& Card)
 	Card.Paper->SetRelativeLocation(BoardToLocal(Card.Position, 0.3f + Lift));
 	Card.Paper->SetRelativeScale3D(FVector(0.004f, Size.X / 100.f, Size.Y / 100.f) * (bHovered ? 1.06f : 1.f));
 	Card.Label->SetRelativeLocation(BoardToLocal(Card.Position - FVector2D(0.f, 1.f), 0.55f + Lift));
+	if (Card.Stamp) Card.Stamp->SetRelativeLocation(BoardToLocal(Card.Position - FVector2D(0.f, Size.Y * 0.33f), 0.55f + Lift));
 	Card.Pin->SetRelativeLocation(BoardToLocal(Card.Position + FVector2D(0.f, Size.Y * 0.5f - 2.f), 0.9f + Lift));
 	Card.Pin->SetRelativeScale3D(FVector(0.014f));
 	const float Glow = Card.Id == PickedId ? 0.25f : 0.f;
@@ -452,11 +542,12 @@ void ANoirCase::ToggleString(const FString& A, const FString& B)
 		Strings.RemoveAt(Existing);
 		return;
 	}
+	static UMaterialInterface* YarnMat = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/Materials/MI_Yarn.MI_Yarn"));
 	static UStaticMesh* Cylinder = BasicShape(TEXT("Cylinder"));
 	FNoirBoardString& S = Strings.AddDefaulted_GetRef();
 	S.A = A;
 	S.B = B;
-	S.Cord = NewMesh(this, Bounds, Cylinder, NoirEvidenceModels::MakeMaterial(this, FLinearColor(0.4f, 0.015f, 0.01f), 0.6f));
+	S.Cord = NewMesh(this, Bounds, Cylinder, YarnMat ? YarnMat : NoirEvidenceModels::MakeMaterial(this, FLinearColor(0.4f, 0.015f, 0.01f), 0.6f));
 	PlaceString(S);
 }
 
@@ -468,4 +559,31 @@ void ANoirCase::SetHighlight(const FString& Hovered, const FString& Picked)
 	for (FNoirBoardCard& C : Cards) PlaceCard(C);
 }
 
+bool ANoirCase::EvaluateContradiction(FName SuspectId, FName StatementId, FName EvidenceId)
+{
+	const FString SuspectStr = SuspectId.ToString();
+
+	if (const UWorld* World = GetWorld())
+	{
+		for (TActorIterator<ANoirCaseDirector> It(World); It; ++It)
+		{
+			if (const ANoirCaseDirector* Director = *It)
+			{
+				return Director->EvaluateContradiction(SuspectId, StatementId, EvidenceId);
+			}
+		}
+	}
+
+	for (const TObjectPtr<ANoirSuspect>& S : Suspects)
+	{
+		if (!S) continue;
+		if (S->GetName().Contains(SuspectStr) || S->DisplayName.ToString().Contains(SuspectStr) || S->GetActorLabel().Contains(SuspectStr))
+		{
+			return S->EvaluateContradiction(StatementId, EvidenceId);
+		}
+	}
+	return false;
+}
+
 #undef LOCTEXT_NAMESPACE
+

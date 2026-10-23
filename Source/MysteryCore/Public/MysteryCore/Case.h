@@ -163,5 +163,9 @@ MYSTERYCORE_API std::optional<SearchResult> SearchSpot(const Content& content, c
 MYSTERYCORE_API std::vector<StoryEntry> StoryFor(const Content& content, const Blueprint& bp, Lang lang);
 /** Everyone gets the same case on the same day ("2026-10-19"). */
 MYSTERYCORE_API DailyCase DailyCaseFor(const Content& content, const std::string& date);
+/** Whether presenting evidenceId breaks what suspectId said in answer to statementId
+ *  ("where", "relation", "heard", "noticed"; "any" for any statement). */
+MYSTERYCORE_API bool EvaluateContradiction(const Content& content, const Blueprint& bp,
+	const std::string& suspectId, const std::string& statementId, const std::string& evidenceId);
 
 } // namespace mystery

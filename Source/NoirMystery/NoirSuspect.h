@@ -41,6 +41,11 @@ struct FNoirTopic
 	/** Follow-up that only opens once the suspect has cracked. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
 	bool bRequiresCracked = false;
+
+	/** The statement the answer puts on record ("where", "relation", "heard", "noticed"), which the
+	 *  detective can challenge with evidence; None for follow-ups and hand-written topics. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
+	FName StatementId;
 };
 
 /** How the suspect responds when shown a particular piece of evidence. */
@@ -76,11 +81,21 @@ public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 
 	/** Indices into Topics that can be asked right now (locked follow-ups are left out). */
+	UFUNCTION(BlueprintPure, Category = "Dialogue")
 	TArray<int32> GetAvailableTopics() const;
 	bool WasAsked(int32 TopicIndex) const { return AskedTopics.Contains(TopicIndex); }
 
 	/** Asks a topic; returns the line the suspect says. */
 	FText Ask(int32 TopicIndex, ANoirCharacter* Detective);
+
+	/** Generated-case suspects have statements to challenge (the four case questions). */
+	bool HasStatements() const;
+	/** Topics they have answered whose statements can be challenged now. */
+	TArray<int32> GetChallengeableTopics() const;
+	/** Challenges what they said in answer to Topic with a clue. The right clue against the right
+	 *  statement cracks them (as Present does); the right clue against the wrong statement only
+	 *  rattles them, and they say so; anything else is brushed off. */
+	FText Challenge(int32 Topic, const FNoirClue& Clue, ANoirCharacter* Detective);
 
 	/** Shows the suspect a clue; returns the line they say. May crack them. */
 	FText Present(const FNoirClue& Clue, ANoirCharacter* Detective);
@@ -93,13 +108,31 @@ public:
 	void LoadState(const FNoirSuspectSave& Saved);
 	const FString& GetCaseSuspectId() const { return CaseSuspectId; }
 
+	UFUNCTION(BlueprintPure, Category = "Suspect")
 	float GetStress() const { return Stress; }
+
+	UFUNCTION(BlueprintPure, Category = "Suspect")
 	bool IsCracked() const { return bCracked; }
+
+	/** The generated case's id for this suspect (empty for hand-made ones). */
+	UFUNCTION(BlueprintPure, Category = "Interview")
+	FString GetCaseId() const { return CaseSuspectId; }
 	FVector GetFaceLocation() const;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Suspect")
+	float Composure = 1.0f;
+
+	UFUNCTION(BlueprintPure, Category = "Suspect")
+	float GetComposure() const { return Composure; }
+
+	/** Evaluates whether presenting EvidenceId contradicts StatementId for this suspect. */
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	bool EvaluateContradiction(FName StatementId, FName EvidenceId);
 
 	/** Builds the standing figure from a look (the case director calls it once on spawn). */
 	void Dress(const FNoirLook& Look);
 
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Suspect")
@@ -160,10 +193,15 @@ private:
 	TSet<FString> ShownClues;
 	/** Topics opened up by cracking them, by index into Topics. */
 	TArray<int32> FollowUpTopics;
+	/** Wrong challenges already made ("topic|clue"), so the same one doesn't rattle them twice. */
+	TSet<FString> Challenges;
 
 	UStaticMeshComponent* Part(USceneComponent* Parent, const TCHAR* Shape, const FVector& At, const FVector& SizeCm,
 		UMaterialInterface* Material, const FRotator& Rotation = FRotator::ZeroRotator);
 	bool bDressed = false;
+	/** Every part the last Dress made, so dressing again replaces the figure rather than stacking a second. */
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<UStaticMeshComponent>> DressParts;
 	float Time = 0.f;
 	float Phase = 0.f;
 	FVector FigureScale = FVector::OneVector;

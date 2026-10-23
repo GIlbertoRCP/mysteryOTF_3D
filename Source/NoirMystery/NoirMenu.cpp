@@ -7,6 +7,7 @@
 #include "NoirPlayerController.h"
 #include "NoirSave.h"
 #include "NoirSettings.h"
+#include "NoirStyle.h"
 #include "Styling/CoreStyle.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SEditableTextBox.h"
@@ -18,11 +19,12 @@
 #include "Widgets/SOverlay.h"
 #include "Widgets/Text/STextBlock.h"
 
-namespace
+namespace NoirMenuLocal
 {
-	const FLinearColor Cream(0.86f, 0.8f, 0.68f);
-	const FLinearColor Amber(1.f, 0.62f, 0.22f);
-	const FLinearColor Dim(0.45f, 0.42f, 0.37f);
+	// The shared palette (NoirStyle.h): menus, HUD, puzzles and case file are one look.
+	using NoirStyle::Cream;
+	using NoirStyle::Amber;
+	using NoirStyle::Dim;
 
 	const TCHAR* const DifficultyKeys[] = {TEXT("Novice"), TEXT("Detective"), TEXT("Mastermind")};
 
@@ -80,6 +82,7 @@ namespace
 
 	UGameUserSettings* Display() { return GEngine ? GEngine->GetGameUserSettings() : nullptr; }
 }
+using namespace NoirMenuLocal;
 
 void SNoirMenu::Construct(const FArguments& InArgs)
 {
@@ -113,24 +116,100 @@ void SNoirMenu::Construct(const FArguments& InArgs)
 			[
 				SNew(SBox).WidthOverride(600.f)
 				[
-					SNew(SBorder).BorderImage(Shade(0.72f)).Padding(FMargin(90.f, 0.f, 30.f, 0.f)).VAlign(VAlign_Center)
+					SNew(SBorder).BorderImage(Shade(0.8f)).Padding(FMargin(90.f, 0.f, 30.f, 0.f)).VAlign(VAlign_Center)
 					[
 						SAssignNew(Pages, SWidgetSwitcher)
 						+ SWidgetSwitcher::Slot()[MakeMainPage()]
 						+ SWidgetSwitcher::Slot()[MakeCasePage()]
 						+ SWidgetSwitcher::Slot()[MakeSettingsPage()]
+						+ SWidgetSwitcher::Slot()[MakeControlsPage()]
 					]
 				]
 			]
+		]
+		// How to drive the menu, in the HUD's words.
+		+ SOverlay::Slot().HAlign(HAlign_Left).VAlign(VAlign_Bottom).Padding(FMargin(90.f, 0.f, 0.f, 44.f))
+		[
+			SNew(STextBlock)
+			.Text_Lambda([]() { return NoirTr(TEXT("ARROWS  move      ENTER  choose      ESC  back"), TEXT("FLECHAS  mover      ENTER  elegir      ESC  volver")); })
+			.Font(NoirStyle::Label(12.5f)).ColorAndOpacity(NoirStyle::Faint)
 		]
 	];
 	// The panel's edge fades into the scene instead of stopping.
 	constexpr int32 Steps = 16;
 	for (int32 i = 1; i <= Steps; ++i)
 	{
-		const float Alpha = 0.72f * FMath::Square(1.f - float(i) / (Steps + 1));
+		const float Alpha = 0.8f * FMath::Square(1.f - float(i) / (Steps + 1));
 		Fade->AddSlot().AutoWidth()[SNew(SBox).WidthOverride(14.f)[SNew(SBorder).BorderImage(Shade(Alpha)).Padding(0.f)]];
 	}
+}
+
+TSharedRef<SWidget> SNoirMenu::MakeControlsPage()
+{
+	TSharedRef<SVerticalBox> Box = SNew(SVerticalBox);
+	auto Add = [&Box](TSharedRef<SWidget> W, float Top = 0.f) { Box->AddSlot().AutoHeight().Padding(0.f, Top, 0.f, 0.f)[W]; };
+	Add(MakeHeading(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("CONTROLS"), TEXT("CONTROLES")); })));
+
+	// A key or button in a dark cap, as the HUD draws them.
+	auto Cap = [](const TCHAR* Key)
+	{
+		static const FSlateBrush* Edge = new FSlateColorBrush(NoirStyle::PanelEdge);
+		static const FSlateBrush* Fill = new FSlateColorBrush(NoirStyle::KeyCap);
+		return SNew(SBorder).BorderImage(Edge).Padding(1.f)
+			[
+				SNew(SBorder).BorderImage(Fill).Padding(FMargin(8.f, 2.f))
+				[
+					SNew(STextBlock).Text(FText::FromString(Key)).Font(Font("Regular", 13)).ColorAndOpacity(Amber)
+				]
+			];
+	};
+	struct FRow { const TCHAR* En; const TCHAR* Es; const TCHAR* Key; const TCHAR* Pad; };
+	// Section headings have no keys.
+	static const FRow Rows[] = {
+		{TEXT("GETTING ABOUT"), TEXT("MOVERSE"), nullptr, nullptr},
+		{TEXT("Walk"), TEXT("Caminar"), TEXT("W A S D"), TEXT("Left stick")},
+		{TEXT("Look"), TEXT("Mirar"), TEXT("Mouse"), TEXT("Right stick")},
+		{TEXT("Run (while held)"), TEXT("Correr (mantener)"), TEXT("Shift"), TEXT("Click left stick")},
+		{TEXT("Torch"), TEXT("Linterna"), TEXT("F"), TEXT("Y")},
+		{TEXT("Map"), TEXT("Mapa"), TEXT("M"), TEXT("D-pad up")},
+		{TEXT("INVESTIGATING"), TEXT("INVESTIGAR"), nullptr, nullptr},
+		{TEXT("Search, pick up, talk"), TEXT("Registrar, coger, hablar"), TEXT("E"), TEXT("A")},
+		{TEXT("Turn over / look closer"), TEXT("Girar / acercar"), TEXT("Mouse  Wheel"), TEXT("Right stick")},
+		{TEXT("Work on a clue"), TEXT("Examinar a fondo"), TEXT("R"), TEXT("X")},
+		{TEXT("Answer, choose"), TEXT("Responder, elegir"), TEXT("1 - 9   0 back"), TEXT("")},
+		{TEXT("Challenge a statement"), TEXT("Rebatir una declaración"), TEXT("P"), TEXT("")},
+		{TEXT("THINKING"), TEXT("PENSAR"), nullptr, nullptr},
+		{TEXT("Mind Place"), TEXT("Palacio mental"), TEXT("Tab"), TEXT("View")},
+		{TEXT("Case file"), TEXT("Expediente"), TEXT("N"), TEXT("D-pad down")},
+		{TEXT("Board: move a card, tie two"), TEXT("Tablero: mover, unir dos"), TEXT("Drag   Right-click"), TEXT("")},
+		{TEXT("Accuse (at the board)"), TEXT("Acusar (en el tablero)"), TEXT("A"), TEXT("")},
+		{TEXT("Pause"), TEXT("Pausa"), TEXT("Esc"), TEXT("Menu")},
+	};
+	for (const FRow& R : Rows)
+	{
+		const FText Name = NoirTr(R.En, R.Es);
+		if (!R.Key)
+		{
+			Add(SNew(STextBlock).Text(Name).Font(NoirStyle::Label(12.f)).ColorAndOpacity(NoirStyle::Faint), 18.f);
+			continue;
+		}
+		TSharedRef<SHorizontalBox> Row = SNew(SHorizontalBox)
+			+ SHorizontalBox::Slot().FillWidth(1.f).VAlign(VAlign_Center)
+			[
+				SNew(STextBlock).Text(Name).Font(Font("Regular", 15)).ColorAndOpacity(Cream)
+			]
+			+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(12.f, 0.f, 0.f, 0.f)[Cap(R.Key)];
+		if (R.Pad && *R.Pad)
+		{
+			Row->AddSlot().AutoWidth().VAlign(VAlign_Center).Padding(8.f, 0.f, 0.f, 0.f)
+			[
+				SNew(STextBlock).Text(FText::FromString(R.Pad)).Font(Font("Italic", 13)).ColorAndOpacity(Dim)
+			];
+		}
+		Add(Row, 6.f);
+	}
+	Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Back"), TEXT("Volver")); }), [this]() { Back(); }, &FirstOnPage[3], 18.f), 26.f);
+	return Box;
 }
 
 TSharedRef<SWidget> SNoirMenu::MakeHeading(TAttribute<FText> Text)
@@ -169,7 +248,7 @@ TSharedRef<SWidget> SNoirMenu::MakeChoice(TAttribute<FText> Label, TAttribute<FT
 	return SNew(SHorizontalBox)
 		+ SHorizontalBox::Slot().FillWidth(1.f).VAlign(VAlign_Center).Padding(14.f, 0.f, 0.f, 0.f)
 		[
-			SNew(STextBlock).Text(Label).Font(Font("Regular", 15, 40)).ColorAndOpacity(Dim)
+			SNew(STextBlock).Text(Label).Font(Font("Regular", 16, 40)).ColorAndOpacity(Dim)
 		]
 		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)[Arrow(TEXT("<"), -1, OutButton)]
 		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
@@ -209,8 +288,15 @@ TSharedRef<SWidget> SNoirMenu::MakeMainPage()
 			{
 				return FText::Format(NoirTr(TEXT("Case seed  {0}"), TEXT("Semilla del caso  {0}")), FText::FromString(Owner.IsValid() ? Owner->GetCaseSeed() : FString()));
 			})
-			.Font(Font("Regular", 13, 80)).ColorAndOpacity(Dim), 8.f);
+			.Font(Font("Regular", 14, 80)).ColorAndOpacity(Dim), 8.f);
 		Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Resume"), TEXT("Continuar")); }), [this]() { if (Owner.IsValid()) Owner->CloseMenu(); }, &FirstOnPage[0]), 48.f);
+		Add(MakeButton(TAttribute<FText>::CreateLambda([this]()
+			{
+				const int32 Left = Owner.IsValid() ? Owner->GetHintsLeft() : 0;
+				return Left > 0 ? FText::Format(NoirTr(TEXT("A hint  ({0} left)"), TEXT("Una pista  (quedan {0})")), Left)
+					: NoirTr(TEXT("No hints left"), TEXT("No quedan pistas"));
+			}),
+			[this]() { if (Owner.IsValid()) Owner->TakeHint(); }));
 		Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Settings"), TEXT("Ajustes")); }), [this]() { ShowPage(TEXT("settings")); }));
 		Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Restart this case"), TEXT("Reiniciar este caso")); }), [this]() { if (Owner.IsValid()) Owner->RestartCase(); }));
 		Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Abandon the case"), TEXT("Abandonar el caso")); }), [this]() { if (Owner.IsValid()) Owner->QuitToMainMenu(); }));
@@ -229,7 +315,7 @@ TSharedRef<SWidget> SNoirMenu::MakeMainPage()
 			[this]() { if (Owner.IsValid()) Owner->ContinueCase(); }, &FirstOnPage[0], 26.f), 70.f);
 		Add(SNew(SBox).Padding(FMargin(14.f, 0.f, 0.f, 6.f))
 			[
-				SNew(STextBlock).Text(Title).Font(Font("Italic", 13)).ColorAndOpacity(Dim)
+				SNew(STextBlock).Text(Title).Font(Font("Italic", 15)).ColorAndOpacity(Dim)
 			]);
 		Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("New case"), TEXT("Nuevo caso")); }), [this]() { ShowPage(TEXT("case")); }, nullptr, 26.f));
 	}
@@ -261,7 +347,7 @@ TSharedRef<SWidget> SNoirMenu::MakeCasePage()
 				: NoirTr(TEXT("A Gothic manor, one autumn night, fog at the windows."),
 					TEXT("Una mansión gótica, una noche de otoño, niebla en las ventanas."));
 		})
-		.Font(Font("Regular", 13)).ColorAndOpacity(Dim).AutoWrapText(true), 6.f);
+		.Font(Font("Regular", 15)).ColorAndOpacity(Dim).AutoWrapText(true), 6.f);
 
 	Add(MakeChoice(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Location"), TEXT("Lugar")); }),
 		TAttribute<FText>::CreateLambda([this]() { return bTrain ? NoirTr(TEXT("The train"), TEXT("El tren")) : NoirTr(TEXT("The manor"), TEXT("La mansión")); }),
@@ -271,7 +357,7 @@ TSharedRef<SWidget> SNoirMenu::MakeCasePage()
 		[this](int32 Dir) { Difficulty = (Difficulty + Dir + 3) % 3; }), 12.f);
 	Add(SNew(SBox).Padding(FMargin(14.f, 0.f, 0.f, 0.f))
 		[
-			SNew(STextBlock).Text_Lambda([this]() { return DifficultyNote(Difficulty); }).Font(Font("Italic", 12)).ColorAndOpacity(Dim).AutoWrapText(true)
+			SNew(STextBlock).Text_Lambda([this]() { return DifficultyNote(Difficulty); }).Font(Font("Italic", 14.5f)).ColorAndOpacity(Dim).AutoWrapText(true)
 		], 2.f);
 	Add(MakeChoice(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Language"), TEXT("Idioma")); }),
 		TAttribute<FText>::CreateLambda([]() { return FText::FromString(NoirIsSpanish() ? TEXT("Español") : TEXT("English")); }),
@@ -281,7 +367,7 @@ TSharedRef<SWidget> SNoirMenu::MakeCasePage()
 	Add(SNew(SHorizontalBox)
 		+ SHorizontalBox::Slot().FillWidth(1.f).VAlign(VAlign_Center).Padding(14.f, 0.f, 0.f, 0.f)
 		[
-			SNew(STextBlock).Text_Lambda([]() { return NoirTr(TEXT("Seed"), TEXT("Semilla")); }).Font(Font("Regular", 15, 40)).ColorAndOpacity(Dim)
+			SNew(STextBlock).Text_Lambda([]() { return NoirTr(TEXT("Seed"), TEXT("Semilla")); }).Font(Font("Regular", 16, 40)).ColorAndOpacity(Dim)
 		]
 		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
 		[
@@ -298,7 +384,7 @@ TSharedRef<SWidget> SNoirMenu::MakeCasePage()
 	Add(SNew(SBox).Padding(FMargin(14.f, 0.f, 0.f, 0.f))
 		[
 			SNew(STextBlock).Text_Lambda([]() { return NoirTr(TEXT("Share a seed and a friend gets the same case."), TEXT("Comparte una semilla y otra persona tendrá el mismo caso.")); })
-			.Font(Font("Italic", 12)).ColorAndOpacity(Dim)
+			.Font(Font("Italic", 14.5f)).ColorAndOpacity(Dim)
 		], 4.f);
 
 	Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Begin the case"), TEXT("Comenzar el caso")); }), [this]() { Begin(); }, nullptr, 26.f), 40.f);
@@ -413,13 +499,27 @@ TSharedRef<SWidget> SNoirMenu::MakeSettingsPage()
 			S->Save();
 		}), 8.f);
 
-	Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Back"), TEXT("Volver")); }), [this]() { Back(); }, nullptr, 18.f), 36.f);
+	Add(MakeChoice(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Head bob"), TEXT("Balanceo de cámara")); }),
+		TAttribute<FText>::CreateLambda([]()
+		{
+			const int32 B = UNoirSettings::Get()->HeadBob;
+			return B >= 2 ? NoirTr(TEXT("Full"), TEXT("Completo")) : B == 1 ? NoirTr(TEXT("Reduced"), TEXT("Reducido")) : NoirTr(TEXT("Off"), TEXT("No"));
+		}),
+		[](int32 Dir)
+		{
+			UNoirSettings* S = UNoirSettings::Get();
+			S->HeadBob = (S->HeadBob + Dir + 3) % 3;
+			S->Save();
+		}), 8.f);
+
+	Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Controls"), TEXT("Controles")); }), [this]() { ShowPage(TEXT("controls")); }, nullptr, 18.f), 28.f);
+	Add(MakeButton(TAttribute<FText>::CreateLambda([]() { return NoirTr(TEXT("Back"), TEXT("Volver")); }), [this]() { Back(); }, nullptr, 18.f), 4.f);
 	return Box;
 }
 
 void SNoirMenu::ShowPage(const FString& Name)
 {
-	Page = Name == TEXT("case") && !bPause ? 1 : Name == TEXT("settings") ? 2 : 0;
+	Page = Name == TEXT("case") && !bPause ? 1 : Name == TEXT("settings") ? 2 : Name == TEXT("controls") ? 3 : 0;
 	Pages->SetActiveWidgetIndex(Page);
 	FocusFirst();
 }
@@ -434,7 +534,11 @@ void SNoirMenu::FocusFirst()
 
 void SNoirMenu::Back()
 {
-	if (Page != 0)
+	if (Page == 3)
+	{
+		ShowPage(TEXT("settings"));
+	}
+	else if (Page != 0)
 	{
 		ShowPage(TEXT("main"));
 	}

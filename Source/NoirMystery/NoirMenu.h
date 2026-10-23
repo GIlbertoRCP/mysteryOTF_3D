@@ -26,7 +26,7 @@ public:
 
 	void Construct(const FArguments& InArgs);
 
-	/** "main" (the first page), "case" (New case) or "settings". */
+	/** "main" (the first page), "case" (New case), "settings" or "controls". */
 	void ShowPage(const FString& Page);
 	void FocusFirst();
 
@@ -37,6 +37,8 @@ private:
 	TSharedRef<SWidget> MakeMainPage();
 	TSharedRef<SWidget> MakeCasePage();
 	TSharedRef<SWidget> MakeSettingsPage();
+	/** Every action, its key and its gamepad button (from Settings). */
+	TSharedRef<SWidget> MakeControlsPage();
 
 	/** A text button: cream, amber when hovered or focused. */
 	TSharedRef<SWidget> MakeButton(TAttribute<FText> Label, TFunction<void()> OnClick, TSharedPtr<SButton>* OutButton = nullptr, float Size = 22.f);
@@ -54,7 +56,7 @@ private:
 	TSharedPtr<SWidgetSwitcher> Pages;
 	TSharedPtr<class SHorizontalBox> Fade;
 	TSharedPtr<SEditableTextBox> SeedBox;
-	TSharedPtr<SButton> FirstOnPage[3];
+	TSharedPtr<SButton> FirstOnPage[4];
 	int32 Page = 0;
 
 	// New case choices.

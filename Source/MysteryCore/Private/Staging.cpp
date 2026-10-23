@@ -47,15 +47,6 @@ Staging StageCase(const Content& content, const Blueprint& bp, const StageLayout
 	const int alibiCount = static_cast<int>(content.themes.at(bp.theme).alibiPlaces.size());
 
 	// ─── Rooms: the scene first, then every room a suspect claims or a weapon lies in ───
-	std::vector<const StageRoom*> sceneChoices;
-	for (const StageRoom& r : layout.rooms)
-	{
-		if (r.canBeScene) sceneChoices.push_back(&r);
-	}
-	if (sceneChoices.empty())
-	{
-		for (const StageRoom& r : layout.rooms) sceneChoices.push_back(&r);
-	}
 	// The English label of a case room: 0 is the scene, 1.. the alibi places.
 	const Theme& theme = content.themes.at(bp.theme);
 	auto caseLabel = [&](int caseRoom) -> std::string
@@ -67,6 +58,25 @@ Staging StageCase(const Content& content, const Blueprint& bp, const StageLayout
 	{
 		return std::find(r.suits.begin(), r.suits.end(), label) != r.suits.end();
 	};
+	// An exclusive room plays only what it is dressed for.
+	auto mayPlay = [&](const StageRoom& r, int caseRoom) { return !r.exclusive || suits(r, caseLabel(caseRoom)); };
+	std::vector<const StageRoom*> sceneChoices;
+	for (const StageRoom& r : layout.rooms)
+	{
+		if (r.canBeScene && mayPlay(r, 0)) sceneChoices.push_back(&r);
+	}
+	if (sceneChoices.empty())
+	{
+		for (const StageRoom& r : layout.rooms)
+		{
+			if (mayPlay(r, 0)) sceneChoices.push_back(&r);
+		}
+	}
+	if (sceneChoices.empty())
+	{
+		st.problems.push_back("no room in the level may play the scene");
+		return st;
+	}
 	{
 		// A room dressed for the scene wins (levels without dressing pick exactly as before).
 		std::vector<const StageRoom*> dressed;
@@ -111,6 +121,21 @@ Staging StageCase(const Content& content, const Blueprint& bp, const StageLayout
 		freeRooms.erase(freeRooms.begin() + static_cast<std::ptrdiff_t>(i));
 		return r;
 	};
+	// The first free room that may play anything (exclusive rooms only take what they suit).
+	auto anyFree = [&]() -> size_t
+	{
+		for (size_t i = 0; i < freeRooms.size(); ++i)
+		{
+			if (!freeRooms[i]->exclusive) return i;
+		}
+		return freeRooms.size();
+	};
+	auto openRooms = [&]()
+	{
+		size_t n = 0;
+		for (const StageRoom* r : freeRooms) n += !r->exclusive;
+		return n;
+	};
 	auto dressedFor = [&](int caseRoom) -> size_t
 	{
 		size_t best = freeRooms.size();
@@ -133,20 +158,23 @@ Staging StageCase(const Content& content, const Blueprint& bp, const StageLayout
 	for (const int caseRoom : optional)
 	{
 		const size_t i = dressedFor(caseRoom);
-		// Never at the cost of a room a suspect or a weapon needs.
-		if (i < freeRooms.size() && freeRooms.size() > requiredLeft) st.roomFor[caseRoom] = take(i)->id;
+		// Never at the cost of a room a suspect or a weapon needs (an exclusive room costs nothing:
+		// no one else could have it).
+		if (i < freeRooms.size() && (freeRooms[i]->exclusive || openRooms() > requiredLeft)) st.roomFor[caseRoom] = take(i)->id;
 		else optionalWaiting.push_back(caseRoom);
 	}
 	for (const int caseRoom : waiting)
 	{
-		if (!freeRooms.empty())
-			st.roomFor[caseRoom] = take(0)->id;
+		const size_t i = anyFree();
+		if (i < freeRooms.size())
+			st.roomFor[caseRoom] = take(i)->id;
 		else
 			st.problems.push_back("case room " + std::to_string(caseRoom) + " is needed but the level has no room left for it");
 	}
 	for (const int caseRoom : optionalWaiting)
 	{
-		if (!freeRooms.empty()) st.roomFor[caseRoom] = take(0)->id;
+		const size_t i = anyFree();
+		if (i < freeRooms.size()) st.roomFor[caseRoom] = take(i)->id;
 	}
 
 	auto levelRoom = [&](const std::string& id) -> const StageRoom*

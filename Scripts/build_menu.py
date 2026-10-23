@@ -53,7 +53,7 @@ def build_level(m):
         dy, dz = y1 - y0, z1 - z0
         length = (dy * dy + dz * dz) ** 0.5
         angle = math.degrees(math.atan2(dz, dy))
-        L.block("Menu_String%d" % i, (bx + 1.0, (y0 + y1) / 2, (z0 + z1) / 2), (0.25, length, 0.25), m["wax"],
+        L.block("Menu_String%d" % i, (bx + 1.0, (y0 + y1) / 2, (z0 + z1) / 2), (0.25, length, 0.25), m.get("yarn", m["wax"]),
                 "Menu/Board", shadow=False, rot=(angle, 0, 0))
 
     # The camera: from beside the evidence table, looking back at the board and its lamps,

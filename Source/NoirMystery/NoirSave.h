@@ -53,6 +53,8 @@ public:
 	UPROPERTY() TArray<FString> KnownClues;
 	UPROPERTY() TArray<FString> SolvedPuzzles;
 	UPROPERTY() TArray<FString> Notes;
+	/** How many of the case's hints the detective has asked for. */
+	UPROPERTY() int32 HintsUsed = 0;
 	/** Seconds until the late lead arrives; negative once it has (or if the case has none). */
 	UPROPERTY() float LateLeadIn = -1.f;
 

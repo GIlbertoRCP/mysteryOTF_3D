@@ -47,7 +47,12 @@ ANoirCharacter::ANoirCharacter()
 	Torch->SetOuterConeAngle(16.f);
 	Torch->SetAttenuationRadius(1500.f);
 	Torch->SetSourceRadius(2.f);
-	Torch->SetVolumetricScatteringIntensity(1.f);
+	// The beam shows in fog and rain: scattering well above physical, and it shadows its own cone.
+	Torch->SetVolumetricScatteringIntensity(4.f);
+	Torch->SetCastVolumetricShadow(true);
+	// It moves every frame, so its shadow is redrawn every frame: coarser is far cheaper, and the
+	// beam is soft anyway.
+	Torch->ShadowResolutionScale = 0.4f;
 
 	InspectLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("InspectLight"));
 	InspectLight->SetupAttachment(Camera);
@@ -68,7 +73,7 @@ ANoirCharacter::ANoirCharacter()
 	Camera->PostProcessSettings.VignetteIntensity = 1.1f;  // switched on for the reveal
 
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
-	Movement->MaxWalkSpeed = 220.f;  // a detective walks; this is not a shooter
+	Movement->MaxWalkSpeed = WalkSpeed;  // a detective walks; this is not a shooter (Shift runs, briefly)
 	Movement->BrakingDecelerationWalking = 1200.f;
 	Movement->GroundFriction = 6.f;
 
@@ -104,6 +109,9 @@ void ANoirCharacter::CreateInput()
 	PauseAction = MakeAction(TEXT("IA_Pause"), EInputActionValueType::Boolean);
 	WorkAction = MakeAction(TEXT("IA_WorkOnIt"), EInputActionValueType::Boolean);
 	MapAction = MakeAction(TEXT("IA_Map"), EInputActionValueType::Boolean);
+	CaseNotebookAction = MakeAction(TEXT("IA_CaseNotebook"), EInputActionValueType::Boolean);
+	SprintAction = MakeAction(TEXT("IA_Sprint"), EInputActionValueType::Boolean);
+	SprintToggleAction = MakeAction(TEXT("IA_SprintToggle"), EInputActionValueType::Boolean);
 	ChoiceActions.Reset();
 	for (int32 Digit = 0; Digit <= 9; ++Digit)
 	{
@@ -150,6 +158,10 @@ void ANoirCharacter::CreateInput()
 	Map(WorkAction, EKeys::Gamepad_FaceButton_Left);
 	Map(MapAction, EKeys::M);
 	Map(MapAction, EKeys::Gamepad_DPad_Up);
+	Map(CaseNotebookAction, EKeys::N);
+	Map(CaseNotebookAction, EKeys::Gamepad_DPad_Down);
+	Map(SprintAction, EKeys::LeftShift);
+	Map(SprintToggleAction, EKeys::Gamepad_LeftThumbstick);
 	const FKey DigitKeys[] = {EKeys::Zero, EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four,
 		EKeys::Five, EKeys::Six, EKeys::Seven, EKeys::Eight, EKeys::Nine};
 	for (int32 Digit = 0; Digit <= 9; ++Digit)
@@ -187,6 +199,10 @@ void ANoirCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Enhanced->BindAction(PauseAction, ETriggerEvent::Started, this, &ANoirCharacter::Pause);
 	Enhanced->BindAction(WorkAction, ETriggerEvent::Started, this, &ANoirCharacter::WorkOnInspected);
 	Enhanced->BindAction(MapAction, ETriggerEvent::Started, this, &ANoirCharacter::OpenMap);
+	Enhanced->BindAction(CaseNotebookAction, ETriggerEvent::Started, this, &ANoirCharacter::OpenCaseNotebook);
+	Enhanced->BindAction(SprintAction, ETriggerEvent::Started, this, &ANoirCharacter::SprintPressed);
+	Enhanced->BindAction(SprintAction, ETriggerEvent::Completed, this, &ANoirCharacter::SprintReleased);
+	Enhanced->BindAction(SprintToggleAction, ETriggerEvent::Started, this, &ANoirCharacter::SprintToggle);
 	for (int32 Digit = 0; Digit <= 9; ++Digit)
 	{
 		Enhanced->BindAction(ChoiceActions[Digit], ETriggerEvent::Started, this, &ANoirCharacter::Choose, Digit);
@@ -195,7 +211,16 @@ void ANoirCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ANoirCharacter::Move(const FInputActionValue& Value)
 {
-	if (IsInspecting() || IsInterviewing() || IsAccusing() || IsOnBoard())
+	if (IsOnBoard())
+	{
+		// Close up, the stick and WASD pan across the board.
+		const FVector2D Pan = Value.Get<FVector2D>();
+		const float Speed = 140.f / BoardZoomNow;
+		const float Dt = GetWorld()->GetDeltaSeconds();
+		BoardFocus += FVector2D(-Pan.X, Pan.Y) * Speed * Dt; // board X runs right to left seen from the front
+		return;
+	}
+	if (IsInspecting() || IsInterviewing() || IsAccusing())
 	{
 		return;
 	}
@@ -203,6 +228,68 @@ void ANoirCharacter::Move(const FInputActionValue& Value)
 	const FRotator Yaw(0.f, GetControlRotation().Yaw, 0.f);
 	AddMovementInput(FRotationMatrix(Yaw).GetUnitAxis(EAxis::X), Input.Y);
 	AddMovementInput(FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y), Input.X);
+}
+
+FTransform ANoirCharacter::UpdateGait(float DeltaSeconds)
+{
+	UCharacterMovementComponent* Movement = GetCharacterMovement();
+	GaitTime += DeltaSeconds;
+	const bool bFree = !IsInspecting() && !IsInterviewing() && !IsAccusing() && !IsOnBoard();
+
+	// Which way the detective is trying to go, in the view's terms (forward, right).
+	const FVector Wish = GetLastMovementInputVector();
+	const FRotator Yaw(0.f, GetControlRotation().Yaw, 0.f);
+	const float Forward = FVector::DotProduct(Wish, FRotationMatrix(Yaw).GetUnitAxis(EAxis::X));
+	const float Right = FVector::DotProduct(Wish, FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y));
+	if (Wish.IsNearlyZero()) bSprintToggled = false; // the stick let go: the toggle lapses
+
+	// Running needs a reason (moving forward), breath, and ground underfoot.
+	bSprinting = bFree && (bSprintHeld || bSprintToggled) && Forward > 0.35f && !bWinded && Movement->IsMovingOnGround();
+	const float Speed = GetVelocity().Size2D();
+	if (bSprinting && Speed > WalkSpeed * 1.1f)
+	{
+		Stamina = FMath::Max(0.f, Stamina - DeltaSeconds / SprintSeconds);
+		SinceSprint = 0.f;
+		if (Stamina <= 0.f) bWinded = true;
+	}
+	else
+	{
+		SinceSprint += DeltaSeconds;
+		if (SinceSprint > 0.8f) Stamina = FMath::Min(1.f, Stamina + DeltaSeconds / RecoverSeconds);
+		if (bWinded && Stamina > 0.35f) bWinded = false;
+	}
+	SprintBlend = FMath::FInterpTo(SprintBlend, bSprinting ? 1.f : 0.f, DeltaSeconds, bSprinting ? 2.5f : 4.f);
+	Movement->MaxWalkSpeed = FMath::Lerp(bWinded ? WalkSpeed * 0.85f : WalkSpeed, SprintSpeed, SprintBlend);
+
+	// The stride: one step per half turn of the phase, longer steps at a run.
+	MoveBlend = FMath::FInterpTo(MoveBlend, bFree ? FMath::Clamp(Speed / WalkSpeed, 0.f, 1.f) : 0.f, DeltaSeconds, 6.f);
+	const float Stride = FMath::Lerp(75.f, 105.f, SprintBlend);
+	GaitPhase = FMath::Fmod(GaitPhase + Speed * DeltaSeconds / Stride * PI, 2.f * PI);
+
+	const float Bob = UNoirSettings::Get()->HeadBobScale();
+	const float Up = FMath::Lerp(1.0f, 3.4f, SprintBlend) * MoveBlend * Bob;
+	const float Side = FMath::Lerp(0.6f, 2.0f, SprintBlend) * MoveBlend * Bob;
+	// Down on each footfall, up between; side to side once per pair of steps.
+	float Z = -Up * FMath::Abs(FMath::Sin(GaitPhase)) + Up * 0.5f;
+	const float Y = Side * FMath::Sin(GaitPhase);
+	// Out of breath: the chest heaves even standing still.
+	const float Breath = (1.f - Stamina) * (1.f - MoveBlend * 0.7f) * Bob;
+	Z += Breath * 0.9f * FMath::Sin(GaitTime * FMath::Lerp(1.6f, 3.4f, 1.f - Stamina) * PI);
+	Lean = FMath::FInterpTo(Lean, bFree ? -Right * 1.4f * Bob : 0.f, DeltaSeconds, 5.f);
+	const float Roll = FMath::Lerp(0.25f, 0.9f, SprintBlend) * MoveBlend * Bob * FMath::Sin(GaitPhase) + Lean;
+	const float Nod = FMath::Lerp(0.1f, 0.45f, SprintBlend) * MoveBlend * Bob * FMath::Cos(2.f * GaitPhase) - Breath * 0.3f;
+
+	Camera->ClearAdditiveOffset();
+	if (bFree)
+	{
+		Camera->AddAdditiveOffset(FTransform(FRotator(Nod, 0.f, Roll), FVector(0.f, Y, Z)), SprintFOVKick * SprintBlend);
+	}
+
+	// The torch hand lags the head a little and swings wider at a run: the beam sweeps the fog.
+	const float Swing = FMath::Lerp(0.3f, 1.f, SprintBlend) * MoveBlend;
+	return FTransform(
+		FRotator(1.8f * Swing * FMath::Sin(2.f * GaitPhase + 0.8f), 1.3f * Swing * FMath::Sin(GaitPhase + 0.4f), 0.f),
+		FVector(0.f, 2.2f * Swing * FMath::Sin(GaitPhase + 0.4f), 3.f * Swing * FMath::Cos(2.f * GaitPhase + 0.6f)));
 }
 
 void ANoirCharacter::Look(const FInputActionValue& Value)
@@ -226,9 +313,10 @@ void ANoirCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Torch trails the view a little, from just below and right of the eye.
-	const FVector Hand = Camera->GetComponentTransform().TransformPosition(FVector(10.f, 14.f, -12.f));
-	const FRotator Target = Camera->GetComponentRotation();
+	// Torch trails the view a little, from just below and right of the eye, swinging with the stride.
+	const FTransform Sway = UpdateGait(DeltaSeconds);
+	const FVector Hand = Camera->GetComponentTransform().TransformPosition(FVector(10.f, 14.f, -12.f) + Sway.GetLocation());
+	const FRotator Target = (Camera->GetComponentRotation().Quaternion() * Sway.GetRotation()).Rotator();
 	const FRotator Current = Torch->GetComponentRotation();
 	Torch->SetWorldLocationAndRotation(Hand, FMath::RInterpTo(Current, Target, DeltaSeconds, TorchFollowSpeed));
 
@@ -402,6 +490,15 @@ void ANoirCharacter::OpenMap()
 	}
 }
 
+void ANoirCharacter::OpenCaseNotebook()
+{
+	if (IsAccusing()) return;
+	if (ANoirPlayerController* PC = Cast<ANoirPlayerController>(GetController()))
+	{
+		PC->ToggleCaseNotebook();
+	}
+}
+
 void ANoirCharacter::Pause()
 {
 	if (ANoirPlayerController* PC = Cast<ANoirPlayerController>(GetController()))
@@ -442,6 +539,12 @@ void ANoirCharacter::EndBoard()
 	{
 		Torch->SetVisibility(bTorchBeforeBoard);
 	}
+	if (ANoirCase* Board = OnBoard.Get())
+	{
+		Board->SetViewZoom(1.f, FVector2D::ZeroVector);
+	}
+	BoardZoom = BoardZoomNow = 1.f;
+	BoardFocus = BoardFocusNow = FVector2D::ZeroVector;
 	OnBoard.Reset();
 	DraggedCard.Reset();
 	PickedCard.Reset();
@@ -465,6 +568,11 @@ bool ANoirCharacter::CursorOnBoard(FVector2D& OutPosition) const
 void ANoirCharacter::UpdateBoard(float DeltaSeconds)
 {
 	ANoirCase* Board = OnBoard.Get();
+	// Ease the view toward the wanted zoom and focus; the board keeps the focus on itself.
+	BoardZoomNow = FMath::FInterpTo(BoardZoomNow, BoardZoom, DeltaSeconds, 10.f);
+	BoardFocusNow = FMath::Vector2DInterpTo(BoardFocusNow, BoardFocus, DeltaSeconds, 10.f);
+	BoardFocus = Board->SetViewZoom(BoardZoom, BoardFocus); // clamped
+	BoardFocusNow = Board->SetViewZoom(BoardZoomNow, BoardFocusNow);
 	FVector2D Cursor;
 	if (!CursorOnBoard(Cursor))
 	{
@@ -540,6 +648,19 @@ void ANoirCharacter::TurnInspected(float YawDegrees, float PitchDegrees)
 
 void ANoirCharacter::Zoom(const FInputActionValue& Value)
 {
+	if (IsOnBoard())
+	{
+		// Toward whatever is under the cursor: it stays under the cursor as the view closes in.
+		const float Old = BoardZoom;
+		BoardZoom = FMath::Clamp(BoardZoom * (1.f + 0.18f * Value.Get<float>()), 1.f, 3.2f);
+		FVector2D Cursor;
+		if (CursorOnBoard(Cursor))
+		{
+			BoardFocus += (Cursor - BoardFocus) * (1.f - Old / BoardZoom);
+		}
+		if (BoardZoom <= 1.001f) BoardFocus = FVector2D::ZeroVector;
+		return;
+	}
 	if (IsInspecting())
 	{
 		InspectDistance = FMath::Clamp(InspectDistance * (1.f - 0.1f * Value.Get<float>()), InspectMinDistance, InspectMaxDistance);
@@ -903,6 +1024,12 @@ float ANoirCharacter::GetLetterbox() const
 	}
 }
 
+bool ANoirCharacter::IsChoosingStatement() const
+{
+	const ANoirSuspect* Suspect = Interviewee.Get();
+	return bPresenting && ChallengedTopic == INDEX_NONE && Suspect && Suspect->HasStatements();
+}
+
 void ANoirCharacter::TogglePresent()
 {
 	if (!IsInterviewing())
@@ -914,7 +1041,15 @@ void ANoirCharacter::TogglePresent()
 		ShowMessage(NoirTr(TEXT("You have no evidence to show yet."), TEXT("Aún no tienes pruebas que mostrar.")));
 		return;
 	}
+	const ANoirSuspect* Suspect = Interviewee.Get();
+	if (!bPresenting && Suspect && Suspect->HasStatements() && Suspect->GetChallengeableTopics().IsEmpty())
+	{
+		ShowMessage(NoirTr(TEXT("Ask them something first: you can only challenge what they've said."),
+			TEXT("Pregúntale algo primero: solo puedes rebatir lo que haya dicho.")));
+		return;
+	}
 	bPresenting = !bPresenting;
+	ChallengedTopic = INDEX_NONE;
 	PresentPage = 0;
 }
 
@@ -932,7 +1067,14 @@ TArray<FNoirInterviewOption> ANoirCharacter::GetInterviewOptions() const
 	{
 		return Options;
 	}
-	if (bPresenting)
+	if (IsChoosingStatement())
+	{
+		for (int32 Topic : Suspect->GetChallengeableTopics())
+		{
+			Options.Add({Suspect->Topics[Topic].Question.ToString(), false});
+		}
+	}
+	else if (bPresenting)
 	{
 		const int32 First = PresentPage * CluesPerPage;
 		for (int32 i = First; i < KnownClues.Num() && i < First + CluesPerPage; ++i)
@@ -968,10 +1110,19 @@ void ANoirCharacter::Choose(int32 Option)
 	}
 	if (Option == 0)
 	{
-		bPresenting = false;
+		// Back: from the evidence to the statements, from the statements out of Present.
+		if (bPresenting && ChallengedTopic != INDEX_NONE && Suspect->HasStatements()) ChallengedTopic = INDEX_NONE;
+		else bPresenting = false;
+		PresentPage = 0;
 		return;
 	}
 	const int32 Index = Option - 1;
+	if (IsChoosingStatement())
+	{
+		const TArray<int32> Statements = Suspect->GetChallengeableTopics();
+		if (Statements.IsValidIndex(Index)) ChallengedTopic = Statements[Index];
+		return;
+	}
 	if (bPresenting)
 	{
 		if (Index == CluesPerPage && KnownClues.Num() > CluesPerPage)
@@ -983,8 +1134,10 @@ void ANoirCharacter::Choose(int32 Option)
 		const int32 ClueIndex = PresentPage * CluesPerPage + Index;
 		if (Index < CluesPerPage && KnownClues.IsValidIndex(ClueIndex))
 		{
-			DialogueLine = Suspect->Present(KnownClues[ClueIndex], this);
+			DialogueLine = ChallengedTopic != INDEX_NONE ? Suspect->Challenge(ChallengedTopic, KnownClues[ClueIndex], this)
+				: Suspect->Present(KnownClues[ClueIndex], this);
 			bPresenting = false;
+			ChallengedTopic = INDEX_NONE;
 		}
 	}
 	else

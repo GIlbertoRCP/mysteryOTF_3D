@@ -18,6 +18,50 @@ enum class ENoirCaseLanguage : uint8
 	Spanish,
 };
 
+/** The case as the detective's notebook tells it: the facts the case file opens with. */
+struct FNoirCaseSummary
+{
+	FText Title;
+	FText Synopsis;
+	FText VictimName;
+	int32 VictimAge = 0;
+	FText VictimOccupation;
+	/** Where the body was found, and when the death happened ("between 10:00 and 10:40 PM"). */
+	FText Scene;
+	FText TimeWindow;
+	/** What makes tonight harder (a blackout, a storm), if anything. */
+	FText ComplicationLabel;
+	FText ComplicationNote;
+	/** The house or the train, by name. */
+	FText Place;
+	int32 SuspectCount = 0;
+	bool bAccomplice = false;
+	/** The hints taken so far, in order. */
+	TArray<FText> HintsTaken;
+};
+
+/** One of the accusation's questions and how much of its evidence has turned up (never which way
+ *  it points: the board keeps count, the detective still has to think). */
+struct FNoirQuestionProgress
+{
+	FText Question;
+	int32 Found = 0;
+	int32 Total = 0;
+	bool IsComplete() const { return Total > 0 && Found >= Total; }
+};
+
+/** Where the investigation stands: for the Mind Place's board and its tally. */
+struct FNoirCaseProgress
+{
+	TArray<FNoirQuestionProgress> Questions;
+	int32 CluesFound = 0, CluesTotal = 0;
+	int32 Searched = 0, SearchTotal = 0;
+	int32 Questioned = 0, Cracked = 0, SuspectTotal = 0;
+	int32 HintsUsed = 0;
+	/** A suspect actor's name -> what the board stamps on their photograph. */
+	TMap<FString, FText> Stamps;
+};
+
 /** What a suspect says when shown a clue, from the generated case's confront rules. */
 struct FNoirConfrontResult
 {
@@ -78,6 +122,10 @@ public:
 
 	FNoirConfrontResult Confront(const FString& SuspectId, const FString& EvidenceId) const;
 
+	/** Evaluates whether presenting EvidenceId contradicts StatementId for SuspectId. */
+	UFUNCTION(BlueprintCallable, Category = "Case")
+	bool EvaluateContradiction(FName SuspectId, FName StatementId, FName EvidenceId) const;
+
 	/** The case's name for the room containing Location, or empty. */
 	FText RoomLabelAt(const FVector& Location) const;
 
@@ -92,6 +140,27 @@ public:
 	/** Picking up a saved case (?Continue=1) rather than starting it fresh. */
 	UFUNCTION(BlueprintPure, Category = "Case")
 	bool IsResuming() const { return bResume; }
+
+	/** The case's next hint (four, each narrowing it further, none naming the killer), filed in the
+	 *  detective's notes. Empty once they are all used. */
+	UFUNCTION(BlueprintCallable, Category = "Case")
+	FText TakeHint();
+	UFUNCTION(BlueprintPure, Category = "Case")
+	int32 GetHintsUsed() const { return HintsUsed; }
+	UFUNCTION(BlueprintPure, Category = "Case")
+	int32 GetHintsLeft() const { return Hints.Num() - HintsUsed; }
+
+	const TArray<TObjectPtr<ANoirSuspect>>& GetSuspects() const { return Suspects; }
+	const TArray<FNoirClue>& GetCaseFile() const { return CaseFile; }
+	const FText& GetBriefing() const { return Briefing; }
+
+	/** The case's opening facts for the notebook; empty until the case is built. */
+	FNoirCaseSummary GetCaseSummary() const;
+
+	/** How far the detective has got: evidence found per question, places searched, people
+	 *  questioned. Empty until the case is built. */
+	FNoirCaseProgress GetCaseProgress(const ANoirCharacter* Detective) const;
+	const TArray<FText>& GetHints() const { return Hints; }
 
 	/** Stops the case's clock (the late lead's countdown) while the detective is in the Mind Place. */
 	void SetCaseClockPaused(bool bPaused);
@@ -136,4 +205,6 @@ private:
 	TArray<FNoirClue> CaseFile;
 	TOptional<FNoirClue> LateLead;
 	FText Briefing;
+	TArray<FText> Hints;
+	int32 HintsUsed = 0;
 };

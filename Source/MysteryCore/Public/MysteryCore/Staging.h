@@ -38,6 +38,9 @@ struct StageRoom
 	/** Case places this room is dressed for, by English label ("Dining Car"); preferred when casting.
 	 *  Empty: any place. */
 	std::vector<std::string> suits;
+	/** Plays only the places in suits (an outbuilding: the chapel is never cast as the kitchen);
+	 *  left out of the case otherwise. */
+	bool exclusive = false;
 };
 
 struct StageLayout
